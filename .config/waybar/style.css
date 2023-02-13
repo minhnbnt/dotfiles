@@ -1,0 +1,121 @@
+* {
+	/* `otf-font-awesome` is required to be installed for icons */
+	font-family: Segoe UI, FontAwesome, 'Font Awesome 6 Pro';
+	font-size: 13px;
+}
+
+window#waybar {
+	background-color: transparent;
+}
+
+window#waybar.empty {
+	background-color: transparent;
+}
+window#waybar.solo {
+	background-color: #fff;
+}
+
+button {
+	/* Use box-shadow instead of border so the text isn't offset */
+	box-shadow: inset 0 -3px transparent;
+	/* Avoid rounded borders under each button name */
+	border: none;
+	border-radius: 0;
+}
+
+#workspaces {
+	background-color: transparent;
+	margin-top: 5px;
+	margin-bottom: 0px;
+	margin-right: 2px;
+	margin-left: 5px;
+}
+#workspaces button {
+	/*box-shadow: rgba(0, 0, 0, 0.116) 2 2 5 2px;*/
+	background-color: #222;
+	border-radius: 10px;
+	margin-right: 4px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-right: 3px;
+	padding-left: 8px;
+	font-weight: bolder;
+	color: #047ccc;
+}
+/*
+#workspaces button:hover{
+    background-color: #f00;
+}
+*/
+#workspaces button.active {
+	/*padding-right: 5px; */
+	/*box-shadow: rgba(0, 0, 0, 0.288) 2 2 5 2px;*/
+	text-shadow: 0 0 5px rgba(0, 0, 0, 0.377);
+	/* padding-left: 5px;
+	padding-bottom: 3px; */
+	background: linear-gradient(to bottom, #047ccc, #00e7cd);
+	background-size: 300% 300%;
+	/*background-size: 300% 300%;*/
+	/*animation: gradient 5s ease infinite;*/
+	color: #fff;
+}
+
+#window {
+	margin-top: 5px;
+	margin-bottom: 0px;
+	margin-right: 10px;
+	margin-left: 0px;
+	/*box-shadow: rgba(0, 0, 0, 0.116) 2 2 5 2px;*/
+	background-color: #222;
+	border-radius: 10px;
+	margin-right: 5px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-right: 8px;
+	padding-left: 8px;
+	/*font-weight: bolder;*/
+	color: #fff;
+}
+
+#custom-cpu,
+#custom-temp,
+#custom-mic,
+#custom-ram,
+#custom-battery,
+#custom-time,
+#backlight,
+#memory,
+#network,
+#clock,
+#cpu,
+#custom-volume {
+	margin-top: 5px;
+	margin-bottom: 0px;
+	margin-right: 0px;
+	margin-left: 0px;
+	/*box-shadow: rgba(0, 0, 0, 0.116) 2 2 5 2px;*/
+	background-color: #222;
+	border-radius: 10px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-right: 8px;
+	padding-left: 8px;
+	/*font-weight: bolder;*/
+	color: #fff;
+}
+
+#custom-ibus {
+	margin-top: 5px;
+	margin-bottom: 0px;
+	margin-right: 5px;
+	margin-left: 0px;
+	/*box-shadow: rgba(0, 0, 0, 0.116) 2 2 5 2px;*/
+	background-color: #222;
+	border-radius: 10px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-right: 8px;
+	padding-left: 8px;
+	/*font-weight: bolder;*/
+	color: #fff;
+}
