@@ -22,7 +22,7 @@ table.insert(
 	}, {
 		text("#include <bits/stdc++.h>"),
 		text({ "", "", "using namespace std;" }),
-		text({ "", "", "int main() {", "    " }),
+		text({ "", "", "int main(int argc, char *argv[]) {", "    " }),
 		insert(1, ""),
 		text({ "", "}" }),
 	}, {

@@ -1,3 +1,59 @@
+local servers = {
+	"bashls",
+	--"ccls",
+	"clangd",
+	"cmake",
+	"cssls",
+	"emmet_ls",
+	"eslint",
+	"html",
+	"jsonls",
+	"tailwindcss",
+	"pyright",
+	--"sumneko_lua",
+	"vimls",
+}
+
+local config = {
+	clangd = {
+		cmd = { "clangd", "--background-index=0", "--suggest-missing-includes", "--clang-tidy=0" },
+	},
+	emmet_ls = {
+		cmd = { "emmet-ls", "--stdio" },
+		filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" },
+		init_options = {
+			html = {
+				options = {
+					["bem.enabled"] = true,
+				},
+			},
+		},
+	},
+	sumneko_lua = {
+		settings = { Lua = { diagnostics = { globals = { "vim" } } } },
+	},
+}
+
+local signs = {
+	Error = "x",
+	Warning = "!",
+	Warn = "!",
+	Hint = "",
+	Information = "i",
+	Info = "i",
+}
+
+vim.api.nvim_create_autocmd("CursorHold", {
+	callback = function()
+		vim.diagnostic.open_float(0, { scope = "cursor", focus = false })
+	end,
+})
+
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+	virtual_text = false,
+	update_in_insert = false,
+})
+
 local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 capabilities = {
 	--offsetEncoding = { "utf-16" },
@@ -14,26 +70,6 @@ capabilities = {
 		},
 	},
 }
-
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-	virtual_text = false,
-	update_in_insert = false,
-})
-
-local signs = {
-	Error = "x",
-	Warning = "!",
-	Warn = "!",
-	Hint = "",
-	Information = "i",
-	Info = "i",
-}
-
-for type, icon in pairs(signs) do
-	local hl = "LspDiagnosticsSign" .. type
-	local hl = "DiagnosticSign" .. type
-	vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
-end
 
 -- Mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
@@ -69,57 +105,19 @@ local on_attach = function(client, bufnr)
 	end, bufopts)
 end
 
-vim.api.nvim_create_autocmd("CursorHold", {
-	callback = function()
-		vim.diagnostic.open_float(0, { scope = "cursor", focus = false })
-	end,
-})
-
-local servers = {
-	"bashls",
-	--"ccls",
-	"cmake",
-	"cssls",
-	"emmet_ls",
-	"html",
-	"tailwindcss",
-	"pyright",
-	"vimls",
-}
+for type, icon in pairs(signs) do
+	local hl = "LspDiagnosticsSign" .. type
+	local hl = "DiagnosticSign" .. type
+	vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+end
 
 for _, lsp in pairs(servers) do
-	require("lspconfig")[lsp].setup({
+	if config[lsp] == nil then
+		config[lsp] = {}
+	end
+	table.insert(config[lsp], {
 		capabilities = capabilities,
 		on_attach = on_attach,
 	})
+	require("lspconfig")[lsp].setup(config[lsp])
 end
-
-require("lspconfig")["emmet_ls"].setup({
-	cmd = { "emmet-ls", "--stdio" },
-	capabilities = capabilities,
-	on_attach = on_attach,
-	filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" },
-	init_options = {
-		html = {
-			options = {
-				["bem.enabled"] = true,
-			},
-		},
-	},
-})
-
-require("lspconfig")["clangd"].setup({
-	cmd = { "clangd", "--background-index=0", "--suggest-missing-includes", "--clang-tidy=0" },
-	capabilities = {
-		capabilities,
-		--offsetEncoding = { "utf-16" },
-	},
-	on_attach = on_attach,
-})
---[[
-require("lspconfig")["sumneko_lua"].setup({
-	capabilities = capabilities,
-	settings = { Lua = { diagnostics = { globals = { "vim" } } } },
-	on_attach = on_attach,
-})
-]]

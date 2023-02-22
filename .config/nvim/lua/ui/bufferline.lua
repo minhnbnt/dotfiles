@@ -41,7 +41,7 @@ require("bufferline").setup({
 		},
 		separator_style = "slant",
 		show_buffer_close_icons = true,
-		show_buffer_icons = true,
+		show_buffer_icons = false,
 		show_close_icon = false,
 		highlights = {
 			fill = {

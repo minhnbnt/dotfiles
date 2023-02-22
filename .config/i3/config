@@ -277,8 +277,8 @@ exec alacritty
 exec ibus-daemon -drx
 #exec xcompmgr -c
 #exec picom --experimental-backend
-exec picom
-exec nvim
+#exec picom
+#exec nvim
 exec xdotool key Num_Lock
 #exec --no-startup-id sh ~/.config/polybar/launch.sh
 

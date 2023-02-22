@@ -6,7 +6,13 @@
 # for examples
 # If not running interactively, don't do anything
 
-echo ""
+echo ''
+#echo "To start i3 type:"
+#echo '$ termux-x11 :1 &'
+#echo '$ env DISPLAY=:1 i3'
+#echo ''
+
+export XDG_RUNTIME_DIR=${TMPDIR}
 
 #export GTK_IM_MODULE=ibus
 #export QT_IM_MODULE=ibus
@@ -29,6 +35,7 @@ cyan="\[$(tput setaf 14)\]"
 drk_cyan="\[$(tput setaf 6)\]"
 light_blue="\[$(tput setaf 80)\]"
 drk_gray="\[$(tput setaf 8)\]"
+light_gray="\[$(tput setaf 7)\]"
 white="\[$(tput setaf 15)\]"
 green="\[$(tput setaf 10)\]"
 bold="\[$(tput bold)\]"
@@ -72,7 +79,7 @@ export PS1
 
 [[ $- != *i* ]] && return
 
-alias ls='ls -a --color --group-directories-first'
+alias ls='ls -vA --color --group-directories-first'
 
 # Some of my custom command
 # Syntax for no output: alias [custom command]='f(){([command] "$@" > /dev/null 2>&1 &);  unset -f f; }; f'

@@ -5,6 +5,21 @@ local server_name = function()
 	if next(clients) == nil then
 		return msg
 	end
+	-- null-ls clients
+	--[[
+  local function null_ls_client_names()
+    local sources = require("null-ls").sources
+    local available = sources.get_available(buf_ft)
+    local registered ={}
+    for _, source in ipairs(available) do
+      for method in pairs(source.methods) do
+        registered[method] = registered[method] or {}
+        table.insert(registered[method], source.name)
+      end
+    end
+  end
+  ]]
+	-- return clients
 	for _, client in ipairs(clients) do
 		local filetypes = client.config.filetypes
 		if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
@@ -14,10 +29,8 @@ local server_name = function()
 	return msg
 end
 
-local Mode = {}
-
 -- stylua: ignore
-Mode.map = {
+local Mode = {
     ['n']     = '',
     ['niI']   = '',
     ['niR']   = '',
@@ -97,7 +110,7 @@ local config = {
 				color = { bg = "#373737" },
 				padding = 0,
 			},
-        },
+		},
 		lualine_z = {},
 		-- These will be filled later
 		lualine_c = {},
@@ -146,40 +159,17 @@ local conditions = {
 	buffer_not_empty = function()
 		return vim.fn.empty(vim.fn.expand("%:t")) ~= 1
 	end,
-	hide_in_width = function()
-		return vim.fn.winwidth(0) > 115
-	end,
-	hide_in_width0 = function()
-		return vim.fn.winwidth(0) > 100
-	end,
-	hide_in_width1 = function()
-		return vim.fn.winwidth(0) > 95
-	end,
-	hide_in_width2 = function()
-		return vim.fn.winwidth(0) > 88
-	end,
-	hide_in_width3 = function()
-		return vim.fn.winwidth(0) > 78
-	end,
-	hide_in_width4 = function()
-		return vim.fn.winwidth(0) > 75
-	end,
-	hide_in_width5 = function()
-		return vim.fn.winwidth(0) > 70
-	end,
-	hide_in_width6 = function()
-		return vim.fn.winwidth(0) > 67
-	end,
-	hide_in_width7 = function()
-		return vim.fn.winwidth(0) > 55
-	end,
-	hide_in_width8 = function()
-		return vim.fn.winwidth(0) > 40
-	end,
 	check_git_workspace = function()
 		local filepath = vim.fn.expand("%:p:h")
 		local gitdir = vim.fn.finddir(".git", filepath .. ";")
 		return gitdir and #gitdir > 0 and #gitdir < #filepath
+	end,
+	hide_in_width = function(index)
+		local widths = { 115, 100, 95, 88, 78, 75, 70, 67, 55, 40 }
+		local out = function()
+			return vim.fn.winwidth(0) > widths[index]
+		end
+		return out
 	end,
 }
 
@@ -204,7 +194,7 @@ ins_left({
 
 ins_left({
 	"fileformat",
-	cond = conditions.hide_in_width4,
+	cond = conditions.hide_in_width(6),
 })
 
 ins_left({
@@ -215,7 +205,7 @@ ins_left({
 		end
 	end,
 	color = { fg = "#62a544" },
-	cond = conditions.hide_in_width0,
+	cond = conditions.hide_in_width(1),
 	padding = { left = 1, right = 0 },
 })
 
@@ -228,7 +218,7 @@ ins_left({
 	"filetype",
 	icon = nil,
 	icons_enabled = false,
-	cond = conditions.hide_in_width0,
+	cond = conditions.hide_in_width(2),
 	padding = { left = 0, right = 1 },
 	fmt = function(str)
 		return (str:gsub("^%l", string.upper))
@@ -238,12 +228,12 @@ ins_left({
 ins_left({
 	"encoding", -- option component same as encoding in viml
 	fmt = string.upper,
-	cond = conditions.hide_in_width3,
+	cond = conditions.hide_in_width(5),
 })
 
 ins_left({
 	"filesize",
-	cond = conditions.hide_in_width5,
+	cond = conditions.hide_in_width(7),
 })
 --[[
 ins_left({
@@ -290,10 +280,10 @@ ins_left({
 			return ""
 		else
 			local mode_code = vim.api.nvim_get_mode().mode
-			if Mode.map[mode_code] == nil then
+			if Mode[mode_code] == nil then
 				return mode_code
 			end
-			return Mode.map[mode_code]
+			return Mode[mode_code]
 		end
 	end,
 	color = { gui = "bold" },
@@ -304,7 +294,7 @@ ins_right({
 	server_name,
 	icon = "",
 	color = { fg = "#72edcc" },
-	cond = conditions.hide_in_width2,
+	cond = conditions.hide_in_width(2),
 })
 
 ins_right({
@@ -314,7 +304,7 @@ ins_right({
 	--symbols = { error = " ", warn = " ", info = " ", hint = " " },
 	sections = { "error", "warn", "info" },
 	symbols = { error = " ", warn = " ", info = " " },
-	cond = conditions.hide_in_width7,
+	cond = conditions.hide_in_width(7),
 	colored = true,
 	update_in_insert = false,
 	always_visible = function()
@@ -330,21 +320,21 @@ ins_right({
 	"branch",
 	icons_enabled = true,
 	icon = "",
-	cond = conditions.hide_in_width1,
+	cond = conditions.hide_in_width(3),
 	color = { fg = "#eb6750" },
 })
 
 ins_right({
 	"diff",
 	colored = true,
-	symbols = { added = " ", modified = "柳", removed = " " },
+	symbols = { added = "+ ", modified = "~ ", removed = "- " },
 	source = nil,
-	cond = conditions.hide_in_width6,
+	cond = conditions.hide_in_width(8),
 })
 
 ins_right({
 	"searchcount",
-	cond = conditions.hide_in_width8,
+	cond = conditions.hide_in_width(10),
 })
 
 ins_right({

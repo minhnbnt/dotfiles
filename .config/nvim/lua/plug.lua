@@ -10,7 +10,7 @@ require("ui.devicons")
 --require("ui.dashboard")
 --require("ui.scrollbar")
 
-require("lsp.cmp")
+--require("lsp.cmp")
 --require("lsp.copilot")
 require("lsp.lspconfig")
 --require("lsp.mason")

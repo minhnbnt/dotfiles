@@ -26,16 +26,16 @@ zstyle ':vcs_info:git:*' formats '%F{6}─[%F{#f05033}%f %F{15}%b%F{6}]%f'
 
 # Git diff in prompt
 
-clear
+#clear
 
-plugdir="/usr/share/zsh/plugins"
+#plugdir="~/.zsh"
 
-source ${plugdir}/zsh-autosuggestions/zsh-autosuggestions.zsh
-source ${plugdir}/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source ${plugdir}/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
+source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
+source ~/.zsh/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 #source /usr/share/doc/pkgfile/command-not-found.zsh
 
-neofetch --stdout --config ~/.config/neofetch/configzsh.conf | sed '/^$/d'
+#neofetch --stdout --config ~/.config/neofetch/configzsh.conf | sed '/^$/d'
 echo ""
 
 #echo 'Remember your studies before typing anything.'

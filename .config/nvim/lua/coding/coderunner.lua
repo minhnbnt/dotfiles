@@ -8,7 +8,7 @@ require("code_runner").setup({
 	},
 	-- put here the commands by filetype
 	filetype = {
-		nasm = "nasm -f elf64 -o $fileNameWithoutExt.o $fileName && ld -o $fileNameWithoutExt $fileNameWithoutExt.o && ./$fileNameWithoutExt",
+		nasm = 'cd "$dir" && nasm -f elf64 -o $fileNameWithoutExt.o $fileName && ld -o $fileNameWithoutExt $fileNameWithoutExt.o && ./$fileNameWithoutExt',
 		cpp = 'cd "$dir" && clang++ $fileName -o $fileNameWithoutExt && ./$fileNameWithoutExt',
 		c = 'cd "$dir" && clang $fileName -o $fileNameWithoutExt && ./$fileNameWithoutExt',
 		java = 'cd "$dir" && javac $fileName && java $fileNameWithoutExt',
@@ -20,10 +20,11 @@ require("code_runner").setup({
 		lua = "lua",
 	},
 	project = {
-		--[[["~/Templates"] = {
+		["~/code"] = {
 			name = "For exam",
+			file_name = "main.c",
 			description = "Project with program use input file",
-			command = "deno run --allow-net",
-		},]]
+			command = "cd $dir && clang $fileName -o $fileNameWithoutExt && ./$fileNameWithoutExt < input.txt",
+		},
 	},
 })
