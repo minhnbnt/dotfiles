@@ -1,7 +1,7 @@
 local servers = {
 	"bashls",
-	--"ccls",
-	"clangd",
+	"ccls",
+	--"clangd",
 	"cmake",
 	"cssls",
 	"emmet_ls",

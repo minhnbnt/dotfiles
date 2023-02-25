@@ -15,7 +15,7 @@ local neovide = {
 local options = {
 	--clipboard = "unnamedplus",
 
-	showmode = true,
+	showmode = false,
 	number = true,
 	relativenumber = true,
 	--numberwidth = 5,
@@ -57,21 +57,20 @@ if vim.g.neovide then
 		vim.g[k] = v
 	end
 end
---[[
 vim.opt.cmdheight = 0
 --vim.api.nvim_set_hl(0, "MsgArea", { link = "lualine_c_normal" })
 
 vim.api.nvim_create_autocmd("CmdlineEnter", {
-    callback = function()
-        vim.opt.cmdheight = 1
-    end,
+	callback = function()
+		vim.opt.cmdheight = 1
+	end,
 })
 vim.api.nvim_create_autocmd("CmdlineLeave", {
-    callback = function()
-        vim.opt.cmdheight = 0
-    end,
+	callback = function()
+		vim.opt.cmdheight = 0
+	end,
 })
-]]
+
 vim.g.cursorhold_updatetime = 1000
 
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
