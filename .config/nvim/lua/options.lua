@@ -20,10 +20,10 @@ local options = {
 	relativenumber = true,
 	--numberwidth = 5,
 	autoindent = true,
-	tabstop = 2,
-	shiftwidth = 2,
+	tabstop = 4,
+	shiftwidth = 4,
 	smarttab = true,
-	softtabstop = 2,
+	softtabstop = 4,
 	expandtab = true,
 	mouse = "a",
 	title = true,
@@ -76,6 +76,15 @@ vim.g.cursorhold_updatetime = 1000
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 	pattern = { "*.htm", "*.html", "*.xhtml", "*.xml" },
 	command = "setlocal tabstop=2 shiftwidth=2 softtabstop=2",
+})
+vim.api.nvim_create_autocmd("VimResized", {
+	callback = function()
+		if vim.fn.winwidth(0) > 70 then
+			vim.cmd("se tabstop=2 shiftwidth=2 softtabstop=2")
+		else
+			vim.cmd("se tabstop=4 shiftwidth=4 softtabstop=4")
+		end
+	end,
 })
 
 -- Shorten function name

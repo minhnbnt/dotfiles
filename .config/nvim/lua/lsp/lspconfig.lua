@@ -18,6 +18,9 @@ local config = {
 	clangd = {
 		cmd = { "clangd", "--background-index=0", "--suggest-missing-includes", "--clang-tidy=0" },
 	},
+	sumneko_lua = {
+		settings = { Lua = { diagnostics = { globals = { "vim" } } } },
+	},
 	emmet_ls = {
 		cmd = { "emmet-ls", "--stdio" },
 		filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" },
@@ -28,9 +31,6 @@ local config = {
 				},
 			},
 		},
-	},
-	sumneko_lua = {
-		settings = { Lua = { diagnostics = { globals = { "vim" } } } },
 	},
 }
 

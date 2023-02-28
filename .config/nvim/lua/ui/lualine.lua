@@ -166,24 +166,22 @@ local conditions = {
 	end,
 	hide_in_width = function(index)
 		local widths = { 115, 100, 95, 88, 78, 75, 70, 67, 55, 40 }
-		local out = function()
+		return function()
 			return vim.fn.winwidth(0) > widths[index]
 		end
-		return out
 	end,
 }
 
---[[ins_left({
+ins_left({
 	function()
-		if vim.fn.winwidth(0) > 115 then
-			vim.opt.showmode = false
-			return ""
+		if vim.fn.winwidth(0) < 70 then
+			vim.cmd("se tabstop=2 shiftwidth=2 softtabstop=2")
 		else
-			vim.opt.showmode = true
-			return ""
+			vim.cmd("se tabstop=4 shiftwidth=4 softtabstop=4")
 		end
+		return ""
 	end,
-})]]
+})
 
 ins_left({
 	function()
