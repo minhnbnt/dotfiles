@@ -6,12 +6,6 @@
 # for examples
 # If not running interactively, don't do anything
 
-echo ''
-#echo "To start i3 type:"
-#echo '$ termux-x11 :1 &'
-#echo '$ env DISPLAY=:1 i3'
-#echo ''
-
 export XDG_RUNTIME_DIR=${TMPDIR}
 
 #export GTK_IM_MODULE=ibus
@@ -65,9 +59,9 @@ PS1="${etc_color}┌─[${cmd_num}\#";
 PS1+="${etc_color}]─";
 PS1+="${on_error}";
 PS1+="${etc_color}[";
-PS1+="${username_color}\u";        # \u=Username
+PS1+="${username_color}minhnbnt";        # \u=Username
 PS1+="${at_color}@";
-PS1+="${host_color}\h"             # \h=Host
+PS1+="${host_color}A03s"             # \h=Host
 PS1+="${etc_color}]─[";
 PS1+="${directory_color}\w";       # \w=Working directory
 PS1+="${etc_color}]\n"             # \n=New Line
