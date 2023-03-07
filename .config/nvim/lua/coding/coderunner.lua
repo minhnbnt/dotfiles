@@ -10,7 +10,7 @@ require("code_runner").setup({
 	filetype = {
 		nasm = 'cd "$dir" && nasm -f elf64 -o $fileNameWithoutExt.o $fileName && ld -o $fileNameWithoutExt $fileNameWithoutExt.o && ./$fileNameWithoutExt',
 		cpp = 'cd "$dir" && clang++ $fileName -o $fileNameWithoutExt && ./$fileNameWithoutExt',
-		c = 'cd "$dir" && clang $fileName -o $fileNameWithoutExt && ./$fileNameWithoutExt',
+		c = 'cd "$dir" && clang $fileName -lm -o $fileNameWithoutExt && ./$fileNameWithoutExt',
 		java = 'cd "$dir" && javac $fileName && java $fileNameWithoutExt',
 		rust = "cd $dir && rustc $fileName && ./$fileNameWithoutExt",
 		html = "cd $dir && live-server --open=$fileName",
