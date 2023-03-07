@@ -59,9 +59,15 @@ PS1="${etc_color}┌─[${cmd_num}\#";
 PS1+="${etc_color}]─";
 PS1+="${on_error}";
 PS1+="${etc_color}[";
-PS1+="${username_color}\u";        # \u=Username
-PS1+="${at_color}@";
-PS1+="${host_color}\h"             # \h=Host
+if [[ -f /data/data/com.termux/files/usr/bin/termux-info ]]; then
+	PS1+="${username_color}minhnbnt";
+	PS1+="${at_color}@";
+	PS1+="${host_color}A03s"
+else
+	PS1+="${username_color}\u";        # \u=Username
+	PS1+="${at_color}@";
+	PS1+="${host_color}\h"             # \h=Host
+fi
 PS1+="${etc_color}]─[";
 PS1+="${directory_color}\w";       # \w=Working directory
 PS1+="${etc_color}]\n"             # \n=New Line
