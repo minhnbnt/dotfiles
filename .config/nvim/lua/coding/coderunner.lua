@@ -19,6 +19,7 @@ require("code_runner").setup({
 		javascript = "node",
 		lua = "lua",
 	},
+	--[[
 	project = {
 		["~/code"] = {
 			name = "For exam",
@@ -27,4 +28,5 @@ require("code_runner").setup({
 			command = "cd $dir && clang $fileName -o $fileNameWithoutExt && ./$fileNameWithoutExt < input.txt",
 		},
 	},
+  ]]
 })
