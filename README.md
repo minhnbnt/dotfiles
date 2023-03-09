@@ -11,3 +11,9 @@ Open Neovim and enter folowing command.
 :PackerCompile
 :PackerSync
 ```
+## Zsh
+If you are using Arch Linux, you can run this command to install plugins.
+```bash
+yay -S zsh-autosuggestions zsh-syntax-highlighting zsh-autocomplete
+```
+Or you need to edit plugins path, install manually or disable it.
