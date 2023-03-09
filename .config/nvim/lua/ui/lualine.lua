@@ -171,10 +171,10 @@ local conditions = {
 		end
 	end,
 }
-
+-- :)))
 ins_left({
 	function()
-		if vim.fn.winwidth(0) < 70 then
+		if vim.fn.winwidth(0) < 115 then
 			vim.cmd("se tabstop=2 shiftwidth=2 softtabstop=2")
 		else
 			vim.cmd("se tabstop=4 shiftwidth=4 softtabstop=4")
@@ -233,7 +233,7 @@ ins_left({
 	"filesize",
 	cond = conditions.hide_in_width(7),
 })
---[[
+
 ins_left({
 	function()
 		if vim.fn.winwidth(0) > 115 or vim.api.nvim_get_mode().mode == "n" or vim.o.showmode then
@@ -245,7 +245,7 @@ ins_left({
 	color = { gui = "bold" },
 	padding = { left = 1, right = 0 },
 })
-]]
+
 ins_left({
 	function()
 		if vim.bo.modified then
@@ -269,6 +269,7 @@ ins_left({
 	function()
 		return "%="
 	end,
+	padding = 0,
 })
 
 ins_left({
@@ -284,7 +285,7 @@ ins_left({
 		end
 	end,
 	color = { gui = "bold" },
-	--cond = conditions.hide_in_width,
+	cond = conditions.hide_in_width(1),
 })
 --[[
 ins_left({
