@@ -53,9 +53,20 @@ float cpu_usage() {
 	return (float)(totald - idled) / totald * 100;
 }
 
-int main() {
-	float clock = cpu_clock();
+int main(int argc, char *argv[]) {
 	float usage = cpu_usage();
-	printf("<span>%s</span> %.2fGHz %.2f%%\n", power_profile(), clock, usage);
-	return 0;
+	if (argc == 2 && strcmp(argv[1], "-c") == 0) {
+		char *color[6] = {
+			"#00ffae", "#04ff00", "#eaff00", "#ff8400", "#ff0000", "#ff0000",
+		};
+		char index = usage / 100 * 6;
+		printf("<span>%s</span> %.2fGHz <span color=\"%s\">%.2f%%</span>\n",
+			   power_profile(), cpu_clock(), color[index], usage);
+		return 0;
+	} else if (argc == 1) {
+		printf("<span>%s</span> %.2fGHz %.2f%%\n", power_profile(), cpu_clock(),
+			   usage);
+		return 0;
+	} else
+		return 1;
 }
