@@ -53,20 +53,53 @@ float cpu_usage() {
 	return (float)(totald - idled) / totald * 100;
 }
 
+float cpu_temp(char *zone) {
+	char path[100];
+	sprintf(path, "/sys/class/thermal/%s/temp", zone);
+	FILE *fp = fopen(path, "r");
+	float temp;
+	fscanf(fp, "%f", &temp);
+	fclose(fp);
+	return temp / 1000;
+}
+
 int main(int argc, char *argv[]) {
 	float usage = cpu_usage();
-	if (argc == 2 && strcmp(argv[1], "-c") == 0) {
-		char *color[6] = {
-			"#00ffae", "#04ff00", "#eaff00", "#ff8400", "#ff0000", "#ff0000",
-		};
-		char index = usage / 100 * 6;
-		printf("<span>%s</span> %.2fGHz <span color=\"%s\">%.2f%%</span>\n",
-			   power_profile(), cpu_clock(), color[index], usage);
-		return 0;
-	} else if (argc == 1) {
+	if (argc == 1) {
 		printf("<span>%s</span> %.2fGHz %.2f%%\n", power_profile(), cpu_clock(),
 			   usage);
 		return 0;
-	} else
-		return 1;
+	} else {
+		int argpos = 0, colored = 0;
+		for (int i = 1; i < argc; i++)
+			if (strcmp(argv[i], "-C") == 0)
+				colored = 1;
+		while (++argpos < argc) {
+			if (strcmp(argv[argpos], "-C") == 0)
+				continue;
+			else if (strcmp(argv[argpos], "-t") == 0) {
+				char *zone = argv[++argpos];
+				printf("%.0f°C", cpu_temp(zone));
+			} else if (strcmp(argv[argpos], "-p") == 0)
+				printf("<span>%s</span>", power_profile());
+			else if (strcmp(argv[argpos], "-c") == 0)
+				printf("%.2fGHz", cpu_clock());
+			else if (strcmp(argv[argpos], "-u") == 0) {
+				if (colored) {
+					char *color[6] = {
+						"#00ffae", "#04ff00", "#eaff00",
+						"#ff8400", "#ff0000", "#ff0000",
+					};
+					char index = usage / 100 * 6;
+					printf("<span color='%s'>%.2f%%</span>", color[index],
+						   usage);
+				} else
+					printf("%.2f%%", usage);
+			};
+			if (argpos + 1 < argc)
+				printf(" ");
+		};
+		printf("\n");
+		return 0;
+	}
 }
