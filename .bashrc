@@ -47,7 +47,7 @@ directory_color=$reset$pink
 ## Color for other characters (like the arrow)
 etc_color=$reset$drk_cyan
 # If last operation did not succeded, add [exit code]- to the prompt
-on_error='$(code=${?##0};echo ${code:+$(tput setaf 6)[$(tput bold)$(tput setaf 9)${code}$(tput bold)$(tput setaf 6)]})'
+on_error='$(code=${?##0};echo ${code:+$(tput setaf 6)[$(tput bold)$(tput setaf 9)${code}$(tput sgr0)$(tput setaf 6)]})'
 # The last symbol in prompt ($, for root user: #)
 symbol="${reset}${bold}${cyan}$(if [[ ${EUID} == 0 ]]; then echo '#'; else echo '$'; fi)"
 # Color of command number
