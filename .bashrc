@@ -47,7 +47,7 @@ directory_color=$reset$pink
 ## Color for other characters (like the arrow)
 etc_color=$reset$drk_cyan
 # If last operation did not succeded, add [✗]- to the prompt
-on_error="\$([[ \$? != 0 ]] && echo \"${etc_color}[${bright_red}${bold}X${etc_color}]─\")"
+on_error='$(code=${?##0};echo ${code:+[$(tput setaf 9)$(tput bold)${code}$(tput sgr0)$(tput setaf 6)]})'
 # The last symbol in prompt ($, for root user: #)
 symbol="${reset}${bold}${cyan}$(if [[ ${EUID} == 0 ]]; then echo '#'; else echo '$'; fi)"
 # Color of command number
@@ -56,9 +56,9 @@ cmd_num="${white}${bold}"
 
 # Setup the prompt/prefix for linux terminal
 PS1="${etc_color}┌─[${cmd_num}\#";
-PS1+="${etc_color}]─";
+PS1+="${etc_color}]";
 PS1+="${on_error}";
-PS1+="${etc_color}[";
+PS1+="${etc_color}─[";
 if [[ -f /data/data/com.termux/files/usr/bin/termux-info ]]; then
 	PS1+="${username_color}minhnbnt";
 	PS1+="${at_color}@";

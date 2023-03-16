@@ -21,8 +21,16 @@ if [[ "$TERM" == (Eterm*|alacritty*|aterm*|gnome*|konsole*|kterm*|putty*|rxvt*|s
 	add-zsh-hook -Uz preexec xterm_title_preexec
 fi
 
-precmd() { vcs_info }
-zstyle ':vcs_info:git:*' formats '%F{6}─[%F{#f05033}%f %F{15}%b%F{6}]%f'
+precmd() {
+    vcs_info
+}
+
+zstyle ':vcs_info:git:*' formats '%F{6}[%F{#f05033}%f %F{15}%b%F{6}]%f'
+zstyle ':vcs_info:*' formats " %F{cyan}%c%u(%b)%f"
+zstyle ':vcs_info:*' actionformats " %F{cyan}%c%u(%b)%f %a"
+zstyle ':vcs_info:*' stagedstr "%F{green}"
+zstyle ':vcs_info:*' unstagedstr "%F{red}"
+zstyle ':vcs_info:*' check-for-changes true
 
 # Git diff in prompt
 
@@ -53,7 +61,9 @@ export GLFW_IM_MODULE=ibus
 
 setopt PROMPT_SUBST
 [[ $cmdcount -ge 1 ]] || cmdcount=1
-preexec() { ((cmdcount++)) }
+preexec() {
+    ((cmdcount++))
+}
 
 ZSH_HIGHLIGHT_STYLES[precommand]=fg=11,underline
 ZSH_HIGHLIGHT_STYLES[function]=fg=14
@@ -87,10 +97,10 @@ setopt HIST_VERIFY               # Don't execute immediately upon history expans
 setopt HIST_BEEP                 # Beep when accessing nonexistent history.
 
 if [[ $(whoami) == "root" ]]; then
-	PS1='%F{6}┌─%f%F{6}[%f%B%F{15}$cmdcount%f%b%F{6}]─%(?,,%F{6}[%f%B%F{9}X%f%b%F{6}]─)%f%F{6}[%f%B%F{11}%n%f%b%B%F{8}@%f%b%B%F{12}%m%f%b%F{6}]─[%f%F{13}%~%f%F{6}]%f'$'\n''%F{6}└╼%f%b %f%B%F{14}$%f%b '
+	PS1='%F{6}┌─%f%F{6}[%f%B%F{15}$cmdcount%f%b%F{6}]%(?,,%F{6}[%f%B%F{9}%?%f%b%F{6}])─%f%F{6}[%f%B%F{11}%n%f%b%B%F{8}@%f%b%B%F{12}%m%f%b%F{6}]─[%f%F{13}%~%f%F{6}]%f'$'\n''%F{6}└╼%f%b %f%B%F{14}$%f%b '
 else
     #RPROMPT='${vcs_info_msg_0_}'
-	PS1='%F{6}┌─%f%F{6}[%f%B%F{15}$cmdcount%f%b%F{6}]─%(?,,%F{6}[%f%B%F{9}X%f%b%F{6}]─)%f%F{6}[%f%B%F{10}%n%f%b%B%F{8}@%f%b%B%F{12}%m%f%b%F{6}]─[%f%F{13}%~%f%F{6}]${vcs_info_msg_0_}%f'$'\n''%F{6}└╼%f%b %f%B%F{14}$%f%b '
+	PS1='%F{6}┌─%f%F{6}[%f%B%F{15}$cmdcount%f%b%F{6}]%(?,,%F{6}[%f%B%F{9}%?%f%b%F{6}])─%f%F{6}[%f%B%F{10}%n%f%b%B%F{8}@%f%b%B%F{12}%m%f%b%F{6}]─[%f%F{13}%~%f%F{6}]${vcs_info_msg_0_}%f'$'\n''%F{6}└╼%f%b %f%B%F{14}$%f%b '
 fi
 
 #alias ls='ls -la --color --group-directories-first'
