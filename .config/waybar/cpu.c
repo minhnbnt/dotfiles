@@ -5,7 +5,7 @@
 char *power_profile() {
 	// take output of command
 	FILE *fp = popen("powerprofilesctl get ", "r");
-	char buf[100];
+	char buf[12];
 	fgets(buf, 100, fp);
 	if (!strncmp(buf, "balanced", 8))
 		return "&#xf24e;";
