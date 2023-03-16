@@ -20,20 +20,20 @@ export XDG_RUNTIME_DIR=${TMPDIR}
 
 # Define some basic colors using tput (8-bit color: 256 colors)
 
-yellow="\[$(tput setaf 11)\]"
-bright_red="\[$(tput setaf 9)\]"
-pink="\[$(tput setaf 13)\]"
-orange="\[$(tput setaf 172)\]"
-blue="\[$(tput setaf 12)\]"
-cyan="\[$(tput setaf 14)\]"
-drk_cyan="\[$(tput setaf 6)\]"
-light_blue="\[$(tput setaf 80)\]"
-drk_gray="\[$(tput setaf 8)\]"
-light_gray="\[$(tput setaf 7)\]"
-white="\[$(tput setaf 15)\]"
-green="\[$(tput setaf 10)\]"
-bold="\[$(tput bold)\]"
-reset="\[$(tput sgr0)\]"
+yellow="$(tput setaf 11)"
+bright_red="$(tput setaf 9)"
+pink="$(tput setaf 13)"
+orange="$(tput setaf 172)"
+blue="$(tput setaf 12)"
+cyan="$(tput setaf 14)"
+drk_cyan="$(tput setaf 6)"
+light_blue="$(tput setaf 80)"
+drk_gray="$(tput setaf 8)"
+light_gray="$(tput setaf 7)"
+white="$(tput setaf 15)"
+green="$(tput setaf 10)"
+bold="$(tput bold)"
+reset="$(tput sgr0)"
 
 # Define basic colors to be used in prompt
 ## The color for username (light_blue, for root user: bright_red)
@@ -46,8 +46,8 @@ host_color=$reset$bold$blue
 directory_color=$reset$pink
 ## Color for other characters (like the arrow)
 etc_color=$reset$drk_cyan
-# If last operation did not succeded, add [✗]- to the prompt
-on_error='$(code=${?##0};echo ${code:+[$(tput setaf 9)$(tput bold)${code}$(tput sgr0)$(tput setaf 6)]})'
+# If last operation did not succeded, add [exit code]- to the prompt
+on_error='$(code=${?##0};echo ${code:+${drk_cyan}[${bold}${bright_red}${code}${reset}${drk_cyan}]})'
 # The last symbol in prompt ($, for root user: #)
 symbol="${reset}${bold}${cyan}$(if [[ ${EUID} == 0 ]]; then echo '#'; else echo '$'; fi)"
 # Color of command number
