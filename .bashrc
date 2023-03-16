@@ -72,7 +72,7 @@ PS1+="${etc_color}]─[";
 PS1+="${directory_color}\w";       # \w=Working directory
 PS1+="${etc_color}]\n"             # \n=New Line
 PS1+="${etc_color}└╼";
-PS1+="${reset} ${symbol}${reset} ";
+PS1+="\[${reset} ${symbol}${reset} \]";
 
 export PS1
 #PS0="\n"
