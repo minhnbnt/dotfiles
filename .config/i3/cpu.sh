@@ -70,7 +70,7 @@ do
 
 	CPU_Percentage=$(awk "BEGIN {print ($totald - $idled)/$totald*100}" | xargs printf "%.*f\n" 1)
 	if [[ "$cpu" == "cpu" ]]; then
-		usage=$CPU_Percentage
+		usage=$CPU_Percentage%
 	fi
 done
 
@@ -125,4 +125,4 @@ do
 done
 
 ferq=$(awk "BEGIN {print $F / $t /1000}" | xargs printf "%.*f\n" 2)
-echo "${icon} ${ferq}GHz ${usage}%"
+echo "${icon} ${ferq}GHz ${usage}"

@@ -1,20 +1,17 @@
 local c = require("vscode.colors")
+
 require("vscode").setup({
 	-- Enable transparent background
 	transparent = true,
-
 	-- Enable italic comment
 	italic_comments = false,
-
 	-- Disable nvim-tree background color
 	disable_nvimtree_bg = true,
-
 	-- Override colors (see ./lua/vscode/colors.lua)
 	color_overrides = {
 		--vscLineNumber = c.vscLightGreen,
 		--vscBack = "NONE",
 	},
-
 	-- Override highlight groups (see ./lua/vscode/theme.lua)
 	group_overrides = {
 		-- this supports the same val table as vim.api.nvim_set_hl
@@ -22,6 +19,8 @@ require("vscode").setup({
 		Cursor = { fg = c.vscDarkBlue, bg = c.vscLightGreen, bold = true },
 	},
 })
+
+require("vscode").load("dark")
 
 vim.cmd([[
     hi CursorLine term=bold cterm=bold guibg=#131313

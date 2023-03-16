@@ -10,7 +10,7 @@ local servers = {
 	"jsonls",
 	"tailwindcss",
 	"pyright",
-	--"sumneko_lua",
+	"lua_ls",
 	"vimls",
 }
 
@@ -18,7 +18,7 @@ local config = {
 	clangd = {
 		cmd = { "clangd", "--background-index=0", "--suggest-missing-includes", "--clang-tidy=0" },
 	},
-	sumneko_lua = {
+	lua_ls = {
 		settings = { Lua = { diagnostics = { globals = { "vim" } } } },
 	},
 	emmet_ls = {
