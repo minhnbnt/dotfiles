@@ -26,7 +26,8 @@ pink="$(tput setaf 13)"
 orange="$(tput setaf 172)"
 blue="$(tput setaf 12)"
 cyan="$(tput setaf 14)"
-drk_cyan="\[$(tput setaf 6)\]"
+drk_cyan="$(tput setaf 6)"
+drk_cyan_line="\[$(tput setaf 6)\]"
 light_blue="$(tput setaf 80)"
 drk_gray="$(tput setaf 8)"
 light_gray="$(tput setaf 7)"
@@ -45,7 +46,7 @@ host_color=$reset$bold$blue
 ## Color of current working directory (light_purple)
 directory_color=$reset$pink
 ## Color for other characters (like the arrow)
-etc_color=$reset$drk_cyan
+etc_color=$reset$drk_cyan_line
 # If last operation did not succeded, add [exit code]- to the prompt
 on_error='$(code=${?##0};echo ${code:+${drk_cyan}[${bold}${bright_red}${code}${reset}${drk_cyan}]})'
 # The last symbol in prompt ($, for root user: #)
