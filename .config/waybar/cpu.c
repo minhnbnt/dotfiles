@@ -2,8 +2,8 @@
 #include <string.h>
 #include <unistd.h>
 
-char *power_profile() {
-	FILE *fp = popen("powerprofilesctl get ", "r");
+char *power_profile(char *command) {
+	FILE *fp = popen(command, "r");
 	char buf[12];
 	fgets(buf, 100, fp);
 	if (!strncmp(buf, "balanced", 8))
@@ -16,8 +16,8 @@ char *power_profile() {
 		return "error";
 }
 
-float cpu_clock() {
-	FILE *fp = fopen("/proc/cpuinfo", "r");
+float cpu_clock(char *path) {
+	FILE *fp = fopen(path, "r");
 	char buf[100], core = 0;
 	float cpu_clock, sum = 0;
 	while (fgets(buf, 100, fp))
@@ -29,18 +29,17 @@ float cpu_clock() {
 	return sum / core / 1000;
 }
 
-float cpu_usage() {
+float cpu_usage(char *path) {
 	long long a[10];
-	FILE *fp = fopen("/proc/stat", "r");
+	FILE *fp = fopen(path, "r");
 	fscanf(fp, "%*s %lld %lld %lld %lld %lld %lld %lld %lld %lld %lld", &a[0],
-		   &a[1], &a[2], &a[3], &a[4], &a[5], &a[6], &a[7], &a[8], &a[9]);
+	       &a[1], &a[2], &a[3], &a[4], &a[5], &a[6], &a[7], &a[8], &a[9]);
 	long long int previdle = a[3] + a[4], pretotal = 0;
 	for (int i = 0; i < 10; i++)
 		pretotal += a[i];
-	sleep(1);
-	fp = fopen("/proc/stat", "r");
+	sleep(1), fp = fopen(path, "r");
 	fscanf(fp, "%*s %lld %lld %lld %lld %lld %lld %lld %lld %lld %lld", &a[0],
-		   &a[1], &a[2], &a[3], &a[4], &a[5], &a[6], &a[7], &a[8], &a[9]);
+	       &a[1], &a[2], &a[3], &a[4], &a[5], &a[6], &a[7], &a[8], &a[9]);
 	fclose(fp);
 	long long idle = a[3] + a[4], total = 0;
 	for (int i = 0; i < 10; i++)
@@ -60,10 +59,12 @@ float cpu_temp(char *zone) {
 }
 
 int main(int argc, char *argv[]) {
-	float usage = cpu_usage();
+	char *stat = "/proc/stat", *cpuinfo = "/proc/cpuinfo",
+		 *current_profile = "powerprofilesctl get ";
 	if (argc == 1) {
-		printf("<span>%s</span> %.2fGHz %.2f%%\n", power_profile(), cpu_clock(),
-			   usage);
+		printf("<span>%s</span> %.2fGHz %.2f%%\n",
+		       power_profile(current_profile), cpu_clock(cpuinfo),
+		       cpu_usage(stat));
 		return 0;
 	} else {
 		int argpos = 0, colored = 0;
@@ -77,10 +78,11 @@ int main(int argc, char *argv[]) {
 				char *zone = argv[++argpos];
 				printf("%.0f°C", cpu_temp(zone));
 			} else if (strcmp(argv[argpos], "-p") == 0)
-				printf("<span>%s</span>", power_profile());
+				printf("<span>%s</span>", power_profile(current_profile));
 			else if (strcmp(argv[argpos], "-c") == 0)
-				printf("%.2fGHz", cpu_clock());
+				printf("%.2fGHz", cpu_clock(cpuinfo));
 			else if (strcmp(argv[argpos], "-u") == 0) {
+				float usage = cpu_usage(stat);
 				if (colored) {
 					char *color[6] = {
 						"#00ffae", "#04ff00", "#eaff00",
@@ -88,7 +90,7 @@ int main(int argc, char *argv[]) {
 					};
 					char index = usage / 100 * 6;
 					printf("<span color='%s'>%.2f%%</span>", color[index],
-						   usage);
+					       usage);
 				} else
 					printf("%.2f%%", usage);
 			};
