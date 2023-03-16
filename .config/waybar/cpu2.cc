@@ -31,11 +31,11 @@ float cpu_usage() {
 		cpuinfo >> a[i], total += a[i];
 	idle = a[3] + a[4];
 	cpuinfo.close();
-	long long totald = total - prevtotal, idled = idle - previdle;
-	return (totald - idled) * 100.0 / totald;
+	total -= prevtotal, idle -= previdle;
+	return (total - idle) * 100.0 / total;
 }
 
 int main() {
-	std::cout << cpu_clock() << cpu_usage() << std::endl;
+	std::cout << cpu_clock() << " " << cpu_usage() << std::endl;
 	return 0;
 }
