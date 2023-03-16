@@ -26,7 +26,7 @@ pink="$(tput setaf 13)"
 orange="$(tput setaf 172)"
 blue="$(tput setaf 12)"
 cyan="$(tput setaf 14)"
-drk_cyan="$(tput setaf 6)"
+drk_cyan="\[$(tput setaf 6)\]"
 light_blue="$(tput setaf 80)"
 drk_gray="$(tput setaf 8)"
 light_gray="$(tput setaf 7)"
@@ -72,7 +72,7 @@ PS1+="${etc_color}]─[";
 PS1+="${directory_color}\w";       # \w=Working directory
 PS1+="${etc_color}]\n"             # \n=New Line
 PS1+="${etc_color}└╼";
-PS1+="\[${reset} ${symbol}${reset} \]";
+PS1+="${reset} ${symbol}${reset} ";
 
 export PS1
 #PS0="\n"
