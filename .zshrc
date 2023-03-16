@@ -41,14 +41,14 @@ echo ""
 #echo 'Remember your studies before typing anything.'
 #echo "Good luck :D \n"
 
-#export GTK_IM_MODULE=ibus
-#export QT_IM_MODULE=ibus
-#export XMODIFIERS=@im=ibus
+export GTK_IM_MODULE=ibus
+export QT_IM_MODULE=ibus
+export XMODIFIERS=@im=ibus
 # Dành cho những phần mềm dựa trên qt4
-#export QT4_IM_MODULE=ibus
+export QT4_IM_MODULE=ibus
 # Dành cho những phần mềm dùng thư viện đồ họa clutter/OpenGL
-#export CLUTTER_IM_MODULE=ibus
-#export GLFW_IM_MODULE=ibus
+export CLUTTER_IM_MODULE=ibus
+export GLFW_IM_MODULE=ibus
 #ibus-daemon -drx
 
 setopt PROMPT_SUBST
@@ -61,6 +61,10 @@ ZSH_HIGHLIGHT_STYLES[alias]=fg=13
 ZSH_HIGHLIGHT_STYLES[command]=fg=14
 ZSH_HIGHLIGHT_STYLES[single-hyphen-option]=fg=3
 ZSH_HIGHLIGHT_STYLES[double-hyphen-option]=fg=3
+
+__git_files () {
+    _wanted files expl 'local files' _files
+}
 
 #Better history
 
