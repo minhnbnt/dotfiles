@@ -9,7 +9,7 @@ char *power_profile(char *command) {
 	if (!strncmp(buf, "balanced", 8)) return "&#xf24e;";          // 
 	else if (!strncmp(buf, "performance", 11)) return "&#xf0e4;"; // 
 	else if (!strncmp(buf, "power-save", 10)) return "&#xf06c;";  // 
-	else return "error";
+	else return "&#xf2db;";                                       // 
 }
 
 float cpu_clock(char *path) {

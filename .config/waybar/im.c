@@ -5,17 +5,17 @@
 int main(int argc, char *argv[]) {
 	FILE *fp = popen("ibus engine", "r");
 	char engine[30], buf[30], layout[5];
-	if (fp == NULL) printf("Error opening pipe!");
+	if (fp == NULL) printf("Error opening pipe!"), exit(1);
 	else fscanf(fp, "%s", engine);
 	fp = popen("setxkbmap -query", "r");
-	if (fp == NULL) printf("Error opening pipe!");
+	if (fp == NULL) printf("Error opening pipe!"), exit(1);
 	else
 		while (fgets(buf, 30, fp) != NULL)
 			if (strstr(buf, "layout") != NULL)
 				sscanf(buf, "layout: %s", layout);
 	fclose(fp);
 	if (argc < 2) {
-		if (strcmp(engine, "BambooUs") == 0) {
+		if (!strcmp(engine, "BambooUs")) {
 			printf("<span>EN</span>");
 		} else if (!strcmp(engine, "Bamboo"))
 			printf("<span color=\"#f44747\">VI</span>");
@@ -26,8 +26,7 @@ int main(int argc, char *argv[]) {
 		} else if (!strcmp(layout, "jp")) {
 			printf("<span>JP</span>");
 		} else printf("%s", layout);
-		printf("\n");
-		return 0;
+		printf("\n"), exit(0);
 	} else if (argc == 2) {
 		if (argv[1][0] == 'e') {
 			if (!strcmp(engine, "BambooUs")) system("ibus engine Bamboo");
@@ -35,7 +34,7 @@ int main(int argc, char *argv[]) {
 		} else if (argv[1][0] == 'l') {
 			if (!strcmp(layout, "us")) system("setxkbmap jp OADG109A");
 			else if (!strcmp(layout, "jp")) system("setxkbmap us");
-		}
+		};
+		exit(0);
 	} else return 1;
-	return 0;
 }

@@ -6,8 +6,7 @@ int main(int argc, char *argv[]) {
 	if (argc < 2) {
 		FILE *cmd = popen("pamixer --get-mute", "r");
 		if (cmd == NULL) {
-			printf("Error opening pipe!"), fclose(cmd);
-			return 1;
+			printf("Error opening pipe!"), fclose(cmd), exit(1);
 		} else {
 			char mute_status;
 			fgets(&mute_status, 2, cmd);
@@ -20,7 +19,7 @@ int main(int argc, char *argv[]) {
 				else if (vol < 33) printf("");
 				else if (vol < 66) printf("");
 				else printf("");
-				printf(" %d%%\n", vol);
+				printf(" %d%%\n", vol), exit(0);
 			}
 		}
 	} else if (argc == 2) {
