@@ -5,15 +5,11 @@
 char *power_profile(char *command) {
 	FILE *fp = popen(command, "r");
 	char buf[12];
-	fgets(buf, 100, fp);
-	if (!strncmp(buf, "balanced", 8))
-		return "&#xf24e;"; // 
-	else if (strncmp(buf, "performance", 11) == 0)
-		return "&#xf0e4;"; // 
-	else if (strncmp(buf, "power-save", 10) == 0)
-		return "&#xf06c;"; // 
-	else
-		return "error";
+	fgets(buf, 100, fp), pclose(fp);
+	if (!strncmp(buf, "balanced", 8)) return "&#xf24e;";          // 
+	else if (!strncmp(buf, "performance", 11)) return "&#xf0e4;"; // 
+	else if (!strncmp(buf, "power-save", 10)) return "&#xf06c;";  // 
+	else return "error";
 }
 
 float cpu_clock(char *path) {
@@ -53,8 +49,7 @@ float cpu_temp(char *zone) {
 	sprintf(path, "/sys/class/thermal/%s/temp", zone);
 	FILE *fp = fopen(path, "r");
 	float temp;
-	fscanf(fp, "%f", &temp);
-	fclose(fp);
+	fscanf(fp, "%f", &temp), fclose(fp);
 	return temp / 1000;
 }
 
@@ -69,15 +64,15 @@ int main(int argc, char *argv[]) {
 	} else {
 		int argpos = 0, colored = 0;
 		for (int i = 1; i < argc; i++)
-			if (strcmp(argv[i], "-C") == 0)
+			if (strcmp(argv[i], "-C") == 0) {
 				colored = 1;
+				break;
+			};
 		while (++argpos < argc) {
-			if (strcmp(argv[argpos], "-C") == 0)
-				continue;
-			else if (strcmp(argv[argpos], "-t") == 0) {
-				char *zone = argv[++argpos];
-				printf("%.0f°C", cpu_temp(zone));
-			} else if (strcmp(argv[argpos], "-p") == 0)
+			if (strcmp(argv[argpos], "-C") == 0) continue;
+			else if (strcmp(argv[argpos], "-t") == 0)
+				printf("%.0f°C", cpu_temp(argv[++argpos]));
+			else if (strcmp(argv[argpos], "-p") == 0)
 				printf("<span>%s</span>", power_profile(current_profile));
 			else if (strcmp(argv[argpos], "-c") == 0)
 				printf("%.2fGHz", cpu_clock(cpuinfo));
@@ -91,13 +86,11 @@ int main(int argc, char *argv[]) {
 					char index = usage / 100 * 6;
 					printf("<span color='%s'>%.2f%%</span>", color[index],
 					       usage);
-				} else
-					printf("%.2f%%", usage);
+				} else printf("%.2f%%", usage);
 			};
-			if (argpos + 1 < argc)
-				printf(" ");
+			if (argpos + 1 < argc) printf(" ");
 		};
 		printf("\n");
 		return 0;
-	}
+	};
 }
