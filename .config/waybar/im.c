@@ -34,7 +34,15 @@ int main(int argc, char *argv[]) {
 		} else if (argv[1][0] == 'l') {
 			if (!strcmp(layout, "us")) system("setxkbmap jp OADG109A");
 			else if (!strcmp(layout, "jp")) system("setxkbmap us");
-		};
+		} else if (!strcmp(argv[1], "nocolor")) {
+			if (!strcmp(engine, "BambooUs")) printf("EN");
+			else if (!strcmp(engine, "Bamboo")) printf("VI");
+			else printf("%s", engine);
+			printf(" ");
+			if (!strcmp(layout, "us")) printf("US");
+			else if (!strcmp(layout, "jp")) printf("JP");
+			else printf("%s", layout);
+		}
 		exit(0);
 	} else return 1;
 }
