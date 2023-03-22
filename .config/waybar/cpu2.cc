@@ -3,8 +3,8 @@
 #include <string>
 #include <unistd.h>
 
-float cpu_clock() {
-	std::ifstream cpuinfo("/proc/cpuinfo");
+float cpu_clock(std::string path) {
+	std::ifstream cpuinfo(path);
 	std::string line;
 	float clock = 0;
 	int cores = 0;
@@ -17,9 +17,9 @@ float cpu_clock() {
 	return clock / cores / 1000;
 }
 
-float cpu_usage() {
+float cpu_usage(std::string path) {
 	long long a[10], prevtotal = 0, previdle;
-	std::ifstream cpuinfo("/proc/stat");
+	std::ifstream cpuinfo(path);
 	cpuinfo.ignore(256, ' ');
 	for (int i = 0; i < 10; i++)
 		cpuinfo >> a[i], prevtotal += a[i];
@@ -29,13 +29,16 @@ float cpu_usage() {
 	long long total = 0, idle;
 	for (int i = 0; i < 10; i++)
 		cpuinfo >> a[i], total += a[i];
-	idle = a[3] + a[4];
-	cpuinfo.close();
+	idle = a[3] + a[4], cpuinfo.close();
 	total -= prevtotal, idle -= previdle;
 	return (total - idle) * 100.0 / total;
 }
 
 int main() {
-	std::cout << cpu_clock() << " " << cpu_usage() << std::endl;
+	std::string stat = "/proc/stat", cpuinfo = "/proc/cpuinfo",
+				command = "powerprofilesctl get ";
+	std::cout.precision(3);
+	std::cout << cpu_clock(cpuinfo) << "GHz " << cpu_usage(stat) << "%"
+			  << std::endl;
 	return 0;
 }

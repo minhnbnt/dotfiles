@@ -31,15 +31,13 @@ float cpu_usage(char *path) {
 	fscanf(fp, "%*s %lld %lld %lld %lld %lld %lld %lld %lld %lld %lld", &a[0],
 	       &a[1], &a[2], &a[3], &a[4], &a[5], &a[6], &a[7], &a[8], &a[9]);
 	long long int previdle = a[3] + a[4], pretotal = 0;
-	for (int i = 0; i < 10; i++)
-		pretotal += a[i];
+	for (int i = 0; i < 10; i++) pretotal += a[i];
 	sleep(1), fp = fopen(path, "r");
 	fscanf(fp, "%*s %lld %lld %lld %lld %lld %lld %lld %lld %lld %lld", &a[0],
 	       &a[1], &a[2], &a[3], &a[4], &a[5], &a[6], &a[7], &a[8], &a[9]);
 	fclose(fp);
 	long long idle = a[3] + a[4], total = 0;
-	for (int i = 0; i < 10; i++)
-		total += a[i];
+	for (int i = 0; i < 10; i++) total += a[i];
 	total -= pretotal, idle -= previdle;
 	return (total - idle) * 100.0 / total;
 }
