@@ -5,13 +5,22 @@
 #define ull unsigned long long
 
 char *power_profile(char *path) {
-	FILE *fp = popen(path, "r");
 	char buf[12];
+	FILE *fp = popen(path, "r");
 	fgets(buf, 12, fp), pclose(fp);
 	if (strncmp(buf, "balanced", 8) == 0) return "&#xf24e;";          // 
 	else if (strncmp(buf, "performance", 11) == 0) return "&#xf0e4;"; // 
 	else if (strncmp(buf, "power-save", 10) == 0) return "&#xf06c;";  // 
 	else return "&#xf2db;";                                           // 
+}
+
+float cpu_temp(char *zone) {
+	char path[100];
+	sprintf(path, "/sys/class/thermal/%s/temp", zone);
+	FILE *fp = fopen(path, "r");
+	float temp;
+	fscanf(fp, "%f", &temp), fclose(fp);
+	return temp / 1000;
 }
 
 float cpu_clock(char *path) {
@@ -41,20 +50,23 @@ float cpu_usage(FILE *fp, ull *a, ull *prev_idle, ull *prev_total,
 
 int main() {
 	char *stat = "/proc/stat", *cpuinfo = "/proc/cpuinfo",
-		 *current_profile = "powerprofilesctl get ";
-	printf("<span>%s</span> %.2fGHz\n", power_profile(current_profile),
-	       cpu_clock(cpuinfo));
-	int delay = 10;
+		 *current_profile = "powerprofilesctl get ", *zone = "thermal_zone1";
+	printf("{\"text\": \"nan\", \"alt\": \"<span>%s</span> %.2fGHz %.3g°C\"}\n",
+	       power_profile(current_profile), cpu_clock(cpuinfo), cpu_temp(zone));
 	ull a[10];
+	int delay = 3;
 	FILE *fp = fopen(stat, "r");
 	fscanf(fp, "%*s %llu %llu %llu %llu %llu %llu %llu %llu %llu %llu", &a[0],
 	       &a[1], &a[2], &a[3], &a[4], &a[5], &a[6], &a[7], &a[8], &a[9]);
 	ull idle = a[3] + a[4], total = 0;
-	for (char i = 0; i < 10; i++) total += a[i];
+	for (int i = 0; i < 10; i++) total += a[i];
 	while (1) {
-		printf("<span>%s</span> %.2fGHz %.2f%%\n",
+		float usage = cpu_usage(fp, a, &idle, &total, delay);
+		printf("{\"text\": \"%.2f%%\", \"alt\": \"<span>%s</span> %.2fGHz "
+		       "%.3g°C\"}\n",
+		       cpu_usage(fp, a, &idle, &total, delay),
 		       power_profile(current_profile), cpu_clock(cpuinfo),
-		       cpu_usage(fp, a, &idle, &total, delay));
+		       cpu_temp(zone));
 	}
 	return 0;
 }
