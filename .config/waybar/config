@@ -15,7 +15,7 @@
         "network",
         "custom/cpu",
         //"cpu",
-        "custom/temp",
+        //"custom/temp",
         "memory",
         //"custom/ram",
         "custom/battery",
@@ -24,6 +24,7 @@
         "custom/mic",
         "clock",
         "custom/ibus",
+        //"custom/weather",
         "tray"
     ],
     // Modules configuration
@@ -71,13 +72,11 @@
         "format": " {}"
     },
     "custom/cpu": {
-        //"return-type": "json",
-        //"format": " {usage}%",
-        //"format-alt": "{icon} {ferq} {temp}",
-        "exec": "~/.config/waybar/cpu",
-        //"exec": "sh ~/.config/waybar/cpu.sh",
-        "tooltip": false,
-        "interval": 10
+        "return-type": "json",
+        "exec": "~/.config/waybar/cpu3",
+        "format": " {}",
+        "format-alt": "{alt}",
+        "tooltip": false
     },
     "cpu": {
         "interval": 10,
@@ -134,6 +133,14 @@
         },
         "tooltip": false
     },
+    "custom/weather": {
+        "exec": "python ~/Templates/weather.py",
+        "restart-interval": 300,
+        "return-type": "json",
+        "on-click": "xdg-open https://weather.com/en-IN/weather/today/l/$(location_id)"
+        // "format-alt": "{alt}",
+    },
+
     "backlight": {
         "interval": 1,
         // "device": "acpi_video1",

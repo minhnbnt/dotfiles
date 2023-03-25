@@ -53,7 +53,8 @@ button {
 	/*text-shadow: 0 0 5px rgba(0, 0, 0, 0.377);*/
 	/* padding-left: 5px;
 	padding-bottom: 3px; */
-	background: #85c1dc;
+	/*background: #85c1dc;*/
+	background: #89b4fa;
 	/*background-size: 300% 300%;*/
 	/*animation: gradient 5s ease infinite;*/
 	color: #1e1e2e;
@@ -65,7 +66,8 @@ button {
 	margin-right: 10px;
 	margin-left: 0px;
 	/*box-shadow: rgba(0, 0, 0, 0.116) 2 2 5 2px;*/
-	background-color: #85c1dc;
+	/*background-color: #85c1dc;*/
+	background: #89b4fa;
 	border-radius: 10px;
 	margin-right: 5px;
 	padding-top: 0px;
@@ -121,15 +123,15 @@ button {
 #memory {
 	background: #f2cdcd;
 }
-#custom-temp {
+#custom-cpu {
 	background: #f2b9e4;
 }
-#custom-cpu {
+#network {
 	background: #cba6f7;
 }
-#network {
+/*#network {
 	background: #89b4fa;
-}
+}*/
 /*
 #custom-cpu,
 #backlight {
