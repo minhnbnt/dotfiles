@@ -8,16 +8,17 @@ require("code_runner").setup({
 	},
 	-- put here the commands by filetype
 	filetype = {
-		nasm = 'cd "$dir" && nasm -f elf64 -o $fileNameWithoutExt.o $fileName && ld -o $fileNameWithoutExt $fileNameWithoutExt.o && ./$fileNameWithoutExt',
-		cpp = 'cd "$dir" && clang++ $fileName -o $fileNameWithoutExt && ./$fileNameWithoutExt',
 		c = 'cd "$dir" && clang $fileName -lm -o $fileNameWithoutExt && ./$fileNameWithoutExt',
-		java = 'cd "$dir" && javac $fileName && java $fileNameWithoutExt',
-		rust = "cd $dir && rustc $fileName && ./$fileNameWithoutExt",
+		cpp = 'cd "$dir" && clang++ $fileName -o $fileNameWithoutExt && ./$fileNameWithoutExt',
+		go = "cd $dir && go run $fileName",
 		html = "cd $dir && live-server --open=$fileName",
-		sh = "cd $dir && sh $fileName",
-		python = "python3 -u",
+		java = 'cd "$dir" && javac $fileName && java $fileNameWithoutExt',
 		javascript = "node",
 		lua = "lua",
+		nasm = 'cd "$dir" && nasm -f elf64 -o $fileNameWithoutExt.o $fileName && ld -o $fileNameWithoutExt $fileNameWithoutExt.o && ./$fileNameWithoutExt',
+		python = "python3 -u",
+		rust = "cd $dir && rustc $fileName && ./$fileNameWithoutExt",
+		sh = "cd $dir && sh $fileName",
 	},
 	--[[
 	project = {
