@@ -1,6 +1,8 @@
 require("packers")
 
 require("ui.vscodetheme")
+--require("ui.base16")
+--require("ui.tokyonight")
 --require("ui.dracula")
 require("ui.alpha")
 require("ui.lualine")
