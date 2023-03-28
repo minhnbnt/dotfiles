@@ -312,7 +312,6 @@ ins_left({
 	end,
 })
 ]]
-
 ins_right({
 	server_name,
 	icon = "",
