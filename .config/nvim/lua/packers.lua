@@ -1,4 +1,4 @@
-local function packer_bootstrap()
+local function ensure_packer()
 	local fn = vim.fn
 	local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
 	if fn.empty(fn.glob(install_path)) > 0 then
@@ -67,13 +67,14 @@ return require("packer").startup(function(use)
 	--	"folke/noice.nvim",
 	--	requires = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
 	--})
-	use({ "nvim-lualine/lualine.nvim" })
+	use("nvim-lualine/lualine.nvim")
 	--use("nvim-lua/lsp-status.nvim")
 	--use("arkav/lualine-lsp-progress")
 
 	--use("petertriho/nvim-scrollbar")
 
 	use("Mofiqul/vscode.nvim")
+	use("folke/tokyonight.nvim")
 	--use("Mofiqul/dracula.nvim")
 	--use("chriskempson/base16-vim")
 
@@ -110,6 +111,7 @@ return require("packer").startup(function(use)
 			"hrsh7th/cmp-nvim-lua",
 			"octaltree/cmp-look",
 			"hrsh7th/cmp-path",
+			"hrsh7th/cmp-cmdline",
 			--"hrsh7th/cmp-calc",
 			--"f3fora/cmp-spell",
 			--"hrsh7th/cmp-emoji",
@@ -138,7 +140,7 @@ return require("packer").startup(function(use)
 
 	--use("dstein64/vim-startuptime")
 
-	if packer_bootstrap() then
+	if ensure_packer() then
 		require("packer").sync()
 	end
 end)
