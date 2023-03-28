@@ -37,14 +37,12 @@ local options = {
 	--showbreak = "⤹",
 
 	guifont = "FiraCode Nerd Font Mono:h10.5",
-
 	confirm = true,
 	autochdir = true,
 	ttyfast = true,
 	--lazyredraw = true,
 	cursorline = true,
 	mousemoveevent = true,
-
 	background = "dark",
 }
 
