@@ -6,18 +6,17 @@ local servers = {
 	"cssls",
 	"emmet_ls",
 	"eslint",
+	"gopls",
 	"html",
 	"jsonls",
+	"rust_analyzer",
 	"tailwindcss",
 	"pyright",
 	"lua_ls",
-	"vimls",
+	--"vimls",
 }
 
 local config = {
-	clangd = {
-		cmd = { "clangd", "--background-index=0", "--suggest-missing-includes", "--clang-tidy=0" },
-	},
 	lua_ls = {
 		settings = { Lua = { diagnostics = { globals = { "vim" } } } },
 	},
