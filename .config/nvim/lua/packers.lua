@@ -63,10 +63,10 @@ return require("packer").startup(function(use)
 
 	use("lukas-reineke/indent-blankline.nvim")
 
-	--use({
-	--	"folke/noice.nvim",
-	--	requires = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
-	--})
+	use({
+		"folke/noice.nvim",
+		requires = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
+	})
 	use("nvim-lualine/lualine.nvim")
 	--use("nvim-lua/lsp-status.nvim")
 	--use("arkav/lualine-lsp-progress")
