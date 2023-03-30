@@ -5,21 +5,6 @@ local server_name = function()
 	if next(clients) == nil then
 		return msg
 	end
-	-- null-ls clients
-	--[[
-  local function null_ls_client_names()
-    local sources = require("null-ls").sources
-    local available = sources.get_available(buf_ft)
-    local registered ={}
-    for _, source in ipairs(available) do
-      for method in pairs(source.methods) do
-        registered[method] = registered[method] or {}
-        table.insert(registered[method], source.name)
-      end
-    end
-  end
-  ]]
-	-- return clients
 	for _, client in ipairs(clients) do
 		local filetypes = client.config.filetypes
 		if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
@@ -28,47 +13,36 @@ local server_name = function()
 	end
 	return msg
 end
-
--- stylua: ignore
-local Mode = {
-    ['n']     = '',
-    ['niI']   = '',
-    ['niR']   = '',
-    ['niV']   = '',
-    ['nt']    = '',
-    ['ntT']   = '',
-    ['no']    = '-- OPERATOR PENDING --',
-    ['nov']   = '-- OPERATOR PENDING --',
-    ['noV']   = '-- OPERATOR PENDING --',
-    ['no\22'] = '-- OPERATOR PENDING --',
-    ['v']     = '-- VISUAL --',
-    ['vs']    = '-- VISUAL --',
-    ['V']     = '-- VISUAL LINE --',
-    ['Vs']    = '-- VISUAL LINE --',
-    ['\22']   = '-- VISUAL BLOCK --',
-    ['\22s']  = '-- VISUAL BLOCK --',
-    ['s']     = '-- SELECT --',
-    ['S']     = '-- SELECT LINE --',
-    ['\19']   = '-- SELECT BLOCK --',
-    ['i']     = '-- INSERT --',
-    ['ic']    = '-- INSERT --',
-    ['ix']    = '-- INSERT --',
-    ['R']     = '-- REPLACE --',
-    ['Rc']    = '-- REPLACE --',
-    ['Rx']    = '-- REPLACE --',
-    ['Rv']    = '-- VISUAL REPLACE --',
-    ['Rvc']   = '-- VISUAL REPLACE --',
-    ['Rvx']   = '-- VISUAL REPLACE --',
-    ['c']     = '-- COMMAND --',
-    ['cv']    = '-- EX --',
-    ['ce']    = '-- EX --',
-    ['r']     = '-- REPLACE --',
-    ['rm']    = '-- MORE --',
-    ['r?']    = '-- CONFIRM --',
-    ['!']     = '-- SHELL --',
-    ['t']     = '-- TERMINAL --',
-}
-
+local function file_ext()
+	local filename = vim.fn.expand("%:t")
+	local ft = filename:match("[^.]+$")
+	local map = {
+		cpp = "c++",
+		cc = "c++",
+		cxx = "c++",
+		csharp = "c#",
+		css = "CSS",
+		html = "HTML",
+		h = "header",
+		hh = "header",
+		hpp = "header",
+		hxx = "header",
+		["h++"] = "header",
+		json = "JSON",
+		jsonc = "JSON comments",
+		py = "python",
+		txt = "text",
+		sh = "shell",
+		yaml = "YAML",
+	}
+	if map[ft] then
+		return map[ft]
+	elseif ft then
+		return ft
+	else
+		return ""
+	end
+end
 local config = {
 	options = {
 		-- Disable sections and component separators
@@ -96,7 +70,8 @@ local config = {
 				padding = 0,
 			},
 		},
-		lualine_y = {
+		lualine_y = {},
+		lualine_z = {
 			{
 				function()
 					local current_line = vim.fn.line(".")
@@ -107,11 +82,10 @@ local config = {
 					local index = math.ceil(line_ratio * #chars)
 					return chars[index]
 				end,
-				color = { bg = "#373737" },
+				color = { fg = "#373737" },
 				padding = 0,
 			},
 		},
-		lualine_z = {},
 		-- These will be filled later
 		lualine_c = {},
 		lualine_x = {},
@@ -146,14 +120,14 @@ local config = {
 	},
 }
 
-local function ins_left(component)
-	table.insert(config.sections.lualine_c, component)
-end
-
--- Inserts a component in lualine_x ot right section
-local function ins_right(component)
-	table.insert(config.sections.lualine_x, component)
-end
+local ins = {
+	left = function(component)
+		table.insert(config.sections.lualine_c, component)
+	end,
+	right = function(component)
+		table.insert(config.sections.lualine_x, component)
+	end,
+}
 
 local conditions = {
 	buffer_not_empty = function()
@@ -172,7 +146,7 @@ local conditions = {
 	end,
 }
 -- :)))
-ins_left({
+ins.left({
 	function()
 		if vim.fn.winwidth(0) < 115 then
 			vim.cmd("se tabstop=2 shiftwidth=2 softtabstop=2")
@@ -183,19 +157,19 @@ ins_left({
 	end,
 })
 
-ins_left({
+ins.left({
 	function()
 		return " "
 	end,
 	padding = 0,
 })
 
-ins_left({
+ins.left({
 	"fileformat",
 	cond = conditions.hide_in_width(6),
 })
 
-ins_left({
+ins.left({
 	function()
 		local b = vim.api.nvim_get_current_buf()
 		if next(vim.treesitter.highlighter.active[b]) then
@@ -207,34 +181,34 @@ ins_left({
 	padding = { left = 1, right = 0 },
 })
 
-ins_left({
+ins.left({
 	"filetype",
 	icon_only = true,
 })
 
-ins_left({
+ins.left({
 	"filetype",
 	icon = nil,
 	icons_enabled = false,
 	cond = conditions.hide_in_width(2),
 	padding = { left = 0, right = 1 },
 	fmt = function(str)
-		return (str:gsub("^%l", string.upper))
+		return str:gsub("^%l", string.upper)
 	end,
 })
 
-ins_left({
-	"encoding", -- option component same as encoding in viml
+ins.left({
+	"encoding",
 	fmt = string.upper,
 	cond = conditions.hide_in_width(5),
 })
 
-ins_left({
+ins.left({
 	"filesize",
 	cond = conditions.hide_in_width(7),
 })
 
-ins_left({
+ins.left({
 	function()
 		if vim.fn.winwidth(0) > 115 or vim.api.nvim_get_mode().mode == "n" or vim.o.showmode then
 			return ""
@@ -246,7 +220,7 @@ ins_left({
 	padding = { left = 1, right = 0 },
 })
 
-ins_left({
+ins.left({
 	function()
 		if vim.bo.modified then
 			return "●"
@@ -260,20 +234,60 @@ ins_left({
 	padding = { left = 1, right = 0 },
 })
 
-ins_left({
+ins.left({
 	"filename",
 	file_status = false,
 	path = 0,
 })
-ins_left({
+
+ins.left({
 	function()
 		return "%="
 	end,
 	padding = 0,
 })
 
-ins_left({
+ins.left({
 	function()
+        -- stylua: ignore
+        local Mode = {
+            ['n']     = '',
+            ['niI']   = '',
+            ['niR']   = '',
+            ['niV']   = '',
+            ['nt']    = '',
+            ['ntT']   = '',
+            ['no']    = '-- OPERATOR PENDING --',
+            ['nov']   = '-- OPERATOR PENDING --',
+            ['noV']   = '-- OPERATOR PENDING --',
+            ['no\22'] = '-- OPERATOR PENDING --',
+            ['v']     = '-- VISUAL --',
+            ['vs']    = '-- VISUAL --',
+            ['V']     = '-- VISUAL LINE --',
+            ['Vs']    = '-- VISUAL LINE --',
+            ['\22']   = '-- VISUAL BLOCK --',
+            ['\22s']  = '-- VISUAL BLOCK --',
+            ['s']     = '-- SELECT --',
+            ['S']     = '-- SELECT LINE --',
+            ['\19']   = '-- SELECT BLOCK --',
+            ['i']     = '-- INSERT --',
+            ['ic']    = '-- INSERT --',
+            ['ix']    = '-- INSERT --',
+            ['R']     = '-- REPLACE --',
+            ['Rc']    = '-- REPLACE --',
+            ['Rx']    = '-- REPLACE --',
+            ['Rv']    = '-- VISUAL REPLACE --',
+            ['Rvc']   = '-- VISUAL REPLACE --',
+            ['Rvx']   = '-- VISUAL REPLACE --',
+            ['c']     = '-- COMMAND --',
+            ['cv']    = '-- EX --',
+            ['ce']    = '-- EX --',
+            ['r']     = '-- REPLACE --',
+            ['rm']    = '-- MORE --',
+            ['r?']    = '-- CONFIRM --',
+            ['!']     = '-- SHELL --',
+            ['t']     = '-- TERMINAL --',
+        }
 		if vim.o.showmode then
 			return ""
 		else
@@ -287,39 +301,15 @@ ins_left({
 	color = { gui = "bold" },
 	cond = conditions.hide_in_width(1),
 })
---[[
-ins_left({
-	function()
-		if not rawget(vim, "lsp") then
-			return ""
-		end
 
-		local Lsp = vim.lsp.util.get_progress_messages()[1]
-
-		if vim.o.columns < 120 or not Lsp then
-			return ""
-		end
-
-		local msg = Lsp.message or ""
-		local percentage = Lsp.percentage or 0
-		local title = Lsp.title or ""
-		local spinners = { "", "" }
-		local ms = vim.loop.hrtime() / 1000000
-		local frame = math.floor(ms / 120) % #spinners
-		local content = string.format(" %%<%s %s %s (%s%%%%) ", spinners[frame + 1], title, msg, percentage)
-
-		return ("%#St_LspProgress#" .. content) or ""
-	end,
-})
-]]
-ins_right({
+ins.right({
 	server_name,
 	icon = "",
 	color = { fg = "#72edcc" },
 	cond = conditions.hide_in_width(2),
 })
 
-ins_right({
+ins.right({
 	"diagnostics",
 	sources = { "nvim_diagnostic" },
 	--sections = { "error", "warn", "info", "hint" },
@@ -338,7 +328,7 @@ ins_right({
 	end,
 })
 
-ins_right({
+ins.right({
 	"branch",
 	icons_enabled = true,
 	icon = "",
@@ -346,7 +336,7 @@ ins_right({
 	color = { fg = "#eb6750" },
 })
 
-ins_right({
+ins.right({
 	"diff",
 	colored = true,
 	symbols = { added = "+ ", modified = "~ ", removed = "- " },
@@ -354,12 +344,12 @@ ins_right({
 	cond = conditions.hide_in_width(8),
 })
 
-ins_right({
+ins.right({
 	"searchcount",
 	cond = conditions.hide_in_width(10),
 })
 
-ins_right({
+ins.right({
 	function()
 		local line = vim.fn.line(".")
 		local col = vim.fn.virtcol(".")
@@ -367,7 +357,7 @@ ins_right({
 	end,
 })
 
-ins_right({
+ins.right({
 	function()
 		return " "
 	end,
