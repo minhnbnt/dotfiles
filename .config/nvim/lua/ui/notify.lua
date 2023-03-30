@@ -1,7 +1,12 @@
 require("notify").setup({
-	stages = "fade_in_slide_out",
 	background_colour = "#000000",
-	timeout = 3000,
+	render = "compact",
+	stages = "slide",
 })
 
-vim.notify = require("notify")
+vim.notify = function(msg, ...)
+	if msg:match("warning: multiple different client offset_encodings") then
+		return
+	end
+	require("notify")(msg, ...)
+end

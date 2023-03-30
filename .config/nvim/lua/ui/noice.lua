@@ -1,7 +1,3 @@
-require("notify").setup({
-	background_colour = "#000000",
-})
-
 require("noice").setup({
 	cmdline = {
 		enabled = true, -- enables the Noice cmdline UI
@@ -96,7 +92,7 @@ require("noice").setup({
 		-- event is always "notify" and kind can be any log level as a string
 		-- The default routes will forward notifications to nvim-notify
 		-- Benefit of using Noice for this is the routing and consistent history view
-		enabled = true,
+		enabled = false,
 		view = "notify",
 	},
 	lsp = {
@@ -123,7 +119,7 @@ require("noice").setup({
 			opts = {}, -- merged with defaults from documentation
 		},
 		signature = {
-			enabled = true,
+			enabled = false,
 			auto_open = {
 				enabled = true,
 				trigger = true, -- Automatically show signature help when typing a trigger character from the LSP
