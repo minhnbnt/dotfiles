@@ -1,14 +1,6 @@
 local null_ls = require("null-ls")
 local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 local format_dir = os.getenv("HOME") .. "/.config/nvim/lua/lsp/formatter"
-local notify = vim.notify
-
-vim.notify = function(msg, ...)
-	if msg:match("warning: multiple different client offset_encodings") then
-		return
-	end
-	notify(msg, ...)
-end
 
 -- sources
 local code_actions = null_ls.builtins.code_actions
