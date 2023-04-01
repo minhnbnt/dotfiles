@@ -23,7 +23,7 @@ table.insert(
 		text("#include <bits/stdc++.h>"),
 		text({ "", "", "using namespace std;" }),
 		text({ "", "", "int main(int argc, char *argv[]) {", "\t" }),
-		insert(1, ""),
+		insert(0, ""),
 		text({ "", "}" }),
 	}, {
 		condition = conds_expand.line_begin,
@@ -37,7 +37,7 @@ table.insert(
 		dscr = "std::cout << message << std::endl",
 	}, {
 		text('std::cout << "'),
-		insert(1, ""),
+		insert(0, ""),
 		text('" << std::endl;'),
 	})
 )
@@ -49,30 +49,8 @@ table.insert(
 		dscr = "cout << message << endl",
 	}, {
 		text('cout << "'),
-		insert(1, ""),
+		insert(0, ""),
 		text('" << endl;'),
-	})
-)
-table.insert(
-	cpp_out,
-	snip({
-		trig = "for",
-		namr = "for",
-		dscr = "for loop",
-	}, {
-		text("for (int "),
-		insert(1, "i"),
-		text(" = "),
-		insert(2, "0"),
-		text("; "),
-		insert(1, "i"),
-		text(" < "),
-		insert(3, "n"),
-		text("; "),
-		insert(1, "i"),
-		text("++) {"),
-		insert(4, ""),
-		text("}"),
 	})
 )
 table.insert(
@@ -83,7 +61,7 @@ table.insert(
 		dscr = "cin >> variable",
 	}, {
 		text("cin >> "),
-		insert(1),
+		insert(0),
 		text(";"),
 	})
 )
@@ -95,7 +73,7 @@ table.insert(
 		dscr = "std::cin >> variable",
 	}, {
 		text("std::cin >> "),
-		insert(1),
+		insert(0),
 		text(";"),
 	})
 )
