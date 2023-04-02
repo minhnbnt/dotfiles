@@ -89,7 +89,7 @@ return require("packer").startup(function(use)
 		requires = {
 			"nvim-treesitter/nvim-treesitter-refactor",
 			"windwp/nvim-ts-autotag",
-			"p00f/nvim-ts-rainbow",
+			"mrjones2014/nvim-ts-rainbow",
 		},
 	})
 
@@ -120,7 +120,7 @@ return require("packer").startup(function(use)
 			"ray-x/cmp-treesitter",
 			"f3fora/cmp-spell",
 			--"hrsh7th/cmp-omni",
-			--"hrsh7th/cmp-nvim-lsp-signature-help",
+			"hrsh7th/cmp-nvim-lsp-signature-help",
 			"hrsh7th/cmp-copilot",
 			--"zbirenbaum/copilot-cmp",
 			--{
