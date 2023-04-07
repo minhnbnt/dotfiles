@@ -1,18 +1,45 @@
+local copilot_active = false
+
 local server_name = function()
-	local msg = ""
+	local attached = {} -- list of attached servers
 	local buf_ft = vim.api.nvim_buf_get_option(0, "filetype")
 	local clients = vim.lsp.get_active_clients()
 	if next(clients) == nil then
-		return msg
+		return ""
 	end
 	for _, client in ipairs(clients) do
 		local filetypes = client.config.filetypes
 		if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
-			return client.name
+			if client.name == "null-ls" then -- null-ls clients
+				local sources = require("null-ls").get_sources()
+				for _, source in ipairs(sources) do
+					if source.filetypes[buf_ft] ~= nil then
+						table.insert(attached, source.name)
+					end
+				end
+			else -- regular lsp clients
+				table.insert(attached, client.name)
+			end
+		elseif client.name == "copilot" then
+			copilot_active = true -- for later
 		end
 	end
-	return msg
+	local display = {}
+	for i = 1, 2 do -- insert first 2 servers
+		if attached[i] ~= nil then
+			table.insert(display, attached[i])
+		end
+	end
+	if #attached > 3 then -- show 2 servers + "more"
+		return table.concat(display, ", ") .. " + " .. #attached - 2 .. " more"
+	else
+		if attached[3] ~= nil then
+			table.insert(display, attached[3])
+		end -- show all servers
+		return table.concat(display, ", ")
+	end
 end
+
 local function file_ext()
 	local filename = vim.fn.expand("%:t")
 	local ft = filename:match("[^.]+$")
@@ -43,19 +70,20 @@ local function file_ext()
 		return ""
 	end
 end
+
 local config = {
 	options = {
-		-- Disable sections and component separators
+		-- disable sections and component separators
 		component_separators = "",
 		section_separators = "",
 		theme = "auto",
-		padding = 1,
+		padding = 1, -- padding between components
 	},
 	sections = {
 		lualine_a = {},
 		lualine_b = {
 			{
-				function()
+				function() -- show identation level
 					local chars = { "▏", "▎", "▍", "▌", "▋", "▊", "▉", "█" }
 					local tab_width = vim.api.nvim_buf_get_option(0, "tabstop")
 					local ratio = tab_width / 8
@@ -73,7 +101,7 @@ local config = {
 		lualine_y = {},
 		lualine_z = {
 			{
-				function()
+				function() -- show current position in file
 					local current_line = vim.fn.line(".")
 					local total_lines = vim.fn.line("$")
 					--local chars = { " ", "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█" }
@@ -110,7 +138,7 @@ local config = {
 				function()
 					local line = vim.fn.line(".")
 					local col = vim.fn.virtcol(".")
-					return string.format("%d:%-1d", col, line)
+					return string.format("%d:%-1d", line, col)
 				end,
 				padding = { left = 1, right = 2 },
 			},
@@ -121,10 +149,10 @@ local config = {
 }
 
 local ins = {
-	left = function(component)
+	left = function(component) -- insert left
 		table.insert(config.sections.lualine_c, component)
 	end,
-	right = function(component)
+	right = function(component) -- insert right
 		table.insert(config.sections.lualine_x, component)
 	end,
 }
@@ -145,20 +173,14 @@ local conditions = {
 		end
 	end,
 }
--- :)))
+
 ins.left({
-	function()
-		if vim.fn.winwidth(0) < 115 then
+	function() -- :)))
+		if vim.fn.winwidth(0) < 115 then -- adjust identation
 			vim.cmd("se tabstop=2 shiftwidth=2 softtabstop=2")
 		else
 			vim.cmd("se tabstop=4 shiftwidth=4 softtabstop=4")
 		end
-		return ""
-	end,
-})
-
-ins.left({
-	function()
 		return " "
 	end,
 	padding = 0,
@@ -167,6 +189,19 @@ ins.left({
 ins.left({
 	"fileformat",
 	cond = conditions.hide_in_width(6),
+})
+
+ins.left({
+	function()
+		if copilot_active then
+			return ""
+		else
+			return ""
+		end
+	end,
+	color = { fg = "#28f5fc" },
+	cond = conditions.hide_in_width(1),
+	padding = { left = 1, right = 0 },
 })
 
 ins.left({
@@ -187,9 +222,9 @@ ins.left({
 })
 
 ins.left({
-	"filetype",
-	icon = nil,
-	icons_enabled = false,
+	function() -- filetype
+		return vim.bo.filetype
+	end,
 	cond = conditions.hide_in_width(2),
 	padding = { left = 0, right = 1 },
 	fmt = function(str)
@@ -223,11 +258,11 @@ ins.left({
 ins.left({
 	function()
 		if vim.bo.modified then
-			return "●"
+			return "●" -- file modified
 		elseif vim.bo.modifiable == false then
-			return ""
+			return "" -- read-only
 		else
-			return ""
+			return "" -- normal
 		end
 	end,
 	color = { fg = "#ce9178" },
@@ -304,7 +339,7 @@ ins.left({
 
 ins.right({
 	server_name,
-	icon = "",
+	icon = "",
 	color = { fg = "#72edcc" },
 	cond = conditions.hide_in_width(2),
 })
@@ -319,13 +354,7 @@ ins.right({
 	cond = conditions.hide_in_width(7),
 	colored = true,
 	update_in_insert = false,
-	always_visible = function()
-		if server_name() == "" or server_name() == "null-ls" then
-			return false
-		else
-			return true
-		end
-	end,
+	always_visible = false,
 })
 
 ins.right({
