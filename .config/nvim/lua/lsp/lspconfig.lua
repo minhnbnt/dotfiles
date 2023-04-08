@@ -8,6 +8,7 @@ local servers = {
 	"eslint",
 	"gopls",
 	"html",
+	"jdtls",
 	"jsonls",
 	"rust_analyzer",
 	"tailwindcss",
@@ -28,6 +29,13 @@ local config = {
 		cmd = { "emmet-ls", "--stdio" },
 		filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" },
 		init_options = { html = { options = { ["bem.enabled"] = true } } },
+	},
+	jdtls = {
+		filetypes = { "java" },
+		single_file_support = true,
+		init_options = { jvm_args = {} },
+		cmd = { "/usr/share/java/jdtls/bin/jdtls" }, -- AUR package jdtls
+		root_dir = vim.fs.dirname(vim.fs.find({ "gradlew", ".git", "mvnw" }, { upward = true })[1]),
 	},
 }
 
@@ -123,5 +131,14 @@ for _, lsp in pairs(servers) do
 		capabilities = capabilities,
 		on_attach = on_attach,
 	})
-	require("lspconfig")[lsp].setup(config[lsp])
+	if lsp == "jdtls" then -- jdtls requires special setup
+		vim.api.nvim_create_autocmd("BufWritePre", {
+			callback = function()
+				require("jdtls").start_or_attach(config.jdtls)
+			end,
+			pattern = "*.java",
+		})
+	else -- all other servers
+		require("lspconfig")[lsp].setup(config[lsp])
+	end
 end
