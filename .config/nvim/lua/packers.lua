@@ -86,6 +86,7 @@ return require("packer").startup(function(use)
 	--use("sheerun/vim-polyglot")
 	use({
 		"nvim-treesitter/nvim-treesitter",
+		run = ":TSUpdate",
 		requires = {
 			"nvim-treesitter/nvim-treesitter-refactor",
 			"windwp/nvim-ts-autotag",

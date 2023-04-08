@@ -92,7 +92,7 @@ local opts = { noremap = true, silent = true }
 local term_opts = { silent = true }
 
 -- Undo, Redo
-keymap("", "<C-z>", ":undo<CR>", opts)
+--keymap("", "<C-z>", ":undo<CR>", opts)
 keymap("", "<C-y>", ":redo<CR>", opts)
 
 -- Save

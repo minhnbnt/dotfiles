@@ -17,29 +17,27 @@ local servers = {
 }
 
 local config = {
+	ccls = {
+		init_options = { index = { threads = 4 } },
+		flags = { debounce_text_changes = 150 },
+	},
 	lua_ls = {
 		settings = { Lua = { diagnostics = { globals = { "vim" } } } },
 	},
 	emmet_ls = {
 		cmd = { "emmet-ls", "--stdio" },
 		filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" },
-		init_options = {
-			html = {
-				options = {
-					["bem.enabled"] = true,
-				},
-			},
-		},
+		init_options = { html = { options = { ["bem.enabled"] = true } } },
 	},
 }
 
 local signs = {
-	Error = "x",
-	Warning = "!",
-	Warn = "!",
-	Hint = "",
-	Information = "i",
-	Info = "i",
+	Error = "",
+	Warning = "",
+	Warn = "",
+	Hint = "",
+	Information = "",
+	Info = "",
 }
 
 vim.api.nvim_create_autocmd("CursorHold", {
@@ -55,8 +53,8 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagn
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 capabilities = {
-	--offsetEncoding = { "utf-16" },
-	--documentFormattingProvider = false
+	documentFormatting = false,
+	documentRangeFormattingProvider = true,
 	textDocument = {
 		foldingRange = {
 			dynamicRegistration = false,
@@ -64,7 +62,14 @@ capabilities = {
 		},
 		completion = {
 			completionItem = {
-				snippetSupport = true,
+				--snippetSupport = true,
+				resolveSupport = {
+					properties = {
+						"documentation",
+						"detail",
+						"additionalTextEdits",
+					},
+				},
 			},
 		},
 	},

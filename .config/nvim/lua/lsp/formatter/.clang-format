@@ -1,5 +1,6 @@
 AllowShortIfStatementsOnASingleLine: AllIfsAndElse
 AllowShortLoopsOnASingleLine: true
 IndentWidth: 4
+ShortBlockStyle: Empty
 TabWidth: 4
 UseTab: AlignWithSpaces
