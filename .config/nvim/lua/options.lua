@@ -55,6 +55,7 @@ if vim.g.neovide then
 		vim.g[k] = v
 	end
 end
+
 vim.opt.cmdheight = 0
 --vim.api.nvim_set_hl(0, "MsgArea", { link = "lualine_c_normal" })
 
@@ -135,7 +136,6 @@ vim.cmd([[
     vnoremenu PopUp.Select\ all                 gg0oG$
     inoremenu PopUp.Select\ all                 <C-Home><C-O>vG$
     nnoremenu PopUp.Find                        /
-
 ]])
 
 if io.open("/usr/bin/ibus", "r") ~= nil then
