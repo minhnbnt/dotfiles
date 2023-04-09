@@ -6,7 +6,12 @@
 # for examples
 # If not running interactively, don't do anything
 
-export XDG_RUNTIME_DIR=${TMPDIR}
+[[ $- != *i* ]] && return
+
+# Some of my custom command
+
+alias vi="nvim"
+alias ls='ls -vA --color --group-directories-first'
 
 #export GTK_IM_MODULE=ibus
 #export QT_IM_MODULE=ibus
@@ -53,7 +58,11 @@ symbol="${reset}${bold}${cyan}$(if [[ ${EUID} == 0 ]]; then echo '#'; else echo 
 # Color of command number
 cmd_num="${white}${bold}"
 
-
+# disable if in console
+if [[ -z $DISPLAY ]] ; then
+	sleep 2
+	return
+fi
 # Setup the prompt/prefix for linux terminal
 PS1="${etc_color}┌─[${cmd_num}\#";
 PS1+="${etc_color}]";
@@ -76,25 +85,3 @@ PS1+="${reset} ${symbol}${reset} ";
 
 export PS1
 #PS0="\n"
-
-[[ $- != *i* ]] && return
-
-alias ls='ls -vA --color --group-directories-first'
-
-# Some of my custom command
-# Syntax for no output: alias [custom command]='f(){([command] "$@" > /dev/null 2>&1 &);  unset -f f; }; f'
-
-alias vi="nvim"
-
-# For LucasChess
-#if $XDG_SESSION_TYPE = wayland ; then
-#    alias lucaschess='echo "Enter sudo password or switch to xorg session."; sudo sh /mnt/e/LucasChessR/linux/run.sh' ;
-#else
-#    alias lucaschess='sh /mnt/e/LucasChessR/linux/run.sh' ;
-#fi
-
-# Old PS1
-#PS1='[\u@\h \W]\$ '
-#PS1="\[\033[38;5;0m\]\[\033[48;5;208m\]\l:\[$(tput sgr0)\]\[\033[38;5;226m\]\u\[$(tput sgr0)\]\[\033[38;5;248m\]@\[$(tput sgr0)\]\[\033[38;5;81m\]\H\[$(tput sgr0)\]\[\033[38;5;79m\]\w\[$(tput sgr0)\] \\$\[$(tput sgr0)\]"
-##PS1='\[\e[0;38;5;232;48;5;49m\]\#\[\e[0;48;5;17m\]: \[\e[0;38;5;220;48;5;17m\]\u\[\e[0;38;5;239;48;5;17m\]@\[\e[0;38;5;39;48;5;17m\]\h\[\e[0;38;5;51;48;5;17m\]\w\[\e[0m\] \$\[$(tput sgr0)\] '
-#PS1='\[\e[0;38;5;232;48;5;49m\]\#\[\e[0;48;5;17m\]: \[\e[0;38;5;220;48;5;17m\]\u\[\e[0;38;5;239;48;5;17m\]@\[\e[0;38;5;39;48;5;17m\]\h\[\e[0;38;5;51;48;5;17m\]\w\[\e[0;97m\] >\[\e[0m\]'
