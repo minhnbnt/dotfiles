@@ -33,6 +33,7 @@ return require("packer").startup(function(use)
 	})
 
 	use("neovim/nvim-lspconfig")
+	use("mfussenegger/nvim-jdtls")
 	--use("williamboman/mason.nvim")
 	--use("williamboman/mason-lspconfig.nvim")
 	use("jose-elias-alvarez/null-ls.nvim")
@@ -96,7 +97,7 @@ return require("packer").startup(function(use)
 
 	use("norcalli/nvim-colorizer.lua")
 
-	use("nathom/filetype.nvim")
+	--use("nathom/filetype.nvim")
 
 	use("mfussenegger/nvim-dap")
 	use("rcarriga/nvim-dap-ui")
