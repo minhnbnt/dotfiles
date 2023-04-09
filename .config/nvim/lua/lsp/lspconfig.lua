@@ -132,7 +132,7 @@ for _, lsp in pairs(servers) do
 		on_attach = on_attach,
 	})
 	if lsp == "jdtls" then -- jdtls requires special setup
-		vim.api.nvim_create_autocmd("BufWritePre", {
+		vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 			callback = function()
 				require("jdtls").start_or_attach(config.jdtls)
 			end,
