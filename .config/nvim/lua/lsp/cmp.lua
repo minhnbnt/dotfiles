@@ -164,7 +164,7 @@ cmp.setup({
 		--{ name = "cmp_tabnine" },
 		{ name = "treesitter", priority = 10 },
 		{ name = "nvim_lua" },
-		{ name = "copilot", priority = 100 },
+		--{ name = "copilot", priority = 100 },
 		--{ name = "nvim_lsp_signature_help" },
 		{
 			name = "look",
@@ -214,7 +214,11 @@ cmp.setup.filetype("gitcommit", {
 
 -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline({ "/", "?" }, {
-	mapping = cmp.mapping.preset.cmdline(),
+	mapping = cmp.mapping.preset.cmdline({
+		["<CR>"] = cmp.mapping.confirm({ select = true }),
+		["<Up>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),
+		["<Down>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }),
+	}),
 	sources = {
 		{ name = "buffer" },
 	},
@@ -233,8 +237,6 @@ cmp.setup.cmdline(":", {
 	}),
 })
 
-vim.cmd([[
-    hi CmpItemMenu cterm=bold gui=bold
-]])
+vim.cmd("hi CmpItemMenu cterm=bold gui=bold")
 
 vim.api.nvim_set_hl(0, "CmpItemKindCopilot", { fg = "#6CC644" })
