@@ -1,6 +1,5 @@
 local function load(module)
-	-- If not run correctly, notify the user
-	if not pcall(require, module) then
+	if not pcall(require, module) then -- If not run correctly, notify the user
 		vim.notify("Error loading module: " .. module, vim.log.levels.ERROR, { title = "plug.lua" })
 	end
 end
@@ -34,7 +33,7 @@ load("coding.ufo")
 load("coding.coderunner")
 load("coding.treesitter")
 load("coding.identblankline")
-load("coding.filetype")
+--load("coding.filetype")
 --load("coding.gitsigns")
 
 load("browser.project")
