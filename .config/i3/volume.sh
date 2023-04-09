@@ -23,7 +23,7 @@ else
 	#    echo " ${volume}%"
 	#fi
 
-	if [ $volume -le 50 ]; then
+	if [[ $volume -le 50 ]]; then
 		echo " ${volume}%"
 	else
 		echo " ${volume}%"

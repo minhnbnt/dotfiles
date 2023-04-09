@@ -21,14 +21,12 @@ float cpu_usage(std::string path) {
 	long long a[10], prevtotal = 0, previdle;
 	std::ifstream cpuinfo(path);
 	cpuinfo.ignore(256, ' ');
-	for (int i = 0; i < 10; i++)
-		cpuinfo >> a[i], prevtotal += a[i];
+	for (int i = 0; i < 10; i++) cpuinfo >> a[i], prevtotal += a[i];
 	previdle = a[3] + a[4];
 	sleep(1), cpuinfo.clear(), cpuinfo.seekg(0);
 	cpuinfo.ignore(256, ' ');
 	long long total = 0, idle;
-	for (int i = 0; i < 10; i++)
-		cpuinfo >> a[i], total += a[i];
+	for (int i = 0; i < 10; i++) cpuinfo >> a[i], total += a[i];
 	idle = a[3] + a[4], cpuinfo.close();
 	total -= prevtotal, idle -= previdle;
 	return (total - idle) * 100.0 / total;
