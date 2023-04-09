@@ -28,16 +28,17 @@ local server_name = function()
 	for i = 1, 2 do -- insert first 2 servers
 		if attached[i] ~= nil then
 			table.insert(display, attached[i])
+		else -- no more servers
+			break
 		end
 	end
 	if #attached > 3 then -- show 2 servers + "more"
 		return table.concat(display, ", ") .. " + " .. #attached - 2 .. " more"
-	else
-		if attached[3] ~= nil then
-			table.insert(display, attached[3])
-		end -- show all servers
-		return table.concat(display, ", ")
 	end
+	if attached[3] ~= nil then
+		table.insert(display, attached[3])
+	end -- show all servers
+	return table.concat(display, ", ")
 end
 
 local function file_ext()
@@ -66,9 +67,8 @@ local function file_ext()
 		return map[ft]
 	elseif ft then
 		return ft
-	else
-		return ""
 	end
+	return ""
 end
 
 local config = {
@@ -86,13 +86,10 @@ local config = {
 				function() -- show identation level
 					local chars = { "▏", "▎", "▍", "▌", "▋", "▊", "▉", "█" }
 					local tab_width = vim.api.nvim_buf_get_option(0, "tabstop")
-					local ratio = tab_width / 8
-					local index = math.ceil(ratio * #chars)
 					if tab_width > 8 then
 						return "█"
-					else
-						return chars[index]
 					end
+					return chars[tab_width]
 				end,
 				color = { bg = "#373737" },
 				padding = 0,
@@ -168,6 +165,9 @@ local conditions = {
 	end,
 	hide_in_width = function(index)
 		local widths = { 115, 100, 95, 88, 78, 75, 70, 67, 55, 40 }
+		if index > #widths then
+			return -- index out of bounds
+		end
 		return function()
 			return vim.fn.winwidth(0) > widths[index]
 		end
@@ -195,9 +195,8 @@ ins.left({
 	function()
 		if copilot_active then
 			return ""
-		else
-			return ""
 		end
+		return ""
 	end,
 	color = { fg = "#28f5fc" },
 	cond = conditions.hide_in_width(1),
@@ -210,6 +209,7 @@ ins.left({
 		if next(vim.treesitter.highlighter.active[b]) then
 			return ""
 		end
+		return ""
 	end,
 	color = { fg = "#62a544" },
 	cond = conditions.hide_in_width(1),
@@ -247,9 +247,8 @@ ins.left({
 	function()
 		if vim.fn.winwidth(0) > 115 or vim.api.nvim_get_mode().mode == "n" or vim.o.showmode then
 			return ""
-		else
-			return vim.api.nvim_get_mode().mode
 		end
+		return vim.api.nvim_get_mode().mode
 	end,
 	color = { gui = "bold" },
 	padding = { left = 1, right = 0 },
@@ -261,9 +260,8 @@ ins.left({
 			return "●" -- file modified
 		elseif vim.bo.modifiable == false then
 			return "" -- read-only
-		else
-			return "" -- normal
 		end
+		return "" -- normal
 	end,
 	color = { fg = "#ce9178" },
 	padding = { left = 1, right = 0 },
@@ -325,13 +323,12 @@ ins.left({
         }
 		if vim.o.showmode then
 			return ""
-		else
-			local mode_code = vim.api.nvim_get_mode().mode
-			if Mode[mode_code] == nil then
-				return mode_code
-			end
-			return Mode[mode_code]
 		end
+		local mode_code = vim.api.nvim_get_mode().mode
+		if Mode[mode_code] == nil then
+			return mode_code
+		end
+		return Mode[mode_code]
 	end,
 	color = { gui = "bold" },
 	cond = conditions.hide_in_width(1),
@@ -339,7 +336,7 @@ ins.left({
 
 ins.right({
 	server_name,
-	icon = "",
+	icon = "",
 	color = { fg = "#72edcc" },
 	cond = conditions.hide_in_width(2),
 })

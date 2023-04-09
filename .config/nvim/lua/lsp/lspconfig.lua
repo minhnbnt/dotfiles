@@ -1,3 +1,4 @@
+-- just comment out the servers you don't want to use
 local servers = {
 	"bashls",
 	"ccls",
@@ -17,6 +18,7 @@ local servers = {
 	--"vimls",
 }
 
+-- for servers that need custom config
 local config = {
 	ccls = {
 		init_options = { index = { threads = 4 } },
@@ -49,7 +51,7 @@ local signs = {
 }
 
 vim.api.nvim_create_autocmd("CursorHold", {
-	callback = function()
+	callback = function() -- enable showing diagnostics in virtual text
 		vim.diagnostic.open_float(0, { scope = "cursor", focus = false })
 	end,
 })
@@ -117,12 +119,13 @@ local on_attach = function(client, bufnr)
 	end, bufopts)
 end
 
-for type, icon in pairs(signs) do
+for type, icon in pairs(signs) do -- set signs
 	local hl = "LspDiagnosticsSign" .. type
 	local hl = "DiagnosticSign" .. type
 	vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 end
 
+-- reqiure all servers
 for _, lsp in pairs(servers) do
 	if config[lsp] == nil then
 		config[lsp] = {}
