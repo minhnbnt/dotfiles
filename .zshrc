@@ -3,8 +3,14 @@
 #
 # If not running interactively, don't do anything
 
+[[ $- != *i* ]] && return
+
+#clear
+
 autoload -Uz add-zsh-hook
 autoload -Uz vcs_info
+
+# Title for terminal
 
 function xterm_title_precmd () {
 	print -Pn -- '\e]2;%n@%m:%~\a'
@@ -21,49 +27,25 @@ if [[ "$TERM" == (Eterm*|alacritty*|aterm*|gnome*|konsole*|kterm*|putty*|rxvt*|s
 	add-zsh-hook -Uz preexec xterm_title_preexec
 fi
 
-precmd() {
-    vcs_info
-}
+# Git diff in prompt
 
-zstyle ':vcs_info:git:*' formats '%F{6}[%F{#f05033}%f %F{15}%b%F{6}]%f'
+precmd() { vcs_info }
+
+zstyle ':vcs_info:git:*' formats '%F{6}[%F{#f05033}%f %b%F{6}]%f'
 zstyle ':vcs_info:*' formats " %F{cyan}%c%u(%b)%f"
 zstyle ':vcs_info:*' actionformats " %F{cyan}%c%u(%b)%f %a"
 zstyle ':vcs_info:*' stagedstr "%F{green}"
 zstyle ':vcs_info:*' unstagedstr "%F{red}"
 zstyle ':vcs_info:*' check-for-changes true
 
-# Git diff in prompt
-
-#clear
-
-#plugdir="~/.zsh"
-
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
 source /usr/share/zsh/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
-#source /usr/share/doc/pkgfile/command-not-found.zsh
 
-neofetch --stdout --config ~/.config/neofetch/configzsh.conf | sed '/^$/d'
-echo ""
+# Command number
 
-#echo 'Remember your studies before typing anything.'
-#echo "Good luck :D \n"
-
-export GTK_IM_MODULE=ibus
-export QT_IM_MODULE=ibus
-export XMODIFIERS=@im=ibus
-# Dành cho những phần mềm dựa trên qt4
-export QT4_IM_MODULE=ibus
-# Dành cho những phần mềm dùng thư viện đồ họa clutter/OpenGL
-export CLUTTER_IM_MODULE=ibus
-export GLFW_IM_MODULE=ibus
-#ibus-daemon -drx
-
-setopt PROMPT_SUBST
 [[ $cmdcount -ge 1 ]] || cmdcount=1
-preexec() {
-    ((cmdcount++))
-}
+preexec() { ((cmdcount++)) }
 
 ZSH_HIGHLIGHT_STYLES[precommand]=fg=11,underline
 ZSH_HIGHLIGHT_STYLES[function]=fg=14
@@ -72,16 +54,19 @@ ZSH_HIGHLIGHT_STYLES[command]=fg=14
 ZSH_HIGHLIGHT_STYLES[single-hyphen-option]=fg=3
 ZSH_HIGHLIGHT_STYLES[double-hyphen-option]=fg=3
 
-__git_files () {
-    _wanted files expl 'local files' _files
-}
+# Use local file only for zsh-autocomplete
 
-#Better history
+__git_files () { _wanted files expl 'local files' _files }
+
+# Better history
 
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=1000000000
 SAVEHIST=1000000000
 
+# Some options
+
+setopt PROMPT_SUBST
 setopt BANG_HIST                 # Treat the '!' character specially during expansion.
 setopt EXTENDED_HISTORY          # Write the history file in the ":start:elapsed;command" format.
 setopt INC_APPEND_HISTORY        # Write to the history file immediately, not when the shell exits.
@@ -96,6 +81,8 @@ setopt HIST_REDUCE_BLANKS        # Remove superfluous blanks before recording en
 setopt HIST_VERIFY               # Don't execute immediately upon history expansion.
 setopt HIST_BEEP                 # Beep when accessing nonexistent history.
 
+# PS1 prompt, look bad right?
+
 if [[ $(whoami) == "root" ]]; then
 	PS1='%F{6}┌─%f%F{6}[%f%B%F{15}$cmdcount%f%b%F{6}]%(?,,%F{6}[%f%B%F{9}%?%f%b%F{6}])─%f%F{6}[%f%B%F{11}%n%f%b%B%F{8}@%f%b%B%F{12}%m%f%b%F{6}]─[%f%F{13}%~%f%F{6}]%f'$'\n''%F{6}└╼%f%b %f%B%F{14}$%f%b '
 else
@@ -103,11 +90,11 @@ else
 	PS1='%F{6}┌─%f%F{6}[%f%B%F{15}$cmdcount%f%b%F{6}]%(?,,%F{6}[%f%B%F{9}%?%f%b%F{6}])─%f%F{6}[%f%B%F{10}%n%f%b%B%F{8}@%f%b%B%F{12}%m%f%b%F{6}]─[%f%F{13}%~%f%F{6}]${vcs_info_msg_0_}%f'$'\n''%F{6}└╼%f%b %f%B%F{14}$%f%b '
 fi
 
-#alias ls='ls -la --color --group-directories-first'
-
 # Some of my custom command
 
+neofetch(){/usr/bin/neofetch --stdout --config ~/.config/neofetch/configzsh.conf | sed '/^$/d'}
 ls(){/usr/bin/ls -Ahv --color --group-directories-first "$@"}
+matrix(){/usr/bin/neo-matrix -D "$@"}
 
 tlauncher(){(java -jar /home/minhnbnt/.tlauncher/TLauncher-2.86.jar "$@" > /dev/null 2>&1 &)}
 deadcells(){(sh /mnt/d/Dead\ Cells\ Linux/start.sh "$@" > /dev/null 2>&1 &)}
@@ -117,8 +104,7 @@ gungeon(){(sh /mnt/d/Enter\ the\ Gungeon/start.sh "$@" > /dev/null 2>&1 &)}
 chrome(){(/usr/bin/google-chrome-stable "$@" > /dev/null 2>&1 &)}
 chromium(){(/usr/bin/chromium %U "$@" > /dev/null 2>&1 &)}
 
-#v(){(alacritty --class=Nvim --option=window.dynamic_title=true -e nvim "$@" > /dev/null 2>&1 &)}
-vscode(){(/usr/bin/code --no-sandbox --new-window "$@" > /dev/null 2>&1 &)}
+#vscode(){(/usr/bin/code --no-sandbox --new-window "$@" > /dev/null 2>&1 &)}
 neovim(){(/usr/bin/nvim-qt "$@" > /dev/null 2>&1 &)}
 vi(){/usr/bin/nvim "$@"}
 emacs(){
@@ -176,3 +162,5 @@ power(){
 		esac
 	done
 }
+
+neofetch # I use Arch btw
