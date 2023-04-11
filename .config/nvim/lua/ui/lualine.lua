@@ -76,7 +76,38 @@ local config = {
 		-- disable sections and component separators
 		component_separators = "",
 		section_separators = "",
-		theme = "auto",
+		theme = {
+			normal = {
+				a = { fg = "#303446", bg = "#1E66F5" },
+				b = { fg = "#1E66F5", bg = "#414559" },
+				c = { fg = "#E6E9EF", bg = "#181825" },
+			},
+			insert = {
+				a = { fg = "#303446", bg = "#40A02B" },
+				b = { fg = "#40A02B", bg = "#414559" },
+				c = { fg = "#E6E9EF", bg = "#181825" },
+			},
+			visual = {
+				a = { fg = "#303446", bg = "#DF8E1D" },
+				b = { fg = "#DF8E1D", bg = "#414559" },
+				c = { fg = "#E6E9EF", bg = "#181825" },
+			},
+			command = {
+				a = { fg = "#303446", bg = "#EA76CB" },
+				b = { fg = "#EA76CB", bg = "#414559" },
+				c = { fg = "#E6E9EF", bg = "#181825" },
+			},
+			replace = {
+				a = { fg = "#303446", bg = "#E64553" },
+				b = { fg = "#E64553", bg = "#414559" },
+				c = { fg = "#E6E9EF", bg = "#181825" },
+			},
+			terminal = {
+				a = { fg = "#303446", bg = "#8839EF" },
+				b = { fg = "#8839EF", bg = "#414559" },
+				c = { fg = "#E6E9EF", bg = "#181825" },
+			},
+		},
 		padding = 1, -- padding between components
 	},
 	sections = {
@@ -91,7 +122,7 @@ local config = {
 					end
 					return chars[tab_width]
 				end,
-				color = { bg = "#373737" },
+				color = { bg = "#363A4F" },
 				padding = 0,
 			},
 		},
@@ -107,7 +138,7 @@ local config = {
 					local index = math.ceil(line_ratio * #chars)
 					return chars[index]
 				end,
-				color = { fg = "#373737" },
+				color = { fg = "#363A4F" },
 				padding = 0,
 			},
 		},
@@ -198,7 +229,7 @@ ins.left({
 		end
 		return ""
 	end,
-	color = { fg = "#28f5fc" },
+	color = { fg = "#04A5E5" },
 	cond = conditions.hide_in_width(1),
 	padding = { left = 1, right = 0 },
 })
@@ -211,7 +242,7 @@ ins.left({
 		end
 		return ""
 	end,
-	color = { fg = "#62a544" },
+	color = { fg = "#5ea64e" },
 	cond = conditions.hide_in_width(1),
 	padding = { left = 1, right = 0 },
 })
@@ -337,7 +368,7 @@ ins.left({
 ins.right({
 	server_name,
 	icon = "",
-	color = { fg = "#72edcc" },
+	color = { fg = "#5be3c8" },
 	cond = conditions.hide_in_width(2),
 })
 
@@ -359,7 +390,7 @@ ins.right({
 	icons_enabled = true,
 	icon = "",
 	cond = conditions.hide_in_width(3),
-	color = { fg = "#eb6750" },
+	color = { fg = "#FE640B" },
 })
 
 ins.right({
