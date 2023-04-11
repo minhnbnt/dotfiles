@@ -164,7 +164,7 @@ cmp.setup({
 		--{ name = "cmp_tabnine" },
 		{ name = "treesitter", priority = 10 },
 		{ name = "nvim_lua" },
-		--{ name = "copilot", priority = 100 },
+		{ name = "copilot", priority = 100 },
 		--{ name = "nvim_lsp_signature_help" },
 		{
 			name = "look",
@@ -221,6 +221,7 @@ cmp.setup.cmdline({ "/", "?" }, {
 	}),
 	sources = {
 		{ name = "buffer" },
+		{ name = "nvim_lsp_document_symbol" },
 	},
 })
 
