@@ -1,4 +1,15 @@
-local dap = require("dap")
+local dap, dapui = require("dap"), require("dapui")
+dap.listeners.after.event_initialized["dapui_config"] = function()
+	dapui.open()
+end
+dap.listeners.before.event_terminated["dapui_config"] = function()
+	dapui.close()
+end
+dap.listeners.before.event_exited["dapui_config"] = function()
+	dapui.close()
+end
+
+dap.set_log_level("TRACE")
 
 dap.adapters.lldb = {
 	type = "executable",
@@ -15,7 +26,14 @@ dap.configurations.cpp = {
 			return vim.fn.input("Path to executable: ", vim.fn.expand("%:p:r"), "file")
 		end,
 		cwd = "${workspaceFolder}",
-		stopOnEntry = false,
+		env = function()
+			local variables = {}
+			for k, v in pairs(vim.fn.environ()) do
+				table.insert(variables, string.format("%s=%s", k, v))
+			end
+			return variables
+		end,
+		stopOnEntry = true,
 		args = {},
 	},
 }
