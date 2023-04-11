@@ -53,7 +53,11 @@ return require("packer").startup(function(use)
 			"ahmedkhalf/project.nvim",
 			{
 				"nvim-telescope/telescope-fzf-native.nvim",
-				run = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+				run = {
+					"cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release &&",
+					"cmake --build build --config Release &&",
+					"cmake --install build --prefix build",
+				},
 			},
 		},
 	})
@@ -75,7 +79,6 @@ return require("packer").startup(function(use)
 	--use("petertriho/nvim-scrollbar")
 
 	use("Mofiqul/vscode.nvim")
-	use("folke/tokyonight.nvim")
 	--use("Mofiqul/dracula.nvim")
 	--use("chriskempson/base16-vim")
 
@@ -121,8 +124,9 @@ return require("packer").startup(function(use)
 			"quangnguyen30192/cmp-nvim-tags",
 			"ray-x/cmp-treesitter",
 			"f3fora/cmp-spell",
+			"hrsh7th/cmp-nvim-lsp-document-symbol",
 			--"hrsh7th/cmp-omni",
-			"hrsh7th/cmp-nvim-lsp-signature-help",
+			--"hrsh7th/cmp-nvim-lsp-signature-help",
 			"hrsh7th/cmp-copilot",
 			--"zbirenbaum/copilot-cmp",
 			--{
