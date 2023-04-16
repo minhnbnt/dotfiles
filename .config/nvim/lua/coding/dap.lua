@@ -2,12 +2,6 @@ local dap, dapui = require("dap"), require("dapui")
 dap.listeners.after.event_initialized["dapui_config"] = function()
 	dapui.open()
 end
-dap.listeners.before.event_terminated["dapui_config"] = function()
-	dapui.close()
-end
-dap.listeners.before.event_exited["dapui_config"] = function()
-	dapui.close()
-end
 
 dap.set_log_level("TRACE")
 
@@ -33,13 +27,35 @@ dap.configurations.cpp = {
 			end
 			return variables
 		end,
-		stopOnEntry = true,
+		stopOnEntry = false,
+		runInTerminal = true,
 		args = {},
 	},
 }
 
 dap.configurations.c = dap.configurations.cpp
 dap.configurations.rust = dap.configurations.cpp
+
+vim.api.nvim_create_user_command("DapUi", function(opts)
+	require("dapui")[opts.args]()
+end, {
+	nargs = 1,
+	complete = function()
+		return { "toggle", "open", "close" }
+	end,
+})
+
+vim.api.nvim_create_user_command("DapUiOpen", function()
+	require("dapui").open()
+end, { nargs = 0 })
+
+vim.api.nvim_create_user_command("DapUiClose", function()
+	require("dapui").close()
+end, { nargs = 0 })
+
+vim.api.nvim_create_user_command("DapUiToggle", function()
+	require("dapui").toggle()
+end, { nargs = 0 })
 
 require("dapui").setup({
 	controls = {
