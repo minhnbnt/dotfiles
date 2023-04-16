@@ -1,33 +1,66 @@
 require("code_runner").setup({
 	mode = "term",
+	startinsert = false,
 	term = {
-		--  Position to open the terminal, this option is ignored if mode is tab
-		position = "bot",
-		-- window size, this option is ignored if tab is true
-		size = 4,
+		position = "bot", -- Position to open the terminal, this option is ignored if mode is tab
+		size = 6, -- Window size, this option is ignored if tab is true
 	},
 	-- put here the commands by filetype
 	filetype = {
-		c = 'cd "$dir" && clang $fileName -lm -o $fileNameWithoutExt && ./$fileNameWithoutExt',
-		cpp = 'cd "$dir" && clang++ $fileName -o $fileNameWithoutExt && ./$fileNameWithoutExt',
-		go = "cd $dir && go run $fileName",
+		c = {
+			'cd "$dir" &&',
+			"clang $fileName -lm -g3 -o $fileNameWithoutExt &&", -- -lm is for math.h, -g3 is for debugging
+			"[[ -f input.txt ]] && echo 'Run with input.txt' &&", -- if input.txt exists, run with it
+			"./$fileNameWithoutExt < input.txt || ./$fileNameWithoutExt", -- else run without input
+		},
+		cpp = {
+			'cd "$dir" &&',
+			"clang++ $fileName -g3 -o $fileNameWithoutExt &&",
+			"[[ -f input.txt ]] && echo 'Run with input.txt' &&",
+			"./$fileNameWithoutExt < input.txt || ./$fileNameWithoutExt",
+		},
+		go = {
+			"cd $dir &&",
+			"[[ -f input.txt ]] && echo 'Run with input.txt' &&",
+			"go run $fileName < input.txt || go run $fileName",
+		},
 		html = "cd $dir && live-server --open=$fileName",
-		java = 'cd "$dir" && javac $fileName && java $fileNameWithoutExt',
-		javascript = "node",
-		lua = "lua",
-		nasm = 'cd "$dir" && nasm -f elf64 -o $fileNameWithoutExt.o $fileName && ld -o $fileNameWithoutExt $fileNameWithoutExt.o && ./$fileNameWithoutExt',
-		python = "python3 -u",
-		rust = "cd $dir && rustc $fileName && ./$fileNameWithoutExt",
-		sh = "cd $dir && sh $fileName",
-	},
-	--[[
-	project = {
-		["~/code"] = {
-			name = "For exam",
-			file_name = "main.c",
-			description = "Project with program use input file",
-			command = "cd $dir && clang $fileName -o $fileNameWithoutExt && ./$fileNameWithoutExt < input.txt",
+		java = {
+			'cd "$dir" && javac $fileName &&',
+			"[[ -f input.txt ]] && echo 'Run with input.txt' &&",
+			"java $fileNameWithoutExt < input.txt || java $fileNameWithoutExt",
+		},
+		javascript = {
+			"cd $dir &&",
+			"[[ -f input.txt ]] && echo 'Run with input.txt' &&",
+			"node $fileName < input.txt || node $fileName",
+		},
+		lua = {
+			"cd $dir &&",
+			"[[ -f input.txt ]] && echo 'Run with input.txt' &&",
+			"lua $fileName < input.txt || lua $fileName",
+		},
+		asm = {
+			'cd "$dir" &&',
+			"nasm -f elf64 -o $fileNameWithoutExt.o $fileName &&", -- compile with nasm
+			"ld -o $fileNameWithoutExt $fileNameWithoutExt.o &&", -- link with ld
+			"[[ -f input.txt ]] && echo 'Run with input.txt' &&",
+			"./$fileNameWithoutExt < input.txt || ./$fileNameWithoutExt",
+		},
+		python = {
+			"cd $dir &&",
+			"[[ -f input.txt ]] && echo 'Run with input.txt' &&",
+			"python $fileName < input.txt || python $fileName",
+		},
+		rust = {
+			'cd "$dir" && rustc $fileName &&',
+			"[[ -f input.txt ]] && echo 'Run with input.txt' &&",
+			"./$fileNameWithoutExt < input.txt || ./$fileNameWithoutExt",
+		},
+		sh = {
+			"cd $dir &&",
+			"[[ -f input.txt ]] && echo 'Run with input.txt' &&",
+			"bash $fileName < input.txt || bash $fileName",
 		},
 	},
-  ]]
 })
