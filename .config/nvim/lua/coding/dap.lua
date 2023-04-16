@@ -37,7 +37,7 @@ dap.configurations.c = dap.configurations.cpp
 dap.configurations.rust = dap.configurations.cpp
 
 vim.api.nvim_create_user_command("DapUi", function(opts)
-	require("dapui")[opts.args]()
+	dapui[opts.args]()
 end, {
 	nargs = 1,
 	complete = function()
@@ -46,18 +46,18 @@ end, {
 })
 
 vim.api.nvim_create_user_command("DapUiOpen", function()
-	require("dapui").open()
+	dapui.open()
 end, { nargs = 0 })
 
 vim.api.nvim_create_user_command("DapUiClose", function()
-	require("dapui").close()
+	dapui.close()
 end, { nargs = 0 })
 
 vim.api.nvim_create_user_command("DapUiToggle", function()
-	require("dapui").toggle()
+	dapui.toggle()
 end, { nargs = 0 })
 
-require("dapui").setup({
+dapui.setup({
 	controls = {
 		element = "repl",
 		enabled = true,

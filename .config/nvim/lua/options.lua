@@ -58,7 +58,7 @@ end
 
 vim.opt.cmdheight = 0
 --vim.api.nvim_set_hl(0, "MsgArea", { link = "lualine_c_normal" })
-
+--[[
 vim.api.nvim_create_autocmd("CmdlineEnter", {
 	callback = function()
 		vim.opt.cmdheight = 1
@@ -69,7 +69,7 @@ vim.api.nvim_create_autocmd("CmdlineLeave", {
 		vim.opt.cmdheight = 0
 	end,
 })
-
+]]
 vim.g.cursorhold_updatetime = 1000
 
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
@@ -91,6 +91,10 @@ vim.api.nvim_create_autocmd("VimResized", {
 local keymap = vim.api.nvim_set_keymap
 local opts = { noremap = true, silent = true }
 local term_opts = { silent = true }
+
+keymap("v", "<BS>", "<Del>", opts)
+keymap("v", "<RightMouse>", "<C-><C-g>gv<cmd>:popup! PopUp<cr>", opts)
+keymap("t", "<esc>", "<C-\\><C-n>", term_opts)
 
 -- Undo, Redo
 --keymap("", "<C-z>", ":undo<CR>", opts)
@@ -127,6 +131,7 @@ vim.cmd([[
     nnoremenu <silent> PopUp.Format\ code       :lua vim.lsp.buf.format()<cr>
 	nnoremenu <silent> PopUp.Find\ File         :Telescope find_files hidden=true<cr>
     nnoremenu <silent> PopUp.Run\ code          <cmd>w<cr><cmd>RunCode<cr>
+    nnoremenu <silent> PopUp.Toggle\ DAP\ UI    :lua require("dapui").toggle()<cr>
     vnoremenu PopUp.Cut                         "+x
     vnoremenu PopUp.Copy                        "+ygv
     anoremenu PopUp.Paste                       "+gP
