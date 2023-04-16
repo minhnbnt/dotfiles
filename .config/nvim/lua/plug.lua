@@ -18,6 +18,7 @@ load("ui.notify")
 load("ui.noice")
 --load("ui.dashboard")
 --load("ui.scrollbar")
+load("ui.statuscol")
 
 load("lsp.cmp")
 --load("lsp.copilot")

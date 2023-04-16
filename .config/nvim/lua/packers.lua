@@ -62,7 +62,7 @@ return require("packer").startup(function(use)
 		},
 	})
 
-	--use("lewis6991/gitsigns.nvim")
+	use("lewis6991/gitsigns.nvim")
 
 	use({ "kevinhwang91/nvim-ufo", requires = "kevinhwang91/promise-async" })
 
@@ -104,6 +104,7 @@ return require("packer").startup(function(use)
 
 	use("mfussenegger/nvim-dap")
 	use("rcarriga/nvim-dap-ui")
+	use("luukvbaal/statuscol.nvim")
 
 	use("rafamadriz/friendly-snippets")
 	use("honza/vim-snippets")
