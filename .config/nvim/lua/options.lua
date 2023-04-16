@@ -57,7 +57,6 @@ if vim.g.neovide then
 end
 
 vim.opt.cmdheight = 0
---vim.api.nvim_set_hl(0, "MsgArea", { link = "lualine_c_normal" })
 --[[
 vim.api.nvim_create_autocmd("CmdlineEnter", {
 	callback = function()

@@ -57,6 +57,12 @@ vim.api.nvim_create_user_command("DapUiToggle", function()
 	dapui.toggle()
 end, { nargs = 0 })
 
+vim.fn.sign_define("DapBreakpoint", { text = "" })
+vim.fn.sign_define("DapStopped", { text = "" })
+vim.fn.sign_define("DapBreakpointCondition", { text = "ﳁ" })
+vim.fn.sign_define("DapBreakpointRejected", { text = "" })
+vim.fn.sign_define("DapLogPoint", { text = "" })
+
 dapui.setup({
 	controls = {
 		element = "repl",
