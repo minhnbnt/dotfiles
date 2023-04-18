@@ -41,36 +41,6 @@ local server_name = function()
 	return table.concat(display, ", ")
 end
 
-local function file_ext()
-	local filename = vim.fn.expand("%:t")
-	local ft = filename:match("[^.]+$")
-	local map = {
-		cpp = "c++",
-		cc = "c++",
-		cxx = "c++",
-		csharp = "c#",
-		css = "CSS",
-		html = "HTML",
-		h = "header",
-		hh = "header",
-		hpp = "header",
-		hxx = "header",
-		["h++"] = "header",
-		json = "JSON",
-		jsonc = "JSON comments",
-		py = "python",
-		txt = "text",
-		sh = "shell",
-		yaml = "YAML",
-	}
-	if map[ft] then
-		return map[ft]
-	elseif ft then
-		return ft
-	end
-	return ""
-end
-
 local config = {
 	options = {
 		-- disable sections and component separators
@@ -207,7 +177,8 @@ local conditions = {
 
 ins.left({
 	function() -- :)))
-		if vim.fn.winwidth(0) < 115 then -- adjust identation
+		local ft = { "htm", "html", "xhtml", "xml" }
+		if vim.fn.winwidth(0) < 115 or vim.tbl_contains(ft, vim.bo.filetype) then
 			vim.cmd("se tabstop=2 shiftwidth=2 softtabstop=2")
 		else
 			vim.cmd("se tabstop=4 shiftwidth=4 softtabstop=4")
@@ -247,20 +218,38 @@ ins.left({
 	padding = { left = 1, right = 0 },
 })
 
+--[[ins.left(function()
+	local name, ext = vim.fn.expand("%:t"), vim.fn.expand("%:e")
+	local icon, hl = require("nvim-web-devicons").get_icon(name, ext, { default = false })
+	return {
+		function()
+			if icon then
+				return icon
+			end
+			return ""
+		end,
+		color = { fg = hl },
+	}
+end)]]
 ins.left({
-	"filetype",
+	"filetype" or " ",
 	icon_only = true,
 })
 
 ins.left({
-	function() -- filetype
-		return vim.bo.filetype
+	function() -- filetype name
+		local icon = require("nvim-web-devicons").get_icons()
+		local name, ext = vim.fn.expand("%:t"), vim.fn.expand("%:e")
+		if icon[ext] then
+			return icon[ext].name
+		elseif icon[name] then
+			return icon[name].name
+		else
+			return vim.bo.filetype:gsub("^%l", string.upper)
+		end
 	end,
 	cond = conditions.hide_in_width(2),
 	padding = { left = 0, right = 1 },
-	fmt = function(str)
-		return str:gsub("^%l", string.upper)
-	end,
 })
 
 ins.left({
