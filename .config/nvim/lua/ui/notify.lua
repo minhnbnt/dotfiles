@@ -2,7 +2,7 @@ require("notify").setup({
 	background_colour = "#000000",
 	render = "compact",
 	stages = "slide",
-	top_down = true,
+	top_down = false,
 })
 
 vim.notify = function(msg, ...)

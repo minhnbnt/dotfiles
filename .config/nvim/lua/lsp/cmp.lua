@@ -1,10 +1,6 @@
 -- Set up nvim-cmp.
 local cmp = require("cmp")
 
---require("copilot_cmp").setup({
---	method = "getPanelCompletions",
---})
-
 local type_comparator = function(conf)
 	local lsp_types = require("cmp.types").lsp
 	return function(entry1, entry2)
@@ -143,17 +139,17 @@ cmp.setup({
 		["<C-f>"] = cmp.mapping.scroll_docs(4),
 		["<C-Space>"] = cmp.mapping.complete(),
 		["<ESC>"] = cmp.mapping.abort(),
-		["<CR>"] = cmp.mapping.confirm(), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+		["<CR>"] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
 		["<Tab>"] = cmp.mapping.confirm({ select = true }),
 		["<Down>"] = cmp.mapping.select_next_item(),
 		["<Up>"] = cmp.mapping.select_prev_item(),
 		--["<Right>"] = cmp.mapping.confirm({ select = true }),
 	}),
 	sources = cmp.config.sources({
-		{ name = "nvim_lsp", priority = 1000 },
+		{ name = "nvim_lsp" },
 		{ name = "path" },
 		--{ name = "vsnip" }, -- For vsnip users.
-		{ name = "luasnip", priority = 10000 }, -- For luasnip users.
+		{ name = "luasnip" }, -- For luasnip users.
 		--{ name = "ultisnips" }, -- For ultisnips users.
 		--{ name = "snippy" }, -- For snippy users.
 		--{ name = "omni" },
@@ -162,9 +158,9 @@ cmp.setup({
 		{ name = "buffer" },
 		{ name = "calc" },
 		--{ name = "cmp_tabnine" },
-		{ name = "treesitter", priority = 10 },
+		{ name = "treesitter" },
 		{ name = "nvim_lua" },
-		{ name = "copilot", priority = 100 },
+		{ name = "copilot" },
 		--{ name = "nvim_lsp_signature_help" },
 		{
 			name = "look",
@@ -193,7 +189,8 @@ cmp.setup({
 			-- Kind icons
 			-- vim_item.kind = string.format("%s", kind_icons[vim_item.kind])
 			vim_item.dup = { nvim_lsp = 0 }
-			vim_item.kind = string.format("%s %s", kind_icons[vim_item.kind], vim_item.kind)
+			local icon = kind_icons[vim_item.kind] or " "
+			vim_item.kind = string.format("%s %s", icon, vim_item.kind)
 			-- source icons
 			vim_item.menu = source_icons[entry.source.name]
 			return vim_item

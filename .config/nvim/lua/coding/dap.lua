@@ -1,10 +1,4 @@
 local dap, dapui = require("dap"), require("dapui")
-dap.listeners.after.event_initialized["dapui_config"] = function()
-	dapui.open()
-end
-
-dap.set_log_level("TRACE")
-
 dap.adapters.lldb = {
 	type = "executable",
 	command = "/usr/bin/lldb-vscode", -- adjust as needed, must be absolute path
@@ -36,6 +30,12 @@ dap.configurations.cpp = {
 dap.configurations.c = dap.configurations.cpp
 dap.configurations.rust = dap.configurations.cpp
 
+dap.listeners.after.event_initialized["dapui_config"] = function()
+	dapui.open()
+end
+
+--dap.set_log_level("TRACE")
+
 vim.api.nvim_create_user_command("DapUi", function(opts)
 	dapui[opts.args]()
 end, {
@@ -44,15 +44,12 @@ end, {
 		return { "toggle", "open", "close" }
 	end,
 })
-
 vim.api.nvim_create_user_command("DapUiOpen", function()
 	dapui.open()
 end, { nargs = 0 })
-
 vim.api.nvim_create_user_command("DapUiClose", function()
 	dapui.close()
 end, { nargs = 0 })
-
 vim.api.nvim_create_user_command("DapUiToggle", function()
 	dapui.toggle()
 end, { nargs = 0 })
@@ -96,36 +93,18 @@ dapui.setup({
 	layouts = {
 		{
 			elements = {
-				{
-					id = "scopes",
-					size = 0.25,
-				},
-				{
-					id = "breakpoints",
-					size = 0.25,
-				},
-				{
-					id = "stacks",
-					size = 0.25,
-				},
-				{
-					id = "watches",
-					size = 0.25,
-				},
+				{ id = "scopes", size = 0.25 },
+				{ id = "breakpoints", size = 0.25 },
+				{ id = "stacks", size = 0.25 },
+				{ id = "watches", size = 0.25 },
 			},
 			position = "left",
 			size = 40,
 		},
 		{
 			elements = {
-				{
-					id = "repl",
-					size = 0.5,
-				},
-				{
-					id = "console",
-					size = 0.5,
-				},
+				{ id = "repl", size = 0.5 },
+				{ id = "console", size = 0.5 },
 			},
 			position = "bottom",
 			size = 10,

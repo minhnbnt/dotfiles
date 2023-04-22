@@ -4,7 +4,7 @@ require("telescope").setup({
 	defaults = {
 		-- Default configuration for telescope goes here:
 		-- config_key = value,
-		-- borderchars  = { "─", "│", "─", "│", "┌", "┐", "┘", "└" }
+		-- borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
 	},
 	pickers = {
 		-- Default configuration for builtin pickers goes here:
