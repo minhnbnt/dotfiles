@@ -38,9 +38,9 @@ require("code_runner").setup({
 		html = "cd $dir && live-server --open=$fileName",
 		java = {
 			'cd "$dir" && javac $fileName &&', -- compile with javac from jdk
-			"[[ ! -f input.txt ]] && java $fileNameWithoutExt.class || {", -- run class file
+			"[[ ! -f input.txt ]] && java $fileNameWithoutExt || {", -- run class file
 			"echo 'Run with input.txt:' && cat input.txt && echo '------------' &&",
-			"java $fileNameWithoutExt.class < input.txt }",
+			"java $fileNameWithoutExt < input.txt }",
 		},
 		javascript = {
 			'cd "$dir" &&',
