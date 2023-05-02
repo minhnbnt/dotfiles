@@ -1,4 +1,4 @@
-local copilot_active = false
+--local copilot_active = false
 
 local server_name = function()
 	local attached = {} -- list of attached servers
@@ -20,8 +20,8 @@ local server_name = function()
 			else -- regular lsp clients
 				table.insert(attached, client.name)
 			end
-		elseif client.name == "copilot" then
-			copilot_active = true -- for later
+			--elseif client.name == "copilot" then
+			--	copilot_active = true -- for later
 		end
 	end
 	local display = {}
@@ -193,7 +193,7 @@ ins.left({
 	cond = conditions.hide_in_width(6),
 })
 
-ins.left({
+--[[ins.left({
 	function()
 		if copilot_active then
 			return ""
@@ -203,8 +203,7 @@ ins.left({
 	color = { fg = "#04A5E5" },
 	cond = conditions.hide_in_width(1),
 	padding = { left = 1, right = 0 },
-})
-
+})]]
 ins.left({
 	function()
 		local b = vim.api.nvim_get_current_buf()
@@ -232,7 +231,7 @@ ins.left({
 	}
 end)]]
 ins.left({
-	"filetype" or " ",
+	require("ui.test"),
 	icon_only = true,
 })
 
@@ -263,7 +262,7 @@ ins.left({
 	cond = conditions.hide_in_width(7),
 })
 
-ins.left({
+--[[ins.left({
 	function()
 		if vim.fn.winwidth(0) > 115 or vim.api.nvim_get_mode().mode == "n" or vim.o.showmode then
 			return ""
@@ -272,8 +271,7 @@ ins.left({
 	end,
 	color = { gui = "bold" },
 	padding = { left = 1, right = 0 },
-})
-
+})]]
 ins.left({
 	function()
 		if vim.bo.modified then
@@ -393,6 +391,11 @@ ins.right({
 ins.right({
 	"searchcount",
 	cond = conditions.hide_in_width(10),
+})
+
+ins.right({
+	require("noice").api.status.command.get,
+	cond = require("noice").api.status.command.has,
 })
 
 ins.right({
