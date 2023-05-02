@@ -105,6 +105,7 @@ chrome(){(/usr/bin/google-chrome-stable "$@" > /dev/null 2>&1 &)}
 chromium(){(/usr/bin/chromium %U "$@" > /dev/null 2>&1 &)}
 
 #vscode(){(/usr/bin/code --no-sandbox --new-window "$@" > /dev/null 2>&1 &)}
+eclipse(){(/usr/bin/eclipse "$@" > /dev/null 2>&1 &)}
 neovim(){(/usr/bin/nvim-qt "$@" > /dev/null 2>&1 &)}
 vi(){/usr/bin/nvim "$@"}
 emacs(){
