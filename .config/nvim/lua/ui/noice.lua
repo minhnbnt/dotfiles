@@ -189,7 +189,7 @@ require("noice").setup({
 		popup = { border = { style = { "┌", "─", "┐", "│", "┘", "─", "└", "│" } } },
 		notify = { border = { style = { "┌", "─", "┐", "│", "┘", "─", "└", "│" } } },
 		confirm = { border = { style = { "┌", "─", "┐", "│", "┘", "─", "└", "│" } } },]]
-		cmdline_popup = { size = { min_width = 40 } },
+		cmdline_popup = { size = { min_width = 60 } },
 	}, ---@see section on views
 	---@type NoiceRouteConfig[]
 	routes = {}, --- @see section on routes
