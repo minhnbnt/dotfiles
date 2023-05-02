@@ -59,7 +59,7 @@ symbol="${reset}${bold}${cyan}$(if [[ ${EUID} == 0 ]]; then echo '#'; else echo 
 cmd_num="${white}${bold}"
 
 # disable if in console
-if [[ -z $DISPLAY ]] ; then
+if [[ -z $DISPLAY ]] && [[ ! -f /data/data/com.termux/files/usr/bin/termux-info ]]; then
 	sleep 2
 	return
 fi
