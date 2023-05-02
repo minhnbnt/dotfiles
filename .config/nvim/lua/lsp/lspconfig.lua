@@ -37,7 +37,8 @@ local config = {
 		single_file_support = true,
 		init_options = { jvm_args = {} },
 		cmd = { "/usr/share/java/jdtls/bin/jdtls" }, -- AUR package jdtls
-		root_dir = vim.fs.dirname(vim.fs.find({ "gradlew", ".git", "mvnw" }, { upward = true })[1]),
+		--root_dir = vim.fs.dirname(vim.fs.find({ "gradlew", ".git", "mvnw" }, { upward = true })[1]),
+		root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew" }),
 	},
 }
 
@@ -61,29 +62,9 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagn
 	update_in_insert = false,
 })
 
-local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
-capabilities = {
-	documentFormatting = false,
-	documentRangeFormattingProvider = true,
-	textDocument = {
-		foldingRange = {
-			dynamicRegistration = false,
-			lineFoldingOnly = true,
-		},
-		completion = {
-			completionItem = {
-				--snippetSupport = true,
-				resolveSupport = {
-					properties = {
-						"documentation",
-						"detail",
-						"additionalTextEdits",
-					},
-				},
-			},
-		},
-	},
-}
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
+capabilities.textDocument.documentFormattingProvider = false
 
 -- Mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
