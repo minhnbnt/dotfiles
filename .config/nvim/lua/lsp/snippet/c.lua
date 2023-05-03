@@ -19,6 +19,10 @@ table.insert(
 		trig = "#include <stdio.h>",
 		namr = "c initial",
 		dscr = "c initial file",
+		condition = function(line_to_cursor, matched_trigger)
+			-- +1 because `string.sub("abcd", 1, -2)` -> abc
+			return line_to_cursor:sub(1, -(#matched_trigger + 1)):match("^%s*$")
+		end,
 	}, {
 		text({ "#include <stdio.h>", "", "" }),
 		text({ "int main(int argc, char *argv[]) {", "\t" }),
