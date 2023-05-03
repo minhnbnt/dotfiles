@@ -1,7 +1,8 @@
 * {
 	/* `otf-font-awesome` is required to be installed for icons */
-	font-family: Segoe UI, FontAwesome, 'Font Awesome 6 Pro';
+	font-family: Segoe UI, FontAwesome, "Font Awesome 6 Pro";
 	font-size: 13px;
+	border: none;
 }
 
 window#waybar {
