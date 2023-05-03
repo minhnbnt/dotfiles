@@ -35,7 +35,7 @@ load("coding.coderunner")
 load("coding.treesitter")
 load("coding.identblankline")
 --load("coding.filetype")
---load("coding.gitsigns")
+load("coding.gitsigns")
 
 load("browser.project")
 load("browser.telescope")
