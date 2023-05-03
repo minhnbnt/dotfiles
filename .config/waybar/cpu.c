@@ -58,13 +58,13 @@ ull sumOfArray(ull *a, int n) {
 	return sum;
 }
 
-float cpu_usage(char *path, unsigned interval) {
+float cpu_usage(void) {
 	ull a[10];
-	FILE *fp = fopen(path, "r");
+	FILE *fp = fopen("/proc/stat", "r");
 	fscanf(fp, "%*s %llu %llu %llu %llu %llu %llu %llu %llu %llu %llu", &a[0],
 	       &a[1], &a[2], &a[3], &a[4], &a[5], &a[6], &a[7], &a[8], &a[9]);
 	ull idle = a[3] + a[4], total = sumOfArray(a, 10);
-	sleep(interval), fp = fopen(path, "r");
+	sleep(10), fp = fopen("/proc/stat", "r");
 	fscanf(fp, "%*s %llu %llu %llu %llu %llu %llu %llu %llu %llu %llu", &a[0],
 	       &a[1], &a[2], &a[3], &a[4], &a[5], &a[6], &a[7], &a[8], &a[9]);
 	fclose(fp), idle = a[3] + a[4] - idle, total = sumOfArray(a, 10) - total;
@@ -77,8 +77,7 @@ int main(int argc, char *argv[]) {
 		 *current_profile = "powerprofilesctl get ";
 	if (argc == 1) {
 		printf("<span>%s</span> %.2fGHz %.3g%%\n",
-		       power_profile(current_profile), cpu_clock(cpuinfo),
-		       cpu_usage(stat, interval));
+		       power_profile(current_profile), cpu_clock(cpuinfo), cpu_usage());
 		return 0;
 	} else {
 		if (strcmp(argv[1], "-l") == 0) {
@@ -115,7 +114,7 @@ int main(int argc, char *argv[]) {
 			else if (strcmp(argv[argpos], "-c") == 0)
 				printf("%.2fGHz", cpu_clock(cpuinfo));
 			else if (strcmp(argv[argpos], "-u") == 0) {
-				float usage = cpu_usage(stat, interval);
+				float usage = cpu_usage();
 				if (colored) {
 					char *color[6] = {
 						"#00ffae", "#04ff00", "#eaff00",

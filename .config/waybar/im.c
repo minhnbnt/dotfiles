@@ -5,6 +5,8 @@
 int main(int argc, char *argv[]) {
 	FILE *fp = popen("ibus engine", "r");
 	char engine[30], buf[30], layout[5];
+	// const char *color1[2] = {"#9cdcfe", "#f44747"};
+	const char *color2[2] = {"#1E66F5", "#D20F39"};
 	if (fp == NULL) printf("Error opening pipe!"), exit(1);
 	else fscanf(fp, "%s", engine);
 	fp = popen("setxkbmap -query", "r");
@@ -18,11 +20,11 @@ int main(int argc, char *argv[]) {
 		if (!strcmp(engine, "BambooUs")) {
 			printf("<span>EN</span>");
 		} else if (!strcmp(engine, "Bamboo"))
-			printf("<span color=\"#f44747\">VI</span>");
+			printf("<span color=\"%s\">VI</span>", color2[1]);
 		else printf("%s", engine);
 		printf(" ");
 		if (!strcmp(layout, "us")) {
-			printf("<span color=\"#9cdcfe\">US</span>");
+			printf("<span color=\"%s\">US</span>", color2[0]);
 		} else if (!strcmp(layout, "jp")) {
 			printf("<span>JP</span>");
 		} else printf("%s", layout);
