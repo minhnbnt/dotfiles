@@ -90,4 +90,5 @@ vim.cmd([[
     hi BufferLineDuplicate guibg=#232634
     hi BufferLineModified guibg=#232634
     hi ModeMsg guibg=none gui=bold
+    hi DiagnosticSignHint guifg=#99d1db
 ]])
