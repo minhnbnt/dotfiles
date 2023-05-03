@@ -101,7 +101,7 @@ local on_attach = function(client, bufnr)
 end
 
 for type, icon in pairs(signs) do -- set signs
-	local hl = "LspDiagnosticsSign" .. type
+	-- local hl = "LspDiagnosticsSign" .. type
 	local hl = "DiagnosticSign" .. type
 	vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 end
