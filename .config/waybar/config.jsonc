@@ -77,7 +77,7 @@
 		"return-type": "json",
 		"exec": "~/.config/waybar/cpu3",
 		"format": " {}",
-		"format-alt": "{alt}",
+		"format-alt": " {alt}",
 		"tooltip": false
 	},
 	"cpu": {
@@ -156,7 +156,7 @@
 		"on-click": "~/.config/waybar/im e",
 		"on-click-right": "~/.config/waybar/im l",
 		"tooltip": false,
-		"exec": "~/.config/waybar/im nocolor",
+		"exec": "~/.config/waybar/im",
 		"interval": 1
 	},
 	"tray": {
