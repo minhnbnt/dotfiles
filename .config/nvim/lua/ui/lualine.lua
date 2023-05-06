@@ -316,17 +316,12 @@ ins.left({
 
 ins.left({
 	function() -- filetype name
-		local icon = require("nvim-web-devicons").get_icons()
-		local name, ext = vim.fn.expand("%:t"), vim.fn.expand("%:e")
-		if icon[ext] then
-			return icon[ext].name
-		elseif icon[name] then
-			return icon[name].name
-		else
-			return vim.bo.filetype:gsub("^%l", string.upper)
-		end
+		return vim.bo.filetype
 	end,
 	cond = conditions.hide_in_width(2),
+	fmt = function(str)
+		return str:gsub("^%l", string.upper)
+	end,
 	padding = { left = 0, right = 1 },
 })
 
