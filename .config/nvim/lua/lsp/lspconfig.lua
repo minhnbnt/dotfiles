@@ -37,9 +37,19 @@ local config = {
 		single_file_support = true,
 		init_options = { jvm_args = {} },
 		cmd = { "/usr/share/java/jdtls/bin/jdtls" }, -- AUR package jdtls
-		--root_dir = vim.fs.dirname(vim.fs.find({ "gradlew", ".git", "mvnw" }, { upward = true })[1]),
 		root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew" }),
 	},
+}
+
+local init = {
+	jdtls = function()
+		vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+			callback = function()
+				require("jdtls").start_or_attach(config.jdtls)
+			end,
+			pattern = "*.java",
+		})
+	end,
 }
 
 local signs = {
@@ -115,13 +125,9 @@ for _, lsp in pairs(servers) do
 		capabilities = capabilities,
 		on_attach = on_attach,
 	})
-	if lsp == "jdtls" then -- jdtls requires special setup
-		vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-			callback = function()
-				require("jdtls").start_or_attach(config.jdtls)
-			end,
-			pattern = "*.java",
-		})
+	if init[lsp] ~= nil then
+		-- if server needs custom init options
+		init[lsp]()
 	else -- all other servers
 		require("lspconfig")[lsp].setup(config[lsp])
 	end
