@@ -1,3 +1,18 @@
+local function get_command(compile, run)
+	if compile == nil then
+		compile = ""
+	else
+		compile = compile .. " && "
+	end
+	return {
+		'cd "$dir" && ' .. compile .. "[[ -f input.txt ]] && {",
+		'cat input.txt && read -p "Run with input.txt? [Y/n]: " answer;',
+		'while [[ $answer != [yYnN] ]]; do read -p "Invalid option [Y/N]: " answer; done;',
+		"[[ $answer == [yY] ]] && { " .. run .. " < input.txt; } ||",
+		"{ " .. run .. '; } } || { echo "Ready."; ' .. run .. "; }",
+	}
+end
+
 require("code_runner").setup({
 	mode = "term",
 	startinsert = false,
@@ -7,70 +22,19 @@ require("code_runner").setup({
 	},
 	-- put here the commands by filetype
 	filetype = {
-		asm = {
-			'cd "$dir" &&',
-			"nasm -f elf64 -o $fileNameWithoutExt.o $fileName &&", -- compile with nasm
-			"ld -o $fileNameWithoutExt $fileNameWithoutExt.o &&", -- link to create the executable
-			"[[ ! -f input.txt ]] && ./$fileNameWithoutExt || {", -- if input.txt doesn't exist, run the program
-			"echo 'Run with input.txt:' && cat input.txt && echo '------------' &&", -- some message
-			"./$fileNameWithoutExt < input.txt }", -- run the program with input.txt
-		},
-		c = {
-			'cd "$dir" &&',
-			"clang $fileName -lm -g3 -o $fileNameWithoutExt &&", -- -lm is for math.h, -g3 is for lldb
-			"[[ ! -f input.txt ]] && ./$fileNameWithoutExt || {",
-			"echo 'Run with input.txt:' && cat input.txt && echo '------------' &&",
-			"./$fileNameWithoutExt < input.txt }",
-		},
-		cpp = {
-			'cd "$dir" &&',
-			"clang++ $fileName -g3 -o $fileNameWithoutExt &&",
-			"[[ ! -f input.txt ]] && ./$fileNameWithoutExt || {",
-			"echo 'Run with input.txt:' && cat input.txt && echo '------------' &&",
-			"./$fileNameWithoutExt < input.txt }",
-		},
-		go = {
-			'cd "$dir" &&',
-			"[[ ! -f input.txt ]] && go run $fileName || {",
-			"echo 'Run with input.txt:' && cat input.txt && echo '------------' &&",
-			"go run $fileName < input.txt }",
-		},
+		asm = get_command(
+			"nasm -f elf64 $fileName && ld -o $fileNameWithoutExt $fileNameWithoutExt.o",
+			"./$fileNameWithoutExt"
+		),
+		c = get_command("clang $fileName -lm -o $fileNameWithoutExt", "./$fileNameWithoutExt"),
+		cpp = get_command("clang++ $fileName -o $fileNameWithoutExt", "./$fileNameWithoutExt"),
+		go = get_command(nil, "go run $fileName"),
 		html = "cd $dir && live-server --open=$fileName",
-		java = {
-			'cd "$dir" && javac $fileName &&', -- compile with javac from jdk
-			"[[ ! -f input.txt ]] && java $fileNameWithoutExt || {", -- run class file
-			"echo 'Run with input.txt:' && cat input.txt && echo '------------' &&",
-			"java $fileNameWithoutExt < input.txt }",
-		},
-		javascript = {
-			'cd "$dir" &&',
-			"[[ ! -f input.txt ]] && node $fileName || {",
-			"echo 'Run with input.txt:' && cat input.txt && echo '------------' &&",
-			"node $fileName < input.txt }",
-		},
-		lua = {
-			'cd "$dir" &&',
-			"[[ ! -f input.txt ]] && lua $fileName || {",
-			"echo 'Run with input.txt:' && cat input.txt && echo '------------' &&",
-			"lua $fileName < input.txt }",
-		},
-		python = {
-			'cd "$dir" &&',
-			"[[ ! -f input.txt ]] && python3 $fileName || {",
-			"echo 'Run with input.txt:' && cat input.txt && echo '------------' &&",
-			"python3 $fileName < input.txt }",
-		},
-		rust = {
-			'cd "$dir" && rustc $fileName &&',
-			"[[ ! -f input.txt ]] && ./$fileNameWithoutExt || {",
-			"echo 'Run with input.txt:' && cat input.txt && echo '------------' &&",
-			"./$fileNameWithoutExt < input.txt }",
-		},
-		sh = {
-			'cd "$dir" &&',
-			"[[ ! -f input.txt ]] && bash $fileName || {",
-			"echo 'Run with input.txt:' && cat input.txt && echo '------------' &&",
-			"bash $fileName < input.txt }",
-		},
+		java = get_command("javac $fileName", "java $fileNameWithoutExt"),
+		javascript = get_command(nil, "node $fileName"),
+		lua = get_command(nil, "lua $fileName"),
+		python = get_command(nil, "python $fileName"),
+		rust = get_command("rustc $fileName", "./$fileNameWithoutExt"),
+		sh = get_command(nil, "bash $fileName"),
 	},
 })
