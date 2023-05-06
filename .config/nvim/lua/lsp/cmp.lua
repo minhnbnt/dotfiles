@@ -45,6 +45,7 @@ local source_icons = {
 	treesitter = "",
 	copilot = "",
 	cmdline = "",
+	nvim_lua = "",
 }
 
 cmp.setup({
@@ -135,7 +136,7 @@ cmp.setup({
 			local icon = kind_icons[vim_item.kind] or " "
 			vim_item.kind = string.format("%s %s", icon, vim_item.kind)
 			-- source icons
-			vim_item.menu = source_icons[entry.source.name]
+			vim_item.menu = (source_icons[entry.source.name] or " ") .. " "
 			return vim_item
 		end,
 	},
