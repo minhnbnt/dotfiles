@@ -11,7 +11,28 @@ dap.configurations.cpp = {
 		type = "lldb",
 		request = "launch",
 		program = function()
-			return vim.fn.input("Path to executable: ", vim.fn.expand("%:p:r"), "file")
+			local compile
+			local path, type = vim.fn.expand("%:p:h"), vim.bo.filetype
+			local name, without_ext = vim.fn.expand("%:t"), vim.fn.expand("%:t:r")
+			local command = {
+				c = "clang -g3 ",
+				cpp = "clang++ -g3 ",
+				rs = "rustc -g ",
+			}
+			if command[type] ~= nil then
+				vim.cmd("w")
+				compile = assert(
+					io.popen('cd "' .. path .. '" && ' .. command[type] .. name .. " -o " .. without_ext .. " 2>&1")
+				)
+			end
+			local output = compile:read("*all")
+			compile:close()
+			if output ~= "" then
+				vim.notify(output, vim.log.levels.ERROR, { title = "Compilation Error" })
+				return
+			else
+				return vim.fn.expand("%:p:r")
+			end
 		end,
 		cwd = "${workspaceFolder}",
 		env = function()
