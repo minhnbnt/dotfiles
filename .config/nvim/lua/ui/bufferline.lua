@@ -17,9 +17,6 @@ require("bufferline").setup({
 		diagnostics = "none",
 		diagnostics_update_in_insert = false,
 		-- The diagnostics indicator can be set to nil to keep the buffer name highlight but delete the highlighting
-		diagnostics_indicator = function(count, level, diagnostics_dict, context)
-			return "(" .. count .. ")"
-		end,
 		get_element_icon = function(opt)
 			-- element consists of { filetype: string, path: string, extension: string, directory: string }
 			-- This can be used to change how bufferline fetches the icon
