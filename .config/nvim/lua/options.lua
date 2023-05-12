@@ -75,17 +75,16 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 	pattern = { "*.htm", "*.html", "*.xhtml", "*.xml" },
 	command = "setlocal tabstop=2 shiftwidth=2 softtabstop=2",
 })
---[[
-vim.api.nvim_create_autocmd("VimResized", {
+
+--[[vim.api.nvim_create_autocmd({ "WinScrolled", "BufLeave" }, {
 	callback = function()
-		if vim.fn.winwidth(0) > 70 then
+		if vim.fn.winwidth(0) < 100 then
 			vim.cmd("se tabstop=2 shiftwidth=2 softtabstop=2")
 		else
 			vim.cmd("se tabstop=4 shiftwidth=4 softtabstop=4")
 		end
 	end,
-})
-]]
+})]]
 -- Shorten function name
 local keymap = vim.api.nvim_set_keymap
 local opts = { noremap = true, silent = true }

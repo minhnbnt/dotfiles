@@ -20,7 +20,7 @@ return require("packer").startup(function(use)
 	--Plugin here
 	use("wbthomason/packer.nvim")
 
-	use("kyazdani42/nvim-web-devicons")
+	use("nvim-tree/nvim-web-devicons")
 
 	use("antoinemadec/FixCursorHold.nvim")
 
@@ -29,7 +29,7 @@ return require("packer").startup(function(use)
 	use({
 		"akinsho/bufferline.nvim",
 		tag = "v3.*",
-		requires = { "nvim-tree/nvim-web-devicons", "famiu/bufdelete.nvim" },
+		requires = { "famiu/bufdelete.nvim" },
 	})
 
 	use("neovim/nvim-lspconfig")
