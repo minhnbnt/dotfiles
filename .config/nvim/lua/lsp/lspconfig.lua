@@ -35,9 +35,29 @@ local config = {
 	jdtls = {
 		filetypes = { "java" },
 		single_file_support = true,
-		init_options = { jvm_args = {} },
+		init_options = { jvm_args = { "-Xmx1G" } },
 		cmd = { "/usr/share/java/jdtls/bin/jdtls" }, -- AUR package jdtls
 		root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew" }),
+	},
+	rust_analyzer = {
+		settings = {
+			["rust-analyzer"] = {
+				imports = {
+					granularity = {
+						group = "module",
+					},
+					prefix = "self",
+				},
+				cargo = {
+					buildScripts = {
+						enable = true,
+					},
+				},
+				procMacro = {
+					enable = true,
+				},
+			},
+		},
 	},
 }
 

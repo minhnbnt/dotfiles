@@ -6,7 +6,7 @@ local config = {
 		AllowShortBlocksOnASingleLine = "Empty",
 		AllowShortIfStatementsOnASingleLine = "AllIfsAndElse",
 		AllowShortLoopsOnASingleLine = true,
-		ColumnLimit = 70,
+		ColumnLimit = 80,
 		IncludeBlocks = "Regroup",
 		IndentWidth = 4,
 		TabWidth = 4,
@@ -14,11 +14,26 @@ local config = {
 	},
 	yapf = {
 		based_on_style = "pep8",
-		column_limit = 70,
+		column_limit = 80,
 		continuation_indent_width = 4,
 		indent_width = 4,
 		use_tabs = true,
 	},
+	rustfmt = function()
+		local config = {
+			max_width = 80,
+			hard_tabs = true,
+			tab_spaces = 4,
+			brace_style = "PreferSameLine",
+			format_strings = true,
+			spaces_around_ranges = true,
+		}
+		local rtn = {}
+		for k, v in pairs(config) do
+			table.insert(rtn, string.format("%s=%s", k, v))
+		end
+		return table.concat(rtn, ",")
+	end,
 }
 
 -- sources
@@ -33,10 +48,11 @@ null_ls.setup({
 	sources = {
 		code_actions.gitsigns,
 
-		formatting.prettier.with({ extra_args = { "--use-tabs" } }),
 		formatting.clang_format.with({ extra_args = { "--style=" .. vim.fn.json_encode(config.clang_format) } }),
 		formatting.yapf.with({ extra_args = { "--style=" .. vim.fn.json_encode(config.yapf) } }),
+		formatting.rustfmt.with({ extra_args = { "--config=" .. config.rustfmt() } }),
 		formatting.beautysh.with({ extra_args = { "-t", "-i 4" } }),
+		formatting.prettier.with({ extra_args = { "--use-tabs" } }),
 		formatting.stylua,
 
 		completion.spell,
@@ -52,6 +68,9 @@ null_ls.setup({
 				callback = function()
 					if vim.bo.modified then
 						vim.lsp.buf.format({
+							filter = function(opts)
+								return opts.name == "null-ls"
+							end,
 							bufnr = bufnr,
 							timeout_ms = 5000,
 						})
