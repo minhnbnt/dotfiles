@@ -8,8 +8,8 @@ local function get_command(compile, run)
 		'cd "$dir" && ' .. compile .. "if [[ -f input.txt ]];", -- check if input.txt exists
 		'then cat input.txt && read -p "Run with input.txt? [Y/n]: " answer;', -- ask if user wants to run with input.txt
 		'while [[ $answer != [yYnN] ]]; do read -p "Invalid option: " answer; done;', -- check if answer is valid
-		"if [[ $answer == [yY] ]]; then " .. run .. " < input.txt;", -- run with input.txt
-		"else " .. run .. '; fi; else echo "Ready." &&' .. run .. "; fi", -- run without input.txt
+		"if [[ $answer == [yY] ]]; then clear;" .. run .. " < input.txt;", -- run with input.txt
+		"else clear;" .. run .. "; fi; else " .. run .. "; fi", -- run without input.txt
 	}
 end
 
