@@ -5,7 +5,7 @@ require("copilot").setup({
 	},
 	panel = {
 		enabled = true,
-		auto_refresh = false,
+		auto_refresh = true,
 		keymap = {
 			jump_prev = "[[",
 			jump_next = "]]",
@@ -18,7 +18,7 @@ require("copilot").setup({
 		--trace = "verbose",
 		settings = {
 			advanced = {
-				--listCount = 10, -- #completions for panel
+				-- listCount = 10, -- #completions for panel
 				inlineSuggestCount = 3, -- #completions for getCompletions
 			},
 		},
