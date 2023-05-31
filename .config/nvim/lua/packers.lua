@@ -33,13 +33,17 @@ return require("packer").startup(function(use)
 	})
 
 	use("neovim/nvim-lspconfig")
-	use("mfussenegger/nvim-jdtls")
 	--use("williamboman/mason.nvim")
 	--use("williamboman/mason-lspconfig.nvim")
 	use("jose-elias-alvarez/null-ls.nvim")
 	use("ray-x/lsp_signature.nvim")
-	use("github/copilot.vim")
-	--use("zbirenbaum/copilot.lua")
+	--use("github/copilot.vim")
+	use("zbirenbaum/copilot.lua")
+
+	--use("ranjithshegde/ccls.nvim")
+	use("p00f/clangd_extensions.nvim")
+	use("mfussenegger/nvim-jdtls")
+	use("simrat39/rust-tools.nvim")
 
 	use("windwp/nvim-autopairs")
 
@@ -65,8 +69,6 @@ return require("packer").startup(function(use)
 	use("lewis6991/gitsigns.nvim")
 
 	use({ "kevinhwang91/nvim-ufo", requires = "kevinhwang91/promise-async" })
-
-	use("lukas-reineke/indent-blankline.nvim")
 
 	use({
 		"folke/noice.nvim",
@@ -98,6 +100,8 @@ return require("packer").startup(function(use)
 		},
 	})
 
+	use("lukas-reineke/indent-blankline.nvim")
+
 	use("norcalli/nvim-colorizer.lua")
 
 	--use("nathom/filetype.nvim")
@@ -128,8 +132,8 @@ return require("packer").startup(function(use)
 			"hrsh7th/cmp-nvim-lsp-document-symbol",
 			--"hrsh7th/cmp-omni",
 			--"hrsh7th/cmp-nvim-lsp-signature-help",
-			"hrsh7th/cmp-copilot",
-			--"zbirenbaum/copilot-cmp",
+			--"hrsh7th/cmp-copilot",
+			"zbirenbaum/copilot-cmp",
 			--{
 			--	"tzachar/cmp-tabnine",
 			--	run = "./install.sh",

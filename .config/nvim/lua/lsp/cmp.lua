@@ -104,9 +104,13 @@ cmp.setup({
 		--{ name = "cmp_tabnine" },
 		{ name = "treesitter" },
 		{ name = "nvim_lua" },
-		{ name = "copilot" },
-		--{ name = "nvim_lsp_signature_help" },
 		{
+			name = "copilot",
+			-- keyword_length = 0,
+			max_item_count = 3,
+		},
+		--{ name = "nvim_lsp_signature_help" },
+		--[[{
 			name = "look",
 			keyword_length = 2,
 			option = {
@@ -114,7 +118,7 @@ cmp.setup({
 				loud = true,
 				--dict = '/usr/share/dict/words'
 			},
-		},
+		},]]
 		{
 			name = "spell",
 			option = {
@@ -132,7 +136,7 @@ cmp.setup({
 			end
 			-- Kind icons
 			-- vim_item.kind = string.format("%s", kind_icons[vim_item.kind])
-			--vim_item.dup = { nvim_lsp = 0 }
+			vim_item.dup = { nvim_lsp = 1, luasnip = 0 }
 			local icon = kind_icons[vim_item.kind] or " "
 			vim_item.kind = string.format("%s %s", icon, vim_item.kind)
 			-- source icons
@@ -180,4 +184,4 @@ cmp.setup.cmdline(":", {
 })
 
 vim.cmd("hi CmpItemMenu cterm=bold gui=bold")
-vim.api.nvim_set_hl(0, "CmpItemKindCopilot", { fg = "#6CC644" })
+vim.api.nvim_set_hl(0, "CmpItemKindCopilot", { fg = "#04A5E5" })
