@@ -1,4 +1,4 @@
---local copilot_active = false
+local copilot_active = false
 
 local server_name = function()
 	local attached = {} -- list of attached servers
@@ -20,8 +20,8 @@ local server_name = function()
 			else -- regular lsp clients
 				table.insert(attached, client.name)
 			end
-			--elseif client.name == "copilot" then
-			--	copilot_active = true -- for later
+		elseif client.name == "copilot" then
+			copilot_active = true -- for later
 		end
 	end
 	local display = {}
@@ -272,7 +272,7 @@ ins.left({
 	cond = conditions.hide_in_width(6),
 })
 
---[[ins.left({
+ins.left({
 	function()
 		if copilot_active then
 			return ""
@@ -282,7 +282,8 @@ ins.left({
 	color = { fg = "#04A5E5" },
 	cond = conditions.hide_in_width(1),
 	padding = { left = 1, right = 0 },
-})]]
+})
+
 ins.left({
 	function()
 		local b = vim.api.nvim_get_current_buf()
