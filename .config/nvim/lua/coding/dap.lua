@@ -15,9 +15,9 @@ dap.configurations.cpp = {
 			local path, type = vim.fn.expand("%:p:h"), vim.bo.filetype
 			local name, without_ext = vim.fn.expand("%:t"), vim.fn.expand("%:t:r")
 			local command = {
-				c = "clang -g3 ",
+				c = "clang -lm -g3 ",
 				cpp = "clang++ -g3 ",
-				rs = "rustc -g ",
+				rust = "rustc -g ",
 			}
 			if command[type] ~= nil then
 				vim.cmd("w")
