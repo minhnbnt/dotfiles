@@ -5,6 +5,7 @@ local servers = {
 	--"clangd",
 	"cmake",
 	"cssls",
+	"denols",
 	"emmet_ls",
 	"eslint",
 	"gopls",
@@ -18,58 +19,19 @@ local servers = {
 	--"vimls",
 }
 
--- for servers that need custom config
-local config = {
-	ccls = {
-		init_options = { index = { threads = 4 } },
-		flags = { debounce_text_changes = 150 },
-	},
-	lua_ls = {
-		settings = { Lua = { diagnostics = { globals = { "vim" } } } },
-	},
-	emmet_ls = {
-		cmd = { "emmet-ls", "--stdio" },
-		filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" },
-		init_options = { html = { options = { ["bem.enabled"] = true } } },
-	},
-	jdtls = {
-		filetypes = { "java" },
-		single_file_support = true,
-		init_options = { jvm_args = { "-Xmx1G" } },
-		cmd = { "/usr/share/java/jdtls/bin/jdtls" }, -- AUR package jdtls
-		root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew" }),
-	},
-	rust_analyzer = {
-		settings = {
-			["rust-analyzer"] = {
-				imports = {
-					granularity = {
-						group = "module",
-					},
-					prefix = "self",
-				},
-				cargo = {
-					buildScripts = {
-						enable = true,
-					},
-				},
-				procMacro = {
-					enable = true,
-				},
-			},
-		},
-	},
-}
-
+-- for servers that need custom setup function(opts)
 local init = {
-	jdtls = function()
+	-- ccls = require("ccls").setup,
+	clangd = require("clangd_extensions").setup,
+	jdtls = function(opts)
 		vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-			callback = function()
-				require("jdtls").start_or_attach(config.jdtls)
-			end,
 			pattern = "*.java",
+			callback = function()
+				require("jdtls").start_or_attach(opts)
+			end,
 		})
 	end,
+	rust_analyzer = require("rust-tools").setup,
 }
 
 local signs = {
@@ -80,17 +42,6 @@ local signs = {
 	Information = "",
 	Info = "",
 }
-
-vim.api.nvim_create_autocmd("CursorHold", {
-	callback = function() -- enable showing diagnostics in virtual text
-		vim.diagnostic.open_float(0, { scope = "cursor", focus = false })
-	end,
-})
-
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-	virtual_text = false,
-	update_in_insert = false,
-})
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
@@ -130,6 +81,64 @@ local on_attach = function(client, bufnr)
 	end, bufopts)
 end
 
+-- for servers that need custom config
+local config = {
+	ccls = {
+		init_options = { index = { threads = 4 } },
+		flags = { debounce_text_changes = 150 },
+	},
+	clangd = {
+		extensions = { inlay_hints = { show_parameter_hints = false } },
+		server = {
+			capabilities = capabilities,
+			on_attach = on_attach,
+		},
+	},
+	lua_ls = {
+		settings = { Lua = { diagnostics = { globals = { "vim" } } } },
+	},
+	emmet_ls = {
+		cmd = { "emmet-ls", "--stdio" },
+		filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" },
+		init_options = { html = { options = { ["bem.enabled"] = true } } },
+	},
+	jdtls = {
+		on_attach = on_attach,
+		capabilities = capabilities,
+		filetypes = { "java" },
+		single_file_support = true,
+		init_options = { jvm_args = { "-Xmx1G" } },
+		cmd = { "/usr/share/java/jdtls/bin/jdtls" }, -- AUR package jdtls
+		root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew" }),
+	},
+	rust_analyzer = {
+		server = {
+			standalone = true,
+			on_attach = on_attach,
+			capabilities = capabilities,
+			settings = {
+				["rust-analyzer"] = {
+					imports = { granularity = { group = "module" }, prefix = "self" },
+					cargo = { buildScripts = { enable = true } },
+					procMacro = { enable = true },
+				},
+			},
+		},
+	},
+}
+
+vim.api.nvim_create_autocmd("CursorHold", {
+	callback = function() -- enable showing diagnostics in virtual text
+		vim.diagnostic.open_float(0, { scope = "cursor", focus = false })
+	end,
+})
+
+vim.lsp.handlers["textDocument/publishDiagnostics"] = --
+	vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+		virtual_text = false,
+		update_in_insert = false,
+	})
+
 for type, icon in pairs(signs) do -- set signs
 	-- local hl = "LspDiagnosticsSign" .. type
 	local hl = "DiagnosticSign" .. type
@@ -141,14 +150,14 @@ for _, lsp in pairs(servers) do
 	if config[lsp] == nil then
 		config[lsp] = {}
 	end
-	table.insert(config[lsp], {
-		capabilities = capabilities,
-		on_attach = on_attach,
-	})
 	if init[lsp] ~= nil then
 		-- if server needs custom init options
-		init[lsp]()
+		init[lsp](config[lsp])
 	else -- all other servers
+		table.insert(config[lsp], {
+			capabilities = capabilities,
+			on_attach = on_attach,
+		})
 		require("lspconfig")[lsp].setup(config[lsp])
 	end
 end

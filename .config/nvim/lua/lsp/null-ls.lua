@@ -4,6 +4,7 @@ local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 local config = {
 	clang_format = {
 		AllowShortBlocksOnASingleLine = "Empty",
+		AllowShortFunctionsOnASingleLine = "Empty",
 		AllowShortIfStatementsOnASingleLine = "AllIfsAndElse",
 		AllowShortLoopsOnASingleLine = true,
 		ColumnLimit = 80,
@@ -48,12 +49,13 @@ null_ls.setup({
 	sources = {
 		code_actions.gitsigns,
 
-		formatting.clang_format.with({ extra_args = { "--style=" .. vim.fn.json_encode(config.clang_format) } }),
-		formatting.yapf.with({ extra_args = { "--style=" .. vim.fn.json_encode(config.yapf) } }),
-		formatting.rustfmt.with({ extra_args = { "--config=" .. config.rustfmt() } }),
 		formatting.beautysh.with({ extra_args = { "-t", "-i 4" } }),
+		formatting.clang_format.with({ extra_args = { "--style=" .. vim.fn.json_encode(config.clang_format) } }),
+		formatting.gofmt,
 		formatting.prettier.with({ extra_args = { "--use-tabs" } }),
+		formatting.rustfmt.with({ extra_args = { "--config=" .. config.rustfmt() } }),
 		formatting.stylua,
+		formatting.yapf.with({ extra_args = { "--style=" .. vim.fn.json_encode(config.yapf) } }),
 
 		completion.spell,
 
