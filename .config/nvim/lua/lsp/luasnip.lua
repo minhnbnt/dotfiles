@@ -9,4 +9,3 @@ require("luasnip.loaders.from_snipmate").lazy_load()
 
 require("luasnip").filetype_extend("all", { "_" })
 require("luasnip").filetype_extend("cpp", { "c" })
-require("luasnip").filetype_extend("typescript", { "javascript" })
