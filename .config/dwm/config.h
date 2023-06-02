@@ -29,30 +29,30 @@ static const Rule rules[] = {
 	/* xprop(1):
 	 *    WM_CLASS(STRING) = instance, class
 	 *    WM_NAME(STRING)  = title */
-	/* class           instance       title       tags mask   isfloating  monitor */
-    { "Alacritty",     NULL,          NULL,       1 << 0,     0,          -1 },
+	/* class           instance       title        tags mask   isfloating  monitor */
+    { "Alacritty",     NULL,          NULL,        1 << 0,     0,          -1 },
 
-    { "Chromium",      NULL,          NULL,       1 << 1,     0,          -1 },
-	{ "Firefox",       NULL,          NULL,       1 << 1,     0,          -1 },
-    { "Google-chrome", NULL,          NULL,       1 << 1,     0,          -1 },
+    { "Chromium",      NULL,          NULL,        1 << 1,     0,          -1 },
+	{ "Firefox",       NULL,          NULL,        1 << 1,     0,          -1 },
+    { "Google-chrome", NULL,          NULL,        1 << 1,     0,          -1 },
 
-    { "java",          "Java",        "Eclipse",  1 << 2,     1,          -1 },
-    { "Eclipse",       NULL,          NULL,       1 << 2,     0,          -1 },
-    { "nvim-qt",       NULL,          NULL,       1 << 2,     0,          -1 },
+    { "java",          "Java",        "Eclipse",   1 << 2,     1,          -1 },
+    { "Eclipse",       NULL,          NULL,        1 << 2,     0,          -1 },
+    { "nvim-qt",       NULL,          NULL,        1 << 2,     0,          -1 },
 
-    { "Nautilus",      NULL,          NULL,       1 << 3,     0,          -1 },
-    { "Nemo",          NULL,          NULL,       1 << 3,     0,          -1 },
-    { "qBittorrent",   NULL,          NULL,       1 << 3,     0,          -1 },
+    { "Nautilus",      NULL,          NULL,        1 << 3,     0,          -1 },
+    { "Nemo",          NULL,          NULL,        1 << 3,     0,          -1 },
+    { "qBittorrent",   NULL,          NULL,        1 << 3,     0,          -1 },
 
-    { "obs",           NULL,          NULL,       1 << 4,     0,          -1 },
-    { "vlc",           NULL,          NULL,       1 << 4,     0,          -1 },
+    { "obs",           NULL,          NULL,        1 << 4,     0,          -1 },
+    { "vlc",           NULL,          NULL,        1 << 4,     0,          -1 },
 
-    { "deadcells",     NULL,          NULL,       1 << 5,     0,          -1 },
-    { NULL, "sun-awt-X11-XFramePeer", "TLauncher",1 << 5,     1,          -1 },
+    { "deadcells",     NULL,          NULL,        1 << 5,     0,          -1 },
+    { NULL, "sun-awt-X11-XFramePeer", "TLauncher", 1 << 5,     1,          -1 },
 
-    { "zoom",          NULL,          NULL,       1 << 6,     0,          -1 },
-    { "discord",       NULL,          NULL,       1 << 6,     0,          -1 },
-    { "Microsoft Teams - Preview",  NULL,   NULL, 1 << 6,     0,          -1 }
+    { "zoom",          NULL,          NULL,        1 << 6,     0,          -1 },
+    { "discord",       NULL,          NULL,        1 << 6,     0,          -1 },
+    { "Microsoft Teams - Preview", NULL,  NULL,    1 << 6,     0,          -1 }
 };
 
 /* layout(s) */
@@ -65,7 +65,7 @@ static const Layout layouts[] = {
 	/* symbol     arrange       function */
 	{ "",        tile },    /* first entry is default */
 	{ "",        NULL },    /* no layout function means floating behavior */
-    { "",        monocle }, /* like tabbed and one window at a time */
+	{ "",        monocle }, /* like tabbed and one window at a time */
 };
 
 /* key definitions */
@@ -80,9 +80,9 @@ static const Layout layouts[] = {
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
+static const char *termcmd[]  = { "alacritty", NULL };
 static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont, "-nb", col_gray1, "-nf",
                                   col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]  = { "alacritty", NULL };
 
 /* for volume control */
 static const char *upvol[]   = { "amixer", "set", "Master", "2+", NULL };
@@ -114,10 +114,10 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
- // { MODKEY|ShiftMask,             XK_q,      quit,           {0} },
-    { 0, XF86XK_AudioRaiseVolume,              spawn,          {.v = upvol } },
-    { 0, XF86XK_AudioLowerVolume,              spawn,          {.v = downvol } },
-    { 0, XF86XK_AudioMute,                     spawn,          {.v = mute } },
+    /* { MODKEY|ShiftMask,             XK_q,      quit,           {0} }, */
+	{ 0,     XF86XK_AudioRaiseVolume,          spawn,          {.v = upvol } },
+	{ 0,     XF86XK_AudioLowerVolume,          spawn,          {.v = downvol } },
+	{ 0,     XF86XK_AudioMute,                 spawn,          {.v = mute } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
