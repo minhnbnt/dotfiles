@@ -1,8 +1,7 @@
 local function load(module)
-	local enable_notifications = true -- Enable notifications for errors
+	local enable_notifications = false -- Enable notifications for errors
 	if not pcall(require, module) and enable_notifications then -- If not run correctly, notify the user
 		vim.notify("Error loading module: " .. module, vim.log.levels.ERROR, { title = "plug.lua" })
-		return
 	end
 end
 

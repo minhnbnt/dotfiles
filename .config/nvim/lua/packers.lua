@@ -44,6 +44,7 @@ return require("packer").startup(function(use)
 	use("p00f/clangd_extensions.nvim")
 	use("mfussenegger/nvim-jdtls")
 	use("simrat39/rust-tools.nvim")
+	use("folke/neodev.nvim")
 
 	use("windwp/nvim-autopairs")
 
@@ -96,7 +97,8 @@ return require("packer").startup(function(use)
 		requires = {
 			"nvim-treesitter/nvim-treesitter-refactor",
 			"windwp/nvim-ts-autotag",
-			"mrjones2014/nvim-ts-rainbow",
+			"HiPhish/nvim-ts-rainbow2",
+			--"mrjones2014/nvim-ts-rainbow",
 		},
 	})
 
@@ -134,10 +136,11 @@ return require("packer").startup(function(use)
 			--"hrsh7th/cmp-nvim-lsp-signature-help",
 			--"hrsh7th/cmp-copilot",
 			"zbirenbaum/copilot-cmp",
-			--{
-			--	"tzachar/cmp-tabnine",
-			--	run = "./install.sh",
-			--},
+			--"tzachar/cmp-ai",
+			{
+				"tzachar/cmp-tabnine",
+				run = "./install.sh",
+			},
 			{
 				"L3MON4D3/LuaSnip",
 				run = "make install_jsregexp",
