@@ -22,10 +22,39 @@ function xterm_title_preexec () {
 	[[ "$TERM" == 'screen'* ]] && { print -Pn -- '\e_\005{g}%n\005{-}@\005{m}%m\005{-} \005{B}%~\005{-} %# ' && print -n -- "${(q)1}\e\\"; }
 }
 
+function command_not_found_handler {
+    local purple='\e[1;35m' bright='\e[0;1m' green='\e[1;32m' reset='\e[0m'
+    printf 'zsh: command not found: %s\n' "$1"
+    local entries=(
+        ${(f)"$(/usr/bin/pacman -F --machinereadable -- "/usr/bin/$1")"}
+    )
+    if (( ${#entries[@]} ))
+    then
+        printf "${bright}$1${reset} may be found in the following packages:\n"
+        local pkg
+        for entry in "${entries[@]}"
+        do
+            # (repo package version file)
+            local fields=(
+                ${(0)entry}
+            )
+            if [[ "$pkg" != "${fields[2]}" ]]
+            then
+                printf "${purple}%s/${bright}%s ${green}%s${reset}\n" "${fields[1]}" "${fields[2]}" "${fields[3]}"
+            fi
+            printf '    /%s\n' "${fields[4]}"
+            pkg="${fields[2]}"
+        done
+    fi
+    return 127
+}
+
 if [[ "$TERM" == (Eterm*|alacritty*|aterm*|gnome*|konsole*|kterm*|putty*|rxvt*|screen*|tmux*|xterm*) ]]; then
 	add-zsh-hook -Uz precmd xterm_title_precmd
 	add-zsh-hook -Uz preexec xterm_title_preexec
 fi
+
+bindkey "^[[3~" delete-char
 
 # Git diff in prompt
 
@@ -41,6 +70,7 @@ zstyle ':vcs_info:*' check-for-changes true
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
 source /usr/share/zsh/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+source /usr/share/zsh/plugins/zsh-autopair/autopair.zsh
 
 # Command number
 
@@ -96,7 +126,7 @@ neofetch(){/usr/bin/neofetch --stdout --config ~/.config/neofetch/configzsh.conf
 ls(){/usr/bin/ls -Ahv --color --group-directories-first "$@"}
 matrix(){/usr/bin/neo-matrix -D "$@"}
 
-tlauncher(){(java -jar /home/minhnbnt/.tlauncher/TLauncher-2.86.jar "$@" > /dev/null 2>&1 &)}
+tlauncher(){(java -jar ~/.tlauncher/TLauncher-2.86.jar "$@" > /dev/null 2>&1 &)}
 deadcells(){(sh /mnt/d/Dead\ Cells\ Linux/start.sh "$@" > /dev/null 2>&1 &)}
 undertale(){(sh /mnt/d/Undertale/start.sh "$@" > /dev/null 2>&1 &)}
 gungeon(){(sh /mnt/d/Enter\ the\ Gungeon/start.sh "$@" > /dev/null 2>&1 &)}
@@ -105,6 +135,7 @@ chrome(){(/usr/bin/google-chrome-stable "$@" > /dev/null 2>&1 &)}
 chromium(){(/usr/bin/chromium %U "$@" > /dev/null 2>&1 &)}
 
 #vscode(){(/usr/bin/code --no-sandbox --new-window "$@" > /dev/null 2>&1 &)}
+mysql-workbench(){(/usr/bin/mysql-workbench "$@" > /dev/null 2>&1 &)}
 eclipse(){(/usr/bin/eclipse "$@" > /dev/null 2>&1 &)}
 neovim(){(/usr/bin/nvim-qt "$@" > /dev/null 2>&1 &)}
 vi(){/usr/bin/nvim "$@"}
@@ -149,8 +180,8 @@ power(){
 			"Logout")
 				if [[ $XDG_CURRENT_DESKTOP = "Hyprland" ]]; then
 					hyprctl dispatch exit --
-				elif [[ $XDG_CURRENT_DESKTOP = "i3" ]]; then
-					i3-msg exit
+				elif [[ $XDG_SESSION_TYPE != "wayland" ]]; then
+                    killall xinit
 				else
 					return 1
 				fi
