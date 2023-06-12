@@ -1,5 +1,7 @@
 vim.g.loaded = 1
 vim.g.loaded_netrwPlugin = 1
+vim.g.input_method = "ibus"
+--vim.g.input_method = "fcitx5"
 
 -- Disable copilot ghost text
 vim.g.copilot_enabled = false
@@ -20,10 +22,10 @@ local options = {
 	relativenumber = true,
 	numberwidth = 4,
 	autoindent = true,
-	tabstop = 4,
-	shiftwidth = 4,
+	tabstop = 2,
+	shiftwidth = 2,
 	smarttab = true,
-	softtabstop = 4,
+	softtabstop = 2,
 	expandtab = true,
 	mouse = "a",
 	title = true,
@@ -57,41 +59,28 @@ if vim.g.neovide then
 end
 
 vim.opt.cmdheight = 0
---[[
-vim.api.nvim_create_autocmd("CmdlineEnter", {
-	callback = function()
-		vim.opt.cmdheight = 1
-	end,
-})
-vim.api.nvim_create_autocmd("CmdlineLeave", {
-	callback = function()
-		vim.opt.cmdheight = 0
-	end,
-})
-]]
+
 vim.g.cursorhold_updatetime = 1000
 
-vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-	pattern = { "*.htm", "*.html", "*.xhtml", "*.xml" },
-	command = "setlocal tabstop=2 shiftwidth=2 softtabstop=2",
-})
-
---[[vim.api.nvim_create_autocmd({ "WinScrolled", "BufLeave" }, {
+vim.api.nvim_create_autocmd({ "BufEnter", "WinResized" }, {
 	callback = function()
+		local ft = { "html", "xhtml", "xml", "typescriptreact", "javascriptreact" }
 		if vim.fn.winwidth(0) < 100 then
 			vim.cmd("se tabstop=2 shiftwidth=2 softtabstop=2")
-		else
-			vim.cmd("se tabstop=4 shiftwidth=4 softtabstop=4")
+		elseif not vim.tbl_contains(ft, vim.bo.filetype) then
+			vim.cmd("setlocal tabstop=4 shiftwidth=4 softtabstop=4")
 		end
 	end,
-})]]
+})
+
 -- Shorten function name
 local keymap = vim.api.nvim_set_keymap
 local opts = { noremap = true, silent = true }
 local term_opts = { silent = true }
 
 keymap("v", "<BS>", "<Del>", opts)
-keymap("v", "<RightMouse>", "<C-><C-g>gv<cmd>:popup! PopUp<cr>", opts)
+keymap("v", "<C-S-c>", '"+y', opts)
+keymap("v", "<RightMouse>", "<C-><C-g>gv<cmd>:popu! PopUp<cr>", opts)
 keymap("t", "<esc>", "<C-\\><C-n>", term_opts)
 
 -- Undo, Redo
@@ -128,8 +117,7 @@ vim.cmd([[
     nnoremenu <silent> PopUp.Open\ File         :Telescope file_browser hidden=true grouped=true<cr>
     nnoremenu <silent> PopUp.Format\ code       :lua vim.lsp.buf.format()<cr>
 	nnoremenu <silent> PopUp.Find\ File         :Telescope find_files hidden=true<cr>
-    nnoremenu <silent> PopUp.Run\ code          <cmd>w<cr><cmd>RunCode<cr>
-    nnoremenu <silent> PopUp.Toggle\ DAP\ UI    :lua require("dapui").toggle()<cr>
+    nnoremenu <silent> PopUp.Toggle\ DAP\ UI    :DapUi toggle<cr>
     vnoremenu PopUp.Cut                         "+x
     vnoremenu PopUp.Copy                        "+ygv
     anoremenu PopUp.Paste                       "+gP
@@ -141,31 +129,47 @@ vim.cmd([[
     nnoremenu PopUp.Find                        /
 ]])
 
-if io.open("/usr/bin/ibus", "r") ~= nil then
-	local IBusOff = function()
-		vim.g.ibus_prev_engine = io.popen("ibus engine", "r"):read("*all")
+local IMOff, IMOn
+
+if vim.g.input_method == "ibus" and io.open("/usr/bin/ibus", "r") ~= nil then
+	IMOff = function()
+		vim.g.im_prev_engine = io.popen("ibus engine", "r"):read("*all")
 		os.execute("ibus engine BambooUs")
 	end
-	local IBusOn = function()
-		os.execute("ibus engine " .. vim.g.ibus_prev_engine)
+	IMOn = function()
+		os.execute("ibus engine " .. vim.g.im_prev_engine)
 		local current_engine = io.popen("ibus engine", "r"):read("*all")
 		if current_engine ~= "BambooUs" then
-			vim.g.ibus_prev_engine = current_engine
+			vim.g.im_prev_engine = current_engine
 		end
 	end
-
-	vim.api.nvim_create_autocmd("CmdlineEnter", {
-		pattern = { "/", "?" },
-		callback = IBusOn,
-	})
-	vim.api.nvim_create_autocmd("CmdlineLeave", {
-		pattern = { "/", "?" },
-		callback = IBusOff,
-	})
-	vim.api.nvim_create_autocmd({ "InsertEnter", "VimLeavePre" }, {
-		callback = IBusOn,
-	})
-	vim.api.nvim_create_autocmd({ "InsertLeave", "VimEnter" }, {
-		callback = IBusOff,
-	})
 end
+
+if vim.g.input_method == "fcitx5" and io.open("/usr/bin/fcitx5", "r") ~= nil then
+	IMOff = function()
+		vim.g.im_prev_engine = io.popen("fcitx5-remote -n", "r"):read("*all")
+		os.execute("fcitx5-remote -g keyboard-us")
+	end
+	IMOn = function()
+		os.execute("fcitx5-remote -g " .. vim.g.im_prev_engine)
+		local current_engine = io.popen("fcitx5-remote -n", "r"):read("*all")
+		if current_engine ~= "keyboard-us" then
+			vim.g.im_prev_engine = current_engine
+		end
+	end
+end
+
+vim.api.nvim_create_autocmd("CmdlineEnter", {
+	pattern = { "/", "?" },
+	callback = IMOn,
+})
+vim.api.nvim_create_autocmd("CmdlineLeave", {
+	pattern = { "/", "?" },
+	callback = IMOff,
+})
+vim.api.nvim_create_autocmd({ "InsertEnter", "VimLeave" }, {
+	callback = IMOn,
+})
+vim.api.nvim_create_autocmd({ "InsertLeave", "VimEnter" }, {
+	callback = IMOff,
+})

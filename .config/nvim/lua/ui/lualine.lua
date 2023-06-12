@@ -253,15 +253,14 @@ local conditions = {
 		end
 	end,
 }
-
 ins.left({
-	function() -- :)))
-		local ft = { "htm", "html", "xhtml", "xml" }
+	function() --[[
+		local ft = { "html", "xhtml", "xml", "typescriptreact", "javascriptreact" }
 		if vim.fn.winwidth(0) < 115 or vim.tbl_contains(ft, vim.bo.filetype) then
 			vim.cmd("se tabstop=2 shiftwidth=2 softtabstop=2")
 		else
 			vim.cmd("se tabstop=4 shiftwidth=4 softtabstop=4")
-		end
+		end]]
 		return " "
 	end,
 	padding = 0,
