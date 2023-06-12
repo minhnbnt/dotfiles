@@ -1,11 +1,6 @@
 local dap, dapui = require("dap"), require("dapui")
-dap.adapters.lldb = {
-	type = "executable",
-	command = "/usr/bin/lldb-vscode", -- adjust as needed, must be absolute path
-	name = "lldb",
-}
 
-dap.configurations.cpp = {
+dap.configurations.c = {
 	{
 		name = "Launch",
 		type = "lldb",
@@ -15,22 +10,20 @@ dap.configurations.cpp = {
 			local path, type = vim.fn.expand("%:p:h"), vim.bo.filetype
 			local name, without_ext = vim.fn.expand("%:t"), vim.fn.expand("%:t:r")
 			local command = {
-				c = "clang -lm -g3 ",
-				cpp = "clang++ -g3 ",
-				rust = "rustc -g ",
+				c = "clang -lm -g3",
+				cpp = "clang++ -g3",
+				rust = "rustc -g",
 			}
 			if command[type] ~= nil then
-				vim.cmd("w")
-				compile = assert(
-					io.popen('cd "' .. path .. '" && ' .. command[type] .. name .. " -o " .. without_ext .. " 2>&1")
-				)
+				vim.cmd("w") -- Save file
+				local cmd = { "cd", path, "&&", command[type], name, "-o", without_ext, "2>&1" }
+				compile = assert(io.popen(table.concat(cmd, " "), "r"))
 			end
 			local output = compile:read("*all")
 			compile:close()
 			if output ~= "" then
 				vim.notify(output, vim.log.levels.ERROR, { title = "Compilation Error" })
-				return
-			else
+			else -- Compile success
 				return vim.fn.expand("%:p:r")
 			end
 		end,
@@ -48,8 +41,89 @@ dap.configurations.cpp = {
 	},
 }
 
-dap.configurations.c = dap.configurations.cpp
-dap.configurations.rust = dap.configurations.cpp
+dap.configurations.python = {
+	{
+		-- The first three options are required by nvim-dap
+		type = "python", -- the type here established the link to the adapter definition: `dap.adapters.python`
+		request = "launch",
+		name = "Launch file",
+
+		-- Options below are for debugpy, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for supported options
+
+		program = function()
+			vim.cmd("w")
+			return vim.fn.expand("%:p")
+		end,
+		console = "integratedTerminal",
+		pythonPath = function()
+			-- debugpy supports launching an application with a different interpreter then the one used to launch debugpy itself.
+			-- The code below looks for a `venv` or `.venv` folder in the current directly and uses the python within.
+			-- You could adapt this - to for example use the `VIRTUAL_ENV` environment variable.
+			local cwd = vim.fn.getcwd()
+			if vim.fn.executable(cwd .. "/venv/bin/python") == 1 then
+				return cwd .. "/venv/bin/python"
+			elseif vim.fn.executable(cwd .. "/.venv/bin/python") == 1 then
+				return cwd .. "/.venv/bin/python"
+			else
+				return "/usr/bin/python"
+			end
+		end,
+	},
+}
+
+dap.adapters.lldb = {
+	type = "executable",
+	command = "/usr/bin/lldb-vscode", -- adjust as needed, must be absolute path
+	name = "lldb",
+}
+
+dap.adapters.python = function(cb, config)
+	if config.request == "attach" then
+		---@diagnostic disable-next-line: undefined-field
+		local port = (config.connect or config).port
+		---@diagnostic disable-next-line: undefined-field
+		local host = (config.connect or config).host or "127.0.0.1"
+		cb({
+			type = "server",
+			port = assert(port, "`connect.port` is required for a python `attach` configuration"),
+			host = host,
+			options = { source_filetype = "python" },
+		})
+	else
+		cb({
+			type = "executable",
+			command = "/usr/bin/python",
+			args = { "-m", "debugpy.adapter" },
+			options = { source_filetype = "python" },
+		})
+	end
+end
+
+dap.configurations.cpp = dap.configurations.c
+dap.configurations.rust = dap.configurations.c
+
+local jdt_setup_class = function()
+	if vim.bo.filetype == "java" then
+		local has_jdt, jdt_dap = pcall(require, "jdtls.dap")
+		if has_jdt then
+			jdt_dap.setup_dap_main_class_configs()
+		end
+	end
+end
+
+local dapui_ctrl = {
+	open = function()
+		jdt_setup_class()
+		dapui.open()
+	end,
+	toggle = function()
+		jdt_setup_class()
+		dapui.toggle()
+	end,
+	close = function()
+		dapui.close()
+	end,
+}
 
 dap.listeners.after.event_initialized["dapui_config"] = function()
 	dapui.open()
@@ -57,23 +131,17 @@ end
 
 --dap.set_log_level("TRACE")
 
+vim.api.nvim_create_user_command("DapUiToggle", dapui_ctrl.toggle, { nargs = 0 })
+vim.api.nvim_create_user_command("DapUiClose", dapui_ctrl.close, { nargs = 0 })
+vim.api.nvim_create_user_command("DapUiOpen", dapui_ctrl.open, { nargs = 0 })
 vim.api.nvim_create_user_command("DapUi", function(opts)
-	dapui[opts.args]()
+	dapui_ctrl[opts.args]()
 end, {
 	nargs = 1,
 	complete = function()
 		return { "toggle", "open", "close" }
 	end,
 })
-vim.api.nvim_create_user_command("DapUiOpen", function()
-	dapui.open()
-end, { nargs = 0 })
-vim.api.nvim_create_user_command("DapUiClose", function()
-	dapui.close()
-end, { nargs = 0 })
-vim.api.nvim_create_user_command("DapUiToggle", function()
-	dapui.toggle()
-end, { nargs = 0 })
 
 vim.fn.sign_define("DapBreakpoint", { text = "" })
 vim.fn.sign_define("DapStopped", { text = "" })
@@ -101,15 +169,13 @@ dapui.setup({
 	expand_lines = true,
 	floating = {
 		border = "single",
-		mappings = {
-			close = { "q", "<Esc>" },
-		},
+		mappings = { close = { "q", "<Esc>" } },
 	},
 	force_buffers = true,
 	icons = {
-		collapsed = "",
-		current_frame = "",
-		expanded = "",
+		collapsed = "",
+		current_frame = "",
+		expanded = "",
 	},
 	layouts = {
 		{
