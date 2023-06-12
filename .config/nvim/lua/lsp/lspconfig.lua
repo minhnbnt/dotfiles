@@ -5,7 +5,7 @@ local servers = {
 	--"clangd",
 	"cmake",
 	"cssls",
-	"denols",
+	--"denols",
 	"emmet_ls",
 	"eslint",
 	"gopls",
@@ -79,12 +79,19 @@ local on_attach = function(client, bufnr)
 	vim.keymap.set("n", "<space>f", function()
 		vim.lsp.buf.format({ async = true })
 	end, bufopts)
+	if client.name == "jdtls" then
+		-- With `hotcodereplace = 'auto' the debug adapter will try to apply code changes
+		-- you make during a debug session immediately.
+		-- Remove the option if you do not want that.
+		-- You can use the `JdtHotcodeReplace` command to trigger it manually
+		require("jdtls").setup_dap({ hotcodereplace = "auto" })
+	end
 end
 
 -- for servers that need custom config
 local config = {
 	ccls = {
-		init_options = { index = { threads = 4 } },
+		init_options = { index = { threads = 0 } },
 		flags = { debounce_text_changes = 150 },
 	},
 	clangd = {
@@ -102,12 +109,39 @@ local config = {
 		filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" },
 		init_options = { html = { options = { ["bem.enabled"] = true } } },
 	},
+	eslint = {
+		settings = {
+			codeAction = {
+				disableRuleComment = { enable = true, location = "separateLine" },
+				showDocumentation = { enable = true },
+			},
+			codeActionOnSave = {
+				enable = false,
+				mode = "all",
+			},
+			experimental = { useFlatConfig = false },
+			format = true,
+			nodePath = "",
+			onIgnoredFiles = "off",
+			packageManager = "npm",
+			problems = { shortenToSingleLine = false },
+			quiet = false,
+			rulesCustomizations = {},
+			run = "onType",
+			useESLintClass = false,
+			validate = "on",
+			workingDirectory = { mode = "location" },
+		},
+	},
 	jdtls = {
 		on_attach = on_attach,
 		capabilities = capabilities,
 		filetypes = { "java" },
 		single_file_support = true,
-		init_options = { jvm_args = { "-Xmx1G" } },
+		init_options = {
+			bundles = { "/usr/share/java-debug/com.microsoft.java.debug.plugin.jar" },
+			jvm_args = { "-Xmx1G" },
+		},
 		cmd = { "/usr/share/java/jdtls/bin/jdtls" }, -- AUR package jdtls
 		root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew" }),
 	},

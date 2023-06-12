@@ -3,23 +3,34 @@ local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
 local config = {
 	clang_format = {
+		AccessModifierOffset = -4,
 		AllowShortBlocksOnASingleLine = "Empty",
 		AllowShortFunctionsOnASingleLine = "Empty",
 		AllowShortIfStatementsOnASingleLine = "AllIfsAndElse",
 		AllowShortLoopsOnASingleLine = true,
 		ColumnLimit = 80,
+		Cpp11BracedListStyle = false,
+		EmptyLineBeforeAccessModifier = "Never",
 		IncludeBlocks = "Regroup",
+		IndentAccessModifiers = false,
 		IndentWidth = 4,
 		TabWidth = 4,
-		UseTab = "AlignWithSpaces",
+		UseTab = "ForIndentation",
 	},
-	yapf = {
-		based_on_style = "pep8",
-		column_limit = 80,
-		continuation_indent_width = 4,
-		indent_width = 4,
-		use_tabs = true,
-	},
+	yapf = function()
+		local config = {
+			based_on_style = "pep8",
+			column_limit = 80,
+			continuation_indent_width = 4,
+			indent_width = 4,
+			use_tabs = true,
+		}
+		local rtn = {}
+		for k, v in pairs(config) do
+			table.insert(rtn, string.format("%s: %s", k, v))
+		end
+		return "{ " .. table.concat(rtn, ", ") .. " }"
+	end,
 	rustfmt = function()
 		local config = {
 			max_width = 80,
@@ -55,7 +66,9 @@ null_ls.setup({
 		formatting.prettier.with({ extra_args = { "--use-tabs" } }),
 		formatting.rustfmt.with({ extra_args = { "--config=" .. config.rustfmt() } }),
 		formatting.stylua,
-		formatting.yapf.with({ extra_args = { "--style=" .. vim.fn.json_encode(config.yapf) } }),
+		formatting.yapf.with({
+			--extra_args = { "--style '" .. config.yapf() .. "'" },
+		}),
 
 		completion.spell,
 
