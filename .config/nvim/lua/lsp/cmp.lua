@@ -28,6 +28,7 @@ local kind_icons = {
 	Event = "",
 	Operator = "",
 	TypeParameter = "",
+	TabNine = "",
 }
 
 local source_icons = {
@@ -67,17 +68,13 @@ cmp.setup({
 	window = {
 		--completion = cmp.config.window.bordered(),
 		--documentation = cmp.config.window.bordered(),
-		documentation = {
-			max_height = 30,
-		},
+		documentation = { max_height = 30 },
 	},
 	confirm_opts = {
 		behavior = cmp.ConfirmBehavior.Replace,
 		select = false,
 	},
-	view = {
-		entries = "custom",
-	},
+	view = { entries = "custom" },
 	mapping = cmp.mapping.preset.insert({
 		["<C-b>"] = cmp.mapping.scroll_docs(-4),
 		["<C-f>"] = cmp.mapping.scroll_docs(4),
@@ -101,7 +98,7 @@ cmp.setup({
 		--{ name = "emoji", insert = true }, -- emoji completion
 		{ name = "buffer" },
 		{ name = "calc" },
-		--{ name = "cmp_tabnine" },
+		{ name = "cmp_tabnine" },
 		{ name = "treesitter" },
 		{ name = "nvim_lua" },
 		{
@@ -109,6 +106,7 @@ cmp.setup({
 			-- keyword_length = 0,
 			max_item_count = 3,
 		},
+		--{ name = "cmp_ai" },
 		--{ name = "nvim_lsp_signature_help" },
 		--[[{
 			name = "look",
@@ -132,7 +130,7 @@ cmp.setup({
 		format = function(entry, vim_item)
 			local max_width = 50
 			if max_width ~= 0 and #vim_item.abbr > max_width then
-				vim_item.abbr = string.sub(vim_item.abbr, 1, max_width - 1) .. "…"
+				vim_item.abbr = string.sub(vim_item.abbr, 1, max_width - 3) .. "..."
 			end
 			-- Kind icons
 			-- vim_item.kind = string.format("%s", kind_icons[vim_item.kind])
@@ -140,21 +138,13 @@ cmp.setup({
 			local icon = kind_icons[vim_item.kind] or " "
 			vim_item.kind = string.format("%s %s", icon, vim_item.kind)
 			-- source icons
-			vim_item.menu = (source_icons[entry.source.name] or " ") .. " "
+			vim_item.menu = source_icons[entry.source.name] .. " " or "  "
 			return vim_item
 		end,
 	},
 	experimental = {
-		--ghost_text = { hl_group = "NonText" }, -- this feature conflict with copilot.vim's preview.
+		ghost_text = { hl_group = "NonText" }, -- this feature conflict with copilot.vim's preview.
 	},
-})
-
--- Set configuration for specific filetype.
-cmp.setup.filetype("gitcommit", {
-	sources = cmp.config.sources({
-		{ name = "cmp_git" }, -- You can specify the `cmp_git` source if you were installed it.
-		{ name = "buffer" },
-	}),
 })
 
 -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
@@ -183,5 +173,33 @@ cmp.setup.cmdline(":", {
 	}),
 })
 
+require("cmp_tabnine.config"):setup({
+	max_lines = 1000,
+	max_num_results = 20,
+	sort = true,
+	run_on_every_keystroke = true,
+	snippet_placeholder = "..",
+	ignored_file_types = {
+		-- default is not to ignore
+		-- uncomment to ignore in lua:
+		-- lua = true
+	},
+	show_prediction_strength = false,
+})
+
+--[[require("cmp_ai.config"):setup({
+	max_lines = 1000,
+	provider = "OpenAI",
+	model = "gpt-4",
+	notify = true,
+	run_on_every_keystroke = true,
+	ignored_file_types = {
+		-- default is not to ignore
+		-- uncomment to ignore in lua:
+		-- lua = true
+	},
+})]]
+
 vim.cmd("hi CmpItemMenu cterm=bold gui=bold")
 vim.api.nvim_set_hl(0, "CmpItemKindCopilot", { fg = "#04A5E5" })
+vim.api.nvim_set_hl(0, "CmpItemKindTabNine", { fg = "#f397f7" })
