@@ -74,7 +74,7 @@ float cpu_usage(void) {
 int main(int argc, char *argv[]) {
 	unsigned interval = 1;
 	char *stat = "/proc/stat", *cpuinfo = "/proc/cpuinfo",
-		 *current_profile = "powerprofilesctl get ";
+		 *current_profile = "powerprofilesctl get";
 	if (argc == 1) {
 		printf("<span>%s</span> %.2fGHz %.3g%%\n",
 		       power_profile(current_profile), cpu_clock(cpuinfo), cpu_usage());

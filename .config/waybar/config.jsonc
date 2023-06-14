@@ -5,7 +5,7 @@
 	// "width": 1280, // Waybar width
 	"spacing": 2, // Gaps between modules
 	// Choose the order of the modules
-	"margin": "0 0 0 0", // Margin of the bar
+	"margin": "0 3 0 3", // Margin of the bar
 	"fixed-center": false, // Disable centering of the bar
 	"modules-left": [
 		"wlr/workspaces",
@@ -25,9 +25,9 @@
 		"custom/volume",
 		"custom/mic",
 		"clock",
-		"custom/ibus"
+		"custom/ibus",
 		//"custom/weather",
-		//"tray"
+		"tray"
 	],
 	// Modules configuration
 	"wlr/workspaces": {
@@ -69,13 +69,13 @@
 		"tooltip": false
 	},
 	"custom/ram": {
-		"exec": "sh ~/.config/i3/ram.sh",
+		"exec": "sh ~/.config/i3/src/ram.sh",
 		"interval": 10,
 		"format": " {}"
 	},
 	"custom/cpu": {
 		"return-type": "json",
-		"exec": "~/.config/waybar/cpu3",
+		"exec": "~/.config/waybar/bin/cpu3",
 		"format": " {}",
 		"format-alt": " {alt}",
 		"tooltip": false
@@ -97,12 +97,12 @@
 		"format-disconnected": "Disconnected"
 	},
 	"custom/temp": {
-		"exec": "~/.config/waybar/cpu -t thermal_zone1",
+		"exec": "~/.config/waybar/bin/cpu -t thermal_zone1",
 		"interval": 5,
 		"format": " {}"
 	},
 	"custom/volume": {
-		"exec": "sh ~/.config/i3/volume.sh",
+		"exec": "sh ~/.config/i3/src/volume.sh",
 		"on-click-right": "pamixer -i 5",
 		"on-click-middle": "pamixer -t",
 		"on-click": "pamixer -d 5",
@@ -113,12 +113,12 @@
 		"on-click-middle": "amixer -q sset Capture toggle",
 		"on-click-right": "amixer -q sset Capture 5%+",
 		"on-click": "amixer -q sset Capture 5%-",
-		"exec": "~/.config/waybar/mic",
+		"exec": "~/.config/waybar/bin/mic",
 		"tooltip": false,
 		"interval": 1
 	},
 	"custom/battery": {
-		"exec": "python3 ~/.config/i3/battery.py",
+		"exec": "python3 ~/.config/i3/src/battery.py",
 		"tooltip": false,
 		"interval": 10
 	},
@@ -153,14 +153,14 @@
 		"on-click-right": "light -A 10"
 	},
 	"custom/ibus": {
-		"on-click": "~/.config/waybar/im e",
-		"on-click-right": "~/.config/waybar/im l",
+		"on-click": "~/.config/waybar/bin/im e",
+		"on-click-right": "~/.config/waybar/bin/im l",
 		"tooltip": false,
-		"exec": "~/.config/waybar/im",
+		"exec": "~/.config/waybar/bin/im",
 		"interval": 1
 	},
 	"tray": {
-		"icon-size": 21,
-		"spacing": 10
+		"icon-size": 19,
+		"spacing": 5
 	}
 }

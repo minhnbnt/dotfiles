@@ -18,29 +18,33 @@ int main(int argc, char *argv[]) {
 	fclose(fp);
 	if (argc < 2) {
 		if (!strcmp(engine, "BambooUs")) {
-			printf("<span>EN</span>");
+			printf("<span>EN </span>");
 		} else if (!strcmp(engine, "Bamboo"))
-			printf("<span color=\"%s\">VI</span>", color2[1]);
-		else printf("%s", engine);
-		printf(" ");
+			printf("<span color=\"%s\">VI </span>", color2[1]);
+		else if (strlen(engine) > 0) printf("%s ", engine);
 		if (!strcmp(layout, "us")) {
 			printf("<span color=\"%s\">US</span>", color2[0]);
 		} else if (!strcmp(layout, "jp")) {
 			printf("<span>JP</span>");
-		} else printf("%s", layout);
+		} else printf("%s ", layout);
 		printf("\n"), exit(0);
 	} else if (argc == 2) {
 		if (argv[1][0] == 'e') {
-			if (!strcmp(engine, "BambooUs")) system("ibus engine Bamboo");
-			else if (!strcmp(engine, "Bamboo")) system("ibus engine BambooUs");
+			if (!strcmp(engine, "BambooUs")) {
+				system("ibus engine Bamboo");
+			} else if (!strcmp(engine, "Bamboo")) {
+				system("ibus engine BambooUs");
+			}
 		} else if (argv[1][0] == 'l') {
-			if (!strcmp(layout, "us")) system("setxkbmap jp OADG109A");
-			else if (!strcmp(layout, "jp")) system("setxkbmap us");
+			if (!strcmp(layout, "us")) {
+				system("setxkbmap jp OADG109A");
+			} else if (!strcmp(layout, "jp")) {
+				system("setxkbmap us");
+			}
 		} else if (!strcmp(argv[1], "nocolor")) {
-			if (!strcmp(engine, "BambooUs")) printf("EN");
-			else if (!strcmp(engine, "Bamboo")) printf("VI");
+			if (!strcmp(engine, "BambooUs")) printf("EN ");
+			else if (!strcmp(engine, "Bamboo")) printf("VI ");
 			else printf("%s", engine);
-			printf(" ");
 			if (!strcmp(layout, "us")) printf("US");
 			else if (!strcmp(layout, "jp")) printf("JP");
 			else printf("%s", layout);
