@@ -14,6 +14,7 @@ local servers = {
 	"jsonls",
 	"rust_analyzer",
 	"tailwindcss",
+	"tsserver",
 	"pyright",
 	"lua_ls",
 	--"vimls",
@@ -84,7 +85,9 @@ local on_attach = function(client, bufnr)
 		-- you make during a debug session immediately.
 		-- Remove the option if you do not want that.
 		-- You can use the `JdtHotcodeReplace` command to trigger it manually
+		require("jdtls.dap").setup_dap_main_class_configs()
 		require("jdtls").setup_dap({ hotcodereplace = "auto" })
+		require("jdtls.setup").add_commands()
 	end
 end
 

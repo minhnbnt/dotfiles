@@ -7,17 +7,17 @@ dap.configurations.c = {
 		request = "launch",
 		program = function()
 			local compile
-			local path, type = vim.fn.expand("%:p:h"), vim.bo.filetype
+			local path, type = '"' .. vim.fn.expand("%:p:h") .. '"', vim.bo.filetype
 			local name, without_ext = vim.fn.expand("%:t"), vim.fn.expand("%:t:r")
 			local command = {
-				c = "clang -lm -g3",
+				c = "clang -lm -g3", -- -lm for math.h
 				cpp = "clang++ -g3",
 				rust = "rustc -g",
 			}
 			if command[type] ~= nil then
 				vim.cmd("w") -- Save file
 				local cmd = { "cd", path, "&&", command[type], name, "-o", without_ext, "2>&1" }
-				compile = assert(io.popen(table.concat(cmd, " "), "r"))
+				compile = assert(io.popen(table.concat(cmd, " "), "r")) -- compile
 			end
 			local output = compile:read("*all")
 			compile:close()
@@ -102,40 +102,17 @@ end
 dap.configurations.cpp = dap.configurations.c
 dap.configurations.rust = dap.configurations.c
 
-local jdt_setup_class = function()
-	if vim.bo.filetype == "java" then
-		local has_jdt, jdt_dap = pcall(require, "jdtls.dap")
-		if has_jdt then
-			jdt_dap.setup_dap_main_class_configs()
-		end
-	end
-end
-
-local dapui_ctrl = {
-	open = function()
-		jdt_setup_class()
-		dapui.open()
-	end,
-	toggle = function()
-		jdt_setup_class()
-		dapui.toggle()
-	end,
-	close = function()
-		dapui.close()
-	end,
-}
-
 dap.listeners.after.event_initialized["dapui_config"] = function()
 	dapui.open()
 end
 
 --dap.set_log_level("TRACE")
 
-vim.api.nvim_create_user_command("DapUiToggle", dapui_ctrl.toggle, { nargs = 0 })
-vim.api.nvim_create_user_command("DapUiClose", dapui_ctrl.close, { nargs = 0 })
-vim.api.nvim_create_user_command("DapUiOpen", dapui_ctrl.open, { nargs = 0 })
+vim.api.nvim_create_user_command("DapUiToggle", dapui.toggle, { nargs = 0 })
+vim.api.nvim_create_user_command("DapUiClose", dapui.close, { nargs = 0 })
+vim.api.nvim_create_user_command("DapUiOpen", dapui.open, { nargs = 0 })
 vim.api.nvim_create_user_command("DapUi", function(opts)
-	dapui_ctrl[opts.args]()
+	dapui[opts.args]()
 end, {
 	nargs = 1,
 	complete = function()
