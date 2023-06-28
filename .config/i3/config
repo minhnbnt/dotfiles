@@ -55,16 +55,16 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 exec --no-startup-id nm-applet
 
 # Pulse Audio controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5%
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
 
 # Sreen brightness controls
 bindsym XF86MonBrightnessUp exec xbacklight -inc 20 # increase screen brightness
 bindsym XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightness
 
 # Touchpad controls
-bindsym XF86TouchpadToggle exec /home/minhnbnt/.config/i3/toggletouchpad.sh # toggle touchpad
+bindsym XF86TouchpadToggle exec /home/minhnbnt/.config/i3/src/toggletouchpad.sh
 
 # Media player controls
 bindsym XF86AudioPlay exec playerctl play
@@ -206,27 +206,27 @@ bindsym $mod+Shift+e exec sh ~/.config/i3/powermenu.sh
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
-        # These bindings trigger as soon as you enter the resize mode
+	# These bindings trigger as soon as you enter the resize mode
 
-        # Pressing left will shrink the window’s width.
-        # Pressing right will grow the window’s width.
-        # Pressing up will shrink the window’s height.
-        # Pressing down will grow the window’s height.
-        bindsym j resize shrink width 10 px or 10 ppt
-        bindsym k resize grow height 10 px or 10 ppt
-        bindsym l resize shrink height 10 px or 10 ppt
-        bindsym semicolon resize grow width 10 px or 10 ppt
+	# Pressing left will shrink the window’s width.
+	# Pressing right will grow the window’s width.
+	# Pressing up will shrink the window’s height.
+	# Pressing down will grow the window’s height.
+	bindsym j resize shrink width 10 px or 10 ppt
+	bindsym k resize grow height 10 px or 10 ppt
+	bindsym l resize shrink height 10 px or 10 ppt
+	bindsym semicolon resize grow width 10 px or 10 ppt
 
-        # same bindings, but for the arrow keys
-        bindsym Left resize shrink width 10 px or 10 ppt
-        bindsym Down resize grow height 10 px or 10 ppt
-        bindsym Up resize shrink height 10 px or 10 ppt
-        bindsym Right resize grow width 10 px or 10 ppt
+	# same bindings, but for the arrow keys
+	bindsym Left resize shrink width 10 px or 10 ppt
+	bindsym Down resize grow height 10 px or 10 ppt
+	bindsym Up resize shrink height 10 px or 10 ppt
+	bindsym Right resize grow width 10 px or 10 ppt
 
-        # back to normal: Enter or Escape or $mod+r
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-        bindsym $mod+r mode "default"
+	# back to normal: Enter or Escape or $mod+r
+	bindsym Return mode "default"
+	bindsym Escape mode "default"
+	bindsym $mod+r mode "default"
 }
 
 # class                 border  bground text    indicator child_border
@@ -247,26 +247,26 @@ bindsym $mod+r mode "resize"
 # finds out, if available)
 
 bar {
-    status_command i3blocks -c ~/.config/i3/i3blocks.conf
-    font pango:FiraCode Nerd Font, FontAwesome 9
-    tray_output none
-    #i3bar_command i3bar --transparency
-    height         22
-        colors {
-            background #000000CD
-            statusline #FFFFFF
-            separator  #666666
-
-            focused_workspace  #285577 #285577 #FFFFFF
-            active_workspace   #333333 #222222 #FFFFFF
-            inactive_workspace #333333 #222222 #888888
-            urgent_workspace   #2F343A #900000 #FFFFFF
-            binding_mode       #2F343A #900000 #FFFFFF
-        }
-    position top
+	# i3bar_command i3bar --transparency
+	status_command i3blocks -c ~/.config/i3/i3blocks.conf
+	font pango:FiraCode Nerd Font, FontAwesome 9
+	# mode hide
+	# hidden_state hide
+	tray_output none
+	height 22
+	position top
 	tray_padding 2
-#    mode hide
-#    hidden_state hide
+	colors {
+		background #000000CD
+		statusline #FFFFFF
+		separator  #666666
+
+		focused_workspace  #285577 #285577 #FFFFFF
+		active_workspace   #333333 #222222 #FFFFFF
+		inactive_workspace #333333 #222222 #888888
+		urgent_workspace   #2F343A #900000 #FFFFFF
+		binding_mode       #2F343A #900000 #FFFFFF
+	}
 }
 
 bindsym Print exec gnome-screenshot -i
