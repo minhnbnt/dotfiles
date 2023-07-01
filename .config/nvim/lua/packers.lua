@@ -44,7 +44,7 @@ return require("packer").startup(function(use)
 	use("p00f/clangd_extensions.nvim")
 	use("mfussenegger/nvim-jdtls")
 	use("simrat39/rust-tools.nvim")
-	use("folke/neodev.nvim")
+	--use("folke/neodev.nvim")
 
 	use("windwp/nvim-autopairs")
 
@@ -103,6 +103,7 @@ return require("packer").startup(function(use)
 	})
 
 	use("lukas-reineke/indent-blankline.nvim")
+	use("numToStr/Comment.nvim")
 
 	use("norcalli/nvim-colorizer.lua")
 
@@ -137,10 +138,10 @@ return require("packer").startup(function(use)
 			--"hrsh7th/cmp-copilot",
 			"zbirenbaum/copilot-cmp",
 			--"tzachar/cmp-ai",
-			{
+			--[[ {
 				"tzachar/cmp-tabnine",
 				run = "./install.sh",
-			},
+			}, ]]
 			{
 				"L3MON4D3/LuaSnip",
 				run = "make install_jsregexp",
