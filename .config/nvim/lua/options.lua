@@ -26,7 +26,7 @@ local options = {
 	shiftwidth = 2,
 	smarttab = true,
 	softtabstop = 2,
-	expandtab = true,
+	expandtab = false,
 	mouse = "a",
 	title = true,
 	undofile = true,
@@ -64,8 +64,9 @@ vim.g.cursorhold_updatetime = 1000
 
 vim.api.nvim_create_autocmd({ "BufEnter", "WinResized" }, {
 	callback = function()
+		local excluded_ft = { "python" }
 		local ft = { "html", "xhtml", "xml", "typescriptreact", "javascriptreact" }
-		if vim.fn.winwidth(0) < 100 then
+		if vim.fn.winwidth(0) < 100 and not vim.tbl_contains(excluded_ft, vim.bo.filetype) then
 			vim.cmd("se tabstop=2 shiftwidth=2 softtabstop=2")
 		elseif not vim.tbl_contains(ft, vim.bo.filetype) then
 			vim.cmd("setlocal tabstop=4 shiftwidth=4 softtabstop=4")

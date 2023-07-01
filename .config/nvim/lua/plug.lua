@@ -35,6 +35,7 @@ load("coding.ufo")
 load("coding.coderunner")
 load("coding.treesitter")
 load("coding.identblankline")
+load("coding.comment")
 --load("coding.filetype")
 load("coding.gitsigns")
 
