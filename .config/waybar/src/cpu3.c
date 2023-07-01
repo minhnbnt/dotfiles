@@ -2,68 +2,120 @@
 #include <string.h>
 #include <unistd.h>
 
-#define __ZONE__ "thermal_zone1" // cpu temp zone
+#define ZONE "thermal_zone1"
 
-char *power_profile(void) {
-	char buf[12]; // store power profile
-	FILE *fp = popen("powerprofilesctl get", "r");
-	fgets(buf, 12, fp), pclose(fp);
-	if (strncmp(buf, "balanced", 8) == 0) {
-		return "&#xf24e;"; // 
-	} else if (strncmp(buf, "performance", 11) == 0) {
-		return "&#xf0e4;"; // 
-	} else if (strncmp(buf, "power-save", 10) == 0) {
-		return "&#xf06c;";    // 
-	} else return "&#xf2db;"; // 
+float cpu_temp(void);
+float cpu_clock(void);
+float cpu_usage(void);
+
+// return class based on usage percentage
+const char *class(float usage) {
+	if (usage < 33) {
+		return "low";
+	} else if (usage < 66) {
+		return "medium";
+	} else return "high";
 }
 
-float cpu_temp(const char *zone) {
-	float temp;
-	char path[50]; // path to thermal_zone
-	sprintf(path, "/sys/class/thermal/%s/temp", zone);
-	FILE *fp = fopen(path, "r");
-	fscanf(fp, "%f", &temp), fclose(fp);
+int main(int argc, char *argv[]) {
+
+	while (1) {
+
+		// avoid calling cpu_usage() twice
+		float usage = cpu_usage();
+
+		// JSON format for waybar
+		printf("{ \"class\": \"%s\", \"percentage\": %.0f,"
+		       " \"text\": \"%.2fGHz %.3g°C\" }\n",
+		       class(usage), usage, cpu_clock(), cpu_temp());
+
+		fflush(stdout); // flush stdout so output is printed immediately
+
+		sleep(5); // sleep for usage update
+	}
+
+	return 0;
+}
+
+float cpu_temp(void) {
+
+	float temp; // store temperature
+
+	// read temp from /sys/class/thermal/<ZONE>/temp
+	FILE *fp = fopen("/sys/class/thermal/" ZONE "/temp", "r");
+
+	fscanf(fp, "%f", &temp); // read temp
+	fclose(fp);              // close file
+
+	// div by 1000 to convert to C
 	return temp / 1000;
 }
 
 float cpu_clock(void) {
-	char buf[100];
-	unsigned core = 0;
-	float cpu_clock, sum = 0;
+
+	char buf[100]; // buffer for line from /proc/cpuinfo
+
+	// calculate average clock speed
+	float sum = 0;     // sum of clock speeds
+	unsigned core = 0; // number of cores
+
+	// file pointer to /proc/cpuinfo
 	FILE *fp = fopen("/proc/cpuinfo", "r");
+
+	// read each line of /proc/cpuinfo
 	while (fgets(buf, 100, fp) != NULL)
-		if (strncmp(buf, "cpu MHz", 7) == 0) { // limit length to 7
+		// if line starts with "cpu MHz"
+		if (strncmp(buf, "cpu MHz", 7) == 0) {
+
+			float cpu_clock; // store clock speed
+
+			// read clock speed from line
 			sscanf(buf, "cpu MHz\t: %f", &cpu_clock);
-			++core, sum += cpu_clock;
+
+			sum += cpu_clock; // add clock speed to sum
+			++core;           // increment core count
 		}
-	fclose(fp);
-	return sum / core / 1000; // average clock
+
+	fclose(fp); // close file pointer
+
+	// div by 1000 to convert from MHz to GHz
+	return sum / core / 1000;
 }
 
-#define ulll __uint128_t
-#define ull unsigned long long
+float cpu_usage(void) {
 
-float cpu_usage_loop(ulll *prev_idle, ulll *prev_total) {
-	ull a[10];
+	unsigned long long val[10];
+
+	// read values from /proc/stat
 	FILE *fp = fopen("/proc/stat", "r");
-	fscanf(fp, "%*s %llu %llu %llu %llu %llu %llu %llu %llu %llu %llu", &a[0],
-	       &a[1], &a[2], &a[3], &a[4], &a[5], &a[6], &a[7], &a[8], &a[9]),
-		fclose(fp);
-	ulll idle = a[3] + a[4], total = 0;
-	for (int i = 0; i < 10; i++) total += a[i];
-	ull totald = total - *prev_total, idled = idle - *prev_idle;
-	*prev_idle = idle, *prev_total = total; // for next loop
-	return 100.0 * (totald - idled) / totald;
-}
 
-int main(int argc, char *argv[]) { // args will be done later :)
-	ulll idle = 0, total = 0;      // for cpu usage
-	while (1) {
-		printf("{\"text\": \"%.*f%%\", \"alt\": \"" /* "<span>%s</span> " */
-		       "%.2fGHz %.3g°C\"}\n",
-		       0, cpu_usage_loop(&idle, &total), /* power_profile(), */
-		       cpu_clock(), cpu_temp(__ZONE__));
-		fflush(stdout), sleep(10); // clear cache and sleep 10s
+	fscanf(fp, "%*s"); // skip "cpu0"
+
+	/* read values into array
+	 * and calculate total and idle */
+	__uint128_t idle, total = 0; // store idle and total
+	for (int i = 0; i < 10; i++) {
+
+		fscanf(fp, "%llu", &val[i]); // read value
+
+		total += val[i]; // add to total
 	}
-	return 0;
+
+	// idle = idle + iowait
+	idle = val[3] + val[4];
+
+	/* this variable is static so it retains its value between calls
+	 * looks better than global variables, right? :p */
+	static __uint128_t prev_idle = 0, prev_total = 0;
+	// so first time this will not give correct value :0
+
+	// calculate usage
+	unsigned long idled = idle - prev_idle;
+	unsigned long totald = total - prev_total;
+
+	// update prev values for next call
+	prev_idle = idle, prev_total = total;
+
+	// return usage percentage
+	return 100.0 * (totald - idled) / totald;
 }

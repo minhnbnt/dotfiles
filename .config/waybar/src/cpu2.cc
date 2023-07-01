@@ -21,10 +21,23 @@ float cpu_temp(void);
 float cpu_clock(void);
 float cpu_usage(void);
 
+// return class based on usage percentage
+const char *module_class(float usage) {
+	if (usage < 33) {
+		return "low";
+	} else if (usage < 66) {
+		return "medium";
+	} else return "high";
+}
+
 void json_output(void) {
-	// for waybar clickable module :D
-	printf("{ \"text\": \"%.3g%%\", \"alt\": \"%.2fGHz %.0f°C\" }\n",
-	       cpu_usage(), cpu_clock(), cpu_temp());
+	// avoid calling cpu_usage() twice
+	float usage = cpu_usage();
+
+	// JSON format for waybar
+	printf("{ \"class\": \"%s\", \"percentage\": %.0f,"
+	       " \"text\": \"%.2fGHz %.3g°C\" }\n",
+	       module_class(usage), usage, cpu_clock(), cpu_temp());
 }
 
 void text_output(void) {
@@ -59,7 +72,7 @@ int main(int argc, char *argv[]) {
 float cpu_clock(void) {
 
 	// temp variables
-	std::string line, find = "cpu MHz";
+	std::string line;
 
 	// read cpuinfo from /proc/cpuinfo
 	std::ifstream ifs("/proc/cpuinfo");
@@ -70,18 +83,16 @@ float cpu_clock(void) {
 
 	while (std::getline(ifs, line)) { // read all lines
 		// find line containing "cpu MHz"
-		std::size_t pos = line.find(find);
+		std::size_t pos = line.find("cpu MHz");
 
 		if (pos != std::string::npos) { // if found
 
 			// add clock speed to sum
-			sum += std::stof(line.substr(pos + find.size() + 4));
+			sum += std::stof(line.substr(pos + 10));
 
 			++cores; // increment core count
 		}
 	}
-
-	ifs.close(); // close file
 
 	// div by 1000 to convert from MHz to GHz
 	return sum / cores / 1000.0;
@@ -95,7 +106,6 @@ float cpu_temp(void) {
 	std::ifstream ifs("/sys/class/thermal/" ZONE "/temp");
 
 	ifs >> temp; // read temp
-	ifs.close(); // close file
 
 	// convert from millidegrees to degrees
 	return temp / 1000.0;
@@ -126,12 +136,9 @@ float cpu_usage(void) {
 	// idle = idle + iowait
 	idle = vals[3] + vals[4];
 
-	ifs.close();  // close file
-	vals.clear(); // clear vector
-
 	// calculate usage
-	size_t idled = idle - prev_idle;
-	size_t totald = total - prev_total;
+	unsigned long idled = idle - prev_idle;
+	unsigned long totald = total - prev_total;
 
 	// update prev values for next call
 	prev_total = total, prev_idle = idle;
