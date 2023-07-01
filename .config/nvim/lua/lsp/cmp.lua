@@ -79,7 +79,7 @@ cmp.setup({
 		["<C-b>"] = cmp.mapping.scroll_docs(-4),
 		["<C-f>"] = cmp.mapping.scroll_docs(4),
 		["<C-Space>"] = cmp.mapping.complete(),
-		["<ESC>"] = cmp.mapping.abort(),
+		["<ESC>"] = cmp.mapping.close(),
 		["<CR>"] = cmp.mapping.confirm({ select = false }), -- Set `select` to `false` to only confirm explicitly selected items.
 		["<Tab>"] = cmp.mapping.confirm({ select = true }),
 		["<Down>"] = cmp.mapping.select_next_item(),
@@ -173,7 +173,7 @@ cmp.setup.cmdline(":", {
 	}),
 })
 
-require("cmp_tabnine.config"):setup({
+--[[ require("cmp_tabnine.config"):setup({
 	max_lines = 1000,
 	max_num_results = 20,
 	sort = true,
@@ -185,9 +185,9 @@ require("cmp_tabnine.config"):setup({
 		-- lua = true
 	},
 	show_prediction_strength = false,
-})
+}) ]]
 
---[[require("cmp_ai.config"):setup({
+--[[ require("cmp_ai.config"):setup({
 	max_lines = 1000,
 	provider = "OpenAI",
 	model = "gpt-4",
@@ -198,7 +198,7 @@ require("cmp_tabnine.config"):setup({
 		-- uncomment to ignore in lua:
 		-- lua = true
 	},
-})]]
+}) ]]
 
 vim.cmd("hi CmpItemMenu cterm=bold gui=bold")
 vim.api.nvim_set_hl(0, "CmpItemKindCopilot", { fg = "#04A5E5" })

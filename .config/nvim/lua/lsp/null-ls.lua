@@ -17,11 +17,10 @@ local config = {
 		TabWidth = 4,
 		UseTab = "ForIndentation",
 	},
-	yapf = function()
+	--[[yapf = function()
 		local config = {
 			based_on_style = "pep8",
 			column_limit = 80,
-			continuation_indent_width = 4,
 			indent_width = 4,
 			use_tabs = true,
 		}
@@ -30,7 +29,7 @@ local config = {
 			table.insert(rtn, string.format("%s: %s", k, v))
 		end
 		return "{ " .. table.concat(rtn, ", ") .. " }"
-	end,
+	end,]]
 	rustfmt = function()
 		local config = {
 			max_width = 80,
@@ -66,9 +65,7 @@ null_ls.setup({
 		formatting.prettier.with({ extra_args = { "--use-tabs" } }),
 		formatting.rustfmt.with({ extra_args = { "--config=" .. config.rustfmt() } }),
 		formatting.stylua,
-		formatting.yapf.with({
-			--extra_args = { "--style '" .. config.yapf() .. "'" },
-		}),
+		formatting.yapf,
 
 		completion.spell,
 
@@ -86,8 +83,8 @@ null_ls.setup({
 							filter = function(opts)
 								return opts.name == "null-ls"
 							end,
-							bufnr = bufnr,
 							timeout_ms = 5000,
+							bufnr = bufnr,
 						})
 					end
 				end,

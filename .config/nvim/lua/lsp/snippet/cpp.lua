@@ -22,9 +22,11 @@ table.insert(
 	}, {
 		text("#include <bits/stdc++.h>"),
 		text({ "", "", "using namespace std;" }),
-		text({ "", "", "int main(int argc, char *argv[]) {", "\t" }),
+		text({ "", "", "int main(void) {", "\t" }),
+		text({ "ios_base::sync_with_stdio(false);", "\t" }),
+		text({ "cin.tie(nullptr), cout.tie(nullptr);", "\t" }),
 		insert(0, ""),
-		text({ "", "}" }),
+		text({ "", "\treturn 0;", "}" }),
 	}, {
 		condition = conds_expand.line_begin,
 	})
