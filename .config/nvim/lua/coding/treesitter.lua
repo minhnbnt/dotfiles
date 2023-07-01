@@ -47,13 +47,12 @@ require("nvim-treesitter.configs").setup({
 	},
 	rainbow = {
 		enable = true,
-		disable = { "htm", "html", "xhtml", "xml" }, -- list of languages you want to disable the plugin for
+		-- disable = { "htm", "html", "xhtml", "xml" }, -- list of languages you want to disable the plugin for
 		extended_mode = false, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
 		max_file_lines = nil, -- Do not enable for files with more than n lines, int
 		--colors = { "#dfcf1d", "#ea76cb", "#1E66F5" }, -- table of hex strings
-		strategy = rainbow.strategy["local"],
+		--strategy = rainbow.strategy["local"],
 		hlgroups = { "TSRainbowYellow", "TSRainbowViolet", "TSRainbowBlue" },
-		-- query = { "rainbow-parens" },
 		-- termcolors = {} -- table of colour name strings
 	},
 	refactor = {
@@ -67,4 +66,4 @@ require("nvim-treesitter.configs").setup({
 
 vim.api.nvim_set_hl(0, "TSRainbowYellow", { fg = "#dfcf1d" })
 vim.api.nvim_set_hl(0, "TSRainbowViolet", { fg = "#ea76cb" })
-vim.api.nvim_set_hl(0, "TSRainbowBlue", { fg = "#1E66F5" })
+vim.api.nvim_set_hl(0, "TSRainbowBlue", { fg = "#5480f7" })
