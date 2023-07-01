@@ -19,22 +19,20 @@ require("bufferline").setup({
 		-- The diagnostics indicator can be set to nil to keep the buffer name highlight but delete the highlighting
 		get_element_icon = function(opt)
 			-- element consists of { filetype: string, path: string, extension: string, directory: string }
-			-- This can be used to change how bufferline fetches the icon
-			-- for an element e.g. a buffer or a tab.
-			-- e.g.
-			local devicon = require("nvim-web-devicons")
-			local filename, ext = vim.fn.expand("%:t"), opt.extension
-			local icon, hl = devicon.get_icon_by_filetype(opt.extension, { default = false })
+			-- This can be used to change how bufferline fetches the icon for an element e.g. a buffer or a tab.
+			local ok, devicon = pcall(require, "nvim-web-devicons")
+			if not ok then
+				return
+			end
+			local ext = opt.extension
+			local icon, hl = devicon.get_icon_by_filetype(ext, { default = false })
 			local icons = devicon.get_icons()
 			-- some extra logic to set highlight group
 			local name = function()
-				if icons[ext] then -- filetype
+				if icons[ext] ~= nil then -- filetype
 					return icons[ext].name
-				elseif icons[filename] then -- filename
-					return icons[filename].name
-				else -- if no icon is found, return the default
-					return "Default"
 				end
+				return "Default"
 			end
 			-- there are lots of filetypes, so I just set opening filetype for highlight
 			vim.api.nvim_set_hl(0, "BufferLineDevIcon" .. name(), { link = "BufferLineBackground" })

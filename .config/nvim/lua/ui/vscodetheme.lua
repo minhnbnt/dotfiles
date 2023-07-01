@@ -85,7 +85,7 @@ vim.cmd([[
     hi BufferLineSeparatorVisible guifg=#565970
     hi BufferLineBackground guibg=#232634
     hi BufferLineFill guibg=#565970
-    hi BufferLineBufferSelected guifg=#99D1DB
+    hi BufferLineBufferSelected guifg=#99d1db
     hi BufferLineCloseButton guibg=#232634
     hi BufferLineDuplicate guibg=#232634
     hi BufferLineModified guibg=#232634
