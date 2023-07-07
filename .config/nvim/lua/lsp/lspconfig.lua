@@ -6,7 +6,8 @@ local servers = {
 	"cmake",
 	"cssls",
 	--"denols",
-	"emmet_ls",
+	--"emmet_ls",
+	"emmet_language_server",
 	"eslint",
 	"gopls",
 	"html",
@@ -44,9 +45,8 @@ local signs = {
 	Info = "",
 }
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
-capabilities.textDocument.documentFormattingProvider = false
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 -- Mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
@@ -112,30 +112,6 @@ local config = {
 		filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" },
 		init_options = { html = { options = { ["bem.enabled"] = true } } },
 	},
-	eslint = {
-		settings = {
-			codeAction = {
-				disableRuleComment = { enable = true, location = "separateLine" },
-				showDocumentation = { enable = true },
-			},
-			codeActionOnSave = {
-				enable = false,
-				mode = "all",
-			},
-			experimental = { useFlatConfig = false },
-			format = true,
-			nodePath = "",
-			onIgnoredFiles = "off",
-			packageManager = "npm",
-			problems = { shortenToSingleLine = false },
-			quiet = false,
-			rulesCustomizations = {},
-			run = "onType",
-			useESLintClass = false,
-			validate = "on",
-			workingDirectory = { mode = "location" },
-		},
-	},
 	jdtls = {
 		on_attach = on_attach,
 		capabilities = capabilities,
@@ -182,19 +158,31 @@ for type, icon in pairs(signs) do -- set signs
 	vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 end
 
+local vscode_extracted = { "html", "cssls", "eslint", "jsonls" }
+
 -- reqiure all servers
-for _, lsp in pairs(servers) do
-	if config[lsp] == nil then
-		config[lsp] = {}
+for _, server in pairs(servers) do
+	if config[server] == nil then
+		config[server] = {}
 	end
-	if init[lsp] ~= nil then
+	if init[server] ~= nil then
 		-- if server needs custom init options
-		init[lsp](config[lsp])
-	else -- all other servers
-		table.insert(config[lsp], {
+		init[server](config[server])
+	elseif not vim.tbl_contains(vscode_extracted, server) then
+		table.insert(config[server], {
 			capabilities = capabilities,
 			on_attach = on_attach,
 		})
-		require("lspconfig")[lsp].setup(config[lsp])
+		require("lspconfig")[server].setup(config[server])
+	end
+end
+
+-- for some reason vscode_extracted servers need to be setup after all others
+for _, server in pairs(vscode_extracted) do
+	if vim.tbl_contains(servers, server) then
+		require("lspconfig")[server].setup({
+			capabilities = capabilities,
+			on_attach = on_attach,
+		})
 	end
 end
