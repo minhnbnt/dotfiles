@@ -1,4 +1,5 @@
-local server_name = function()
+local function server_name()
+	local len = 20 -- more than max length of server name
 	local attached = {} -- list of attached servers
 	local buf_ft = vim.api.nvim_buf_get_option(0, "filetype")
 	local clients = vim.lsp.get_active_clients()
@@ -7,7 +8,7 @@ local server_name = function()
 	end
 	for _, client in ipairs(clients) do
 		local filetypes = client.config.filetypes
-		if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
+		if filetypes and vim.tbl_contain(filetypes, buf_ft) then
 			if client.name == "null-ls" then -- null-ls clients
 				local sources = require("null-ls").get_sources()
 				for _, source in ipairs(sources) do
@@ -22,12 +23,23 @@ local server_name = function()
 			vim.b.copilot_active = true -- for later
 		end
 	end
-	local num_attached = #attached
-	if num_attached > 3 then
-		local str = table.concat(attached, ", ", 1, 2)
-		return str .. " + " .. num_attached - 2 .. " more"
+	local displays, not_displayed = {}, #attached
+	while true do -- shorten names until they fit
+		local server = table.remove(attached, 1)
+		not_displayed = not_displayed - 1
+		table.insert(displays, server)
+		if not_displayed == 1 then
+			-- i don't want to see + 1 more
+			table.insert(displays, attached[1])
+			break -- displays = attached
+		end
+		local str = table.concat(displays, ", ")
+		if str:len() > len then -- if too long
+			return str .. " + " .. not_displayed .. " more"
+		end
 	end
-	return table.concat(attached, ", ")
+	-- without more
+	return table.concat(displays, ", ")
 end
 
 local filetype = require("lualine.components.filetype")
@@ -37,7 +49,6 @@ function filetype.update_status()
 		highlight = "lualine.highlight",
 		utils = "lualine.utils.utils",
 	})
-
 	local ft = vim.fn.expand("%:e")
 	if ft == "" then
 		ft = vim.bo.filetype or ""
@@ -260,10 +271,10 @@ ins.right({
 ins.right({
 	"diagnostics",
 	sources = { "nvim_diagnostic" },
-	--sections = { "error", "warn", "info", "hint" },
-	--symbols = { error = " ", warn = " ", info = " ", hint = " " },
-	sections = { "error", "warn", "info" },
-	symbols = { error = " ", warn = " ", info = " " },
+	sections = { "error", "warn", "info", "hint" },
+	symbols = { error = " ", warn = " ", info = " ", hint = " " },
+	-- sections = { "error", "warn", "info" },
+	-- symbols = { error = " ", warn = " ", info = " " },
 	cond = conditions.hide_in_width(7),
 	colored = true,
 	update_in_insert = false,
@@ -324,6 +335,7 @@ config.options = {
 	component_separators = "",
 	section_separators = "",
 	padding = 1, -- padding between components
+	refresh = { statusline = 5000 },
 	theme = {
 		normal = {
 			a = { fg = "#303446", bg = "#1E66F5" },
