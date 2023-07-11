@@ -20,23 +20,27 @@ require("bufferline").setup({
 		get_element_icon = function(opt)
 			-- element consists of { filetype: string, path: string, extension: string, directory: string }
 			-- This can be used to change how bufferline fetches the icon for an element e.g. a buffer or a tab.
-			local ok, devicon = pcall(require, "nvim-web-devicons")
+			local ok, devicons = pcall(require, "nvim-web-devicons")
+
 			if not ok then
 				return
 			end
-			local ext = opt.extension
-			local icon, hl = devicon.get_icon_by_filetype(ext, { default = false })
-			local icons = devicon.get_icons()
-			-- some extra logic to set highlight group
-			local name = function()
-				if icons[ext] ~= nil then -- filetype
-					return icons[ext].name
+
+			local ft, icons = opt.filetype, devicons.get_icons()
+			local icon, hl = devicons.get_icon_by_filetype(ft, { default = false })
+			local icon_name = devicons.get_icon_name_by_filetype(ft) or opt.extension
+
+			local function get_name()
+				if icon_name ~= nil and icons[icon_name] ~= nil then
+					return icons[icon_name].name
 				end
 				return "Default"
 			end
+
 			-- there are lots of filetypes, so I just set opening filetype for highlight
-			vim.api.nvim_set_hl(0, "BufferLineDevIcon" .. name(), { link = "BufferLineBackground" })
+			vim.api.nvim_set_hl(0, "BufferLineDevIcon" .. get_name(), { link = "BufferLineBackground" })
 			-- for open multiple files at once, I couldn't find a way to set highlight for each filetype :(
+
 			return icon, hl -- like normal
 		end,
 		offsets = {
