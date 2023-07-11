@@ -1,6 +1,3 @@
--- Set up nvim-cmp.
-local cmp = require("cmp")
-
 local kind_icons = {
 	Copilot = "",
 	Text = "",
@@ -49,6 +46,9 @@ local source_icons = {
 	nvim_lua = "",
 }
 
+-- Set up nvim-cmp.
+local cmp, luasnip = require("cmp"), require("luasnip")
+
 cmp.setup({
 	preselect = cmp.PreselectMode.None,
 	snippet = {
@@ -81,7 +81,15 @@ cmp.setup({
 		["<C-Space>"] = cmp.mapping.complete(),
 		["<ESC>"] = cmp.mapping.close(),
 		["<CR>"] = cmp.mapping.confirm({ select = false }), -- Set `select` to `false` to only confirm explicitly selected items.
-		["<Tab>"] = cmp.mapping.confirm({ select = true }),
+		["<Tab>"] = cmp.mapping(function(fallback)
+			if cmp.visible() then
+				cmp.confirm({ select = true })
+			elseif luasnip.expand_or_jumpable() then
+				luasnip.expand_or_jump()
+			else
+				fallback()
+			end
+		end, { "i", "s" }),
 		["<Down>"] = cmp.mapping.select_next_item(),
 		["<Up>"] = cmp.mapping.select_prev_item(),
 		--["<Right>"] = cmp.mapping.confirm({ select = true }),
@@ -96,6 +104,7 @@ cmp.setup({
 		--{ name = "omni" },
 		{ name = "tags" },
 		--{ name = "emoji", insert = true }, -- emoji completion
+	}, {
 		{ name = "buffer" },
 		{ name = "calc" },
 		{ name = "cmp_tabnine" },
