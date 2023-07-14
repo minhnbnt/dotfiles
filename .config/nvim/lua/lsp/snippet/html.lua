@@ -13,10 +13,10 @@ local conds_expand = require("luasnip.extras.conditions.expand")
 local html_out = {}
 
 -- need a function, variable will throw exception
-local init = function()
+local function init()
 	return {
-		text({ "<!DOCTYPE html>", '<html lang="vi">', "\t<head>", "" }),
-		text({ '\t\t<meta charset="UTF-8" />', "" }),
+		text({ "<!DOCTYPE html>", '<html lang="vi">', "\t<head>" }),
+		text({ "", '\t\t<meta charset="UTF-8" />', "" }),
 		text('\t\t<meta name="viewport" content="width='),
 		insert(1, "device-width"),
 		text(", initial-scale="),

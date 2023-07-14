@@ -16,7 +16,7 @@ local cpp_out = {}
 table.insert(
 	cpp_out,
 	snip({
-		trig = "#include <bits/stdc++.h>",
+		trig = "main",
 		namr = "initial",
 		dscr = "initial c++ file",
 	}, {
@@ -31,6 +31,35 @@ table.insert(
 		condition = conds_expand.line_begin,
 	})
 )
+
+local function get_file_name()
+	return vim.fn.expand("%:t:r")
+end
+
+table.insert(
+	cpp_out,
+	snip({
+		trig = "solution",
+		namr = "initial",
+		dscr = "initial c++ file",
+	}, {
+		text("#include <bits/stdc++.h>"),
+		text({ "", "", "using namespace std;" }),
+		text({ "", "", "class " }),
+		func(get_file_name, {}),
+		text({ " {", "public:", "\t" }),
+		text({ "static void main(int argc, char *argv[]) {", "\t\t" }),
+		insert(0, ""),
+		text({ "", "\t}", "};", "", "int main(int argc, char *argv[]) {" }),
+		text({ "", "\tios_base::sync_with_stdio(false);", "\t" }),
+		text({ "cin.tie(nullptr), cout.tie(nullptr);", "\t" }),
+		func(get_file_name, {}),
+		text({ "::main(argc, argv);", "\treturn 0;", "}" }),
+	}, {
+		condition = conds_expand.line_begin,
+	})
+)
+
 table.insert(
 	cpp_out,
 	snip({
@@ -50,9 +79,9 @@ table.insert(
 		namr = "cout",
 		dscr = "cout << message << endl",
 	}, {
-		text('cout << "'),
+		text("cout << "),
 		insert(0, ""),
-		text('" << endl;'),
+		text(" << endl;"),
 	})
 )
 table.insert(
