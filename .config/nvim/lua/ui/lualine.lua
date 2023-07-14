@@ -6,13 +6,14 @@ local function server_name()
 	if next(clients) == nil then
 		return ""
 	end
+	-- gen list of attached servers
 	for _, client in ipairs(clients) do
 		local filetypes = client.config.filetypes
-		if filetypes and vim.tbl_contain(filetypes, buf_ft) then
+		if filetypes and vim.tbl_contains(filetypes, buf_ft) then
 			if client.name == "null-ls" then -- null-ls clients
 				local sources = require("null-ls").get_sources()
 				for _, source in ipairs(sources) do
-					if source.filetypes[buf_ft] ~= nil then
+					if source.filetypes[buf_ft] then
 						table.insert(attached, source.name)
 					end
 				end
@@ -23,27 +24,26 @@ local function server_name()
 			vim.b.copilot_active = true -- for later
 		end
 	end
-	local displays, not_displayed = {}, #attached
+	-- shorten names
+	local displayed, not_displayed = {}, #attached
 	while true do -- shorten names until they fit
 		local server = table.remove(attached, 1)
 		not_displayed = not_displayed - 1
-		table.insert(displays, server)
-		if not_displayed == 1 then
+		table.insert(displayed, server)
+		if not_displayed < 2 then
 			-- i don't want to see + 1 more
-			table.insert(displays, attached[1])
+			table.insert(displayed, attached[1])
 			break -- displays = attached
 		end
-		local str = table.concat(displays, ", ")
+		local str = table.concat(displayed, ", ")
 		if str:len() > len then -- if too long
 			return str .. " + " .. not_displayed .. " more"
 		end
 	end
-	-- without more
-	return table.concat(displays, ", ")
+	return table.concat(displayed, ", ")
 end
 
 local filetype = require("lualine.components.filetype")
-
 function filetype.update_status()
 	local modules = require("lualine_require").lazy_require({
 		highlight = "lualine.highlight",
