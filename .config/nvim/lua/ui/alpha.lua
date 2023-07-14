@@ -49,7 +49,7 @@ dashboard.section.buttons.val = {
 local function footer()
 	--local handle = io.popen("fortune")
 	--if handle == nil then
-	return "My name, it's Neo."
+	return "It will create a miracle."
 	--end
 	--local fortune = handle:read("*a")
 	--handle:close()
