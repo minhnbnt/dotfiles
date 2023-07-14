@@ -3,7 +3,7 @@ local function ensure_packer()
 	local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
 	if fn.empty(fn.glob(install_path)) > 0 then
 		fn.system({ "git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", install_path })
-		vim.cmd([[packadd packer.nvim]])
+		vim.cmd("packadd packer.nvim")
 		return true
 	end
 	return false
@@ -26,19 +26,16 @@ return require("packer").startup(function(use)
 
 	use("kyazdani42/nvim-tree.lua")
 
-	use({
-		"akinsho/bufferline.nvim",
-		tag = "v3.*",
-		requires = { "famiu/bufdelete.nvim" },
-	})
+	use({ "akinsho/bufferline.nvim", tag = "*", requires = { "famiu/bufdelete.nvim" } })
 
 	use("neovim/nvim-lspconfig")
-	--use("williamboman/mason.nvim")
-	--use("williamboman/mason-lspconfig.nvim")
+	use("williamboman/mason.nvim")
+	use("williamboman/mason-lspconfig.nvim")
 	use("jose-elias-alvarez/null-ls.nvim")
 	use("ray-x/lsp_signature.nvim")
 	--use("github/copilot.vim")
 	use("zbirenbaum/copilot.lua")
+	--use({ "neoclide/coc.nvim", branch = "release" })
 
 	--use("ranjithshegde/ccls.nvim")
 	use("p00f/clangd_extensions.nvim")
@@ -71,10 +68,7 @@ return require("packer").startup(function(use)
 
 	use({ "kevinhwang91/nvim-ufo", requires = "kevinhwang91/promise-async" })
 
-	use({
-		"folke/noice.nvim",
-		requires = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
-	})
+	use({ "folke/noice.nvim", requires = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" } })
 	use("nvim-lualine/lualine.nvim")
 	--use("nvim-lua/lsp-status.nvim")
 	--use("arkav/lualine-lsp-progress")
@@ -115,6 +109,7 @@ return require("packer").startup(function(use)
 
 	use("rafamadriz/friendly-snippets")
 	use("honza/vim-snippets")
+	--use("hrsh7th/nvim-compe")
 	use({
 		"hrsh7th/nvim-cmp",
 		requires = {
