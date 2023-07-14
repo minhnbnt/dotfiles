@@ -49,6 +49,9 @@ local source_icons = {
 -- Set up nvim-cmp.
 local cmp, luasnip = require("cmp"), require("luasnip")
 
+local bordered = cmp.config.window.bordered()
+bordered.max_height = 25
+
 cmp.setup({
 	preselect = cmp.PreselectMode.None,
 	snippet = {
@@ -67,7 +70,7 @@ cmp.setup({
 	},
 	window = {
 		--completion = cmp.config.window.bordered(),
-		--documentation = cmp.config.window.bordered(),
+		--documentation = bordered,
 		documentation = { max_height = 30 },
 	},
 	confirm_opts = {
@@ -90,8 +93,9 @@ cmp.setup({
 				fallback()
 			end
 		end, { "i", "s" }),
-		["<Down>"] = cmp.mapping.select_next_item(),
-		["<Up>"] = cmp.mapping.select_prev_item(),
+		-- changed to select, not insert for safer use
+		["<Up>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
+		["<Down>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
 		--["<Right>"] = cmp.mapping.confirm({ select = true }),
 	}),
 	sources = cmp.config.sources({
