@@ -64,12 +64,19 @@ vim.g.cursorhold_updatetime = 1000
 
 vim.api.nvim_create_autocmd({ "BufEnter", "WinResized" }, {
 	callback = function()
+		local changed = false
 		local excluded_ft = { "python" }
 		local ft = { "html", "xhtml", "xml", "typescriptreact", "javascriptreact" }
-		if vim.fn.winwidth(0) < 100 and not vim.tbl_contains(excluded_ft, vim.bo.filetype) then
+		if vim.fn.winwidth(0) < 100 and excluded_ft[vim.bo.filetype] == nil then
 			vim.cmd("se tabstop=2 shiftwidth=2 softtabstop=2")
+			changed = true
 		elseif not vim.tbl_contains(ft, vim.bo.filetype) then
 			vim.cmd("setlocal tabstop=4 shiftwidth=4 softtabstop=4")
+			changed = true
+		end
+		local ok, ident = pcall(require, "indent_blankline")
+		if ok and changed then
+			ident.refresh()
 		end
 	end,
 })
@@ -80,7 +87,7 @@ local opts = { noremap = true, silent = true }
 local term_opts = { silent = true }
 
 keymap("v", "<BS>", "<Del>", opts)
-keymap("v", "<C-S-c>", '"+y', opts)
+keymap("v", "<C-S-c>", '"+ygv', { noremap = true })
 keymap("v", "<RightMouse>", "<C-><C-g>gv<cmd>:popu! PopUp<cr>", opts)
 keymap("t", "<esc>", "<C-\\><C-n>", term_opts)
 
