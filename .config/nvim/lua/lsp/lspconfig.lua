@@ -112,6 +112,24 @@ local config = {
 		filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" },
 		init_options = { html = { options = { ["bem.enabled"] = true } } },
 	},
+	emmet_language_server = {
+		init_options = {
+			--- @type table<string, any> https://docs.emmet.io/customization/preferences/
+			preferences = {},
+			--- @type "always" | "never" defaults to `"always"`
+			showexpandedabbreviation = "always",
+			--- @type boolean defaults to `true`
+			showabbreviationsuggestions = true,
+			--- @type boolean defaults to `false`
+			showsuggestionsassnippets = true,
+			--- @type table<string, any> https://docs.emmet.io/customization/syntax-profiles/
+			syntaxprofiles = {},
+			--- @type table<string, string> https://docs.emmet.io/customization/snippets/#variables
+			variables = {},
+			--- @type string[]
+			excludelanguages = {},
+		},
+	},
 	jdtls = {
 		on_attach = on_attach,
 		capabilities = capabilities,
