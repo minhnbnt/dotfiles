@@ -1,3 +1,5 @@
+// compile: gcc -o im im.c -lX11 -lX11-xkb
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,7 +7,7 @@
 #include <X11/XKBlib.h>
 #include <X11/extensions/XKBrules.h>
 
-const char *color2[2] = { "#1E66F5", "#D20F39" };
+const char *color[] = { "#1E66F5", "#D20F39" };
 
 void switch_layout(const char *layout) {
 	if (!strcmp(layout, "us")) {
@@ -83,10 +85,10 @@ int main(int argc, char *argv[]) {
 		if (!strcmp(engine, "BambooUs")) {
 			printf("<span>EN </span>");
 		} else if (!strcmp(engine, "Bamboo"))
-			printf("<span color=\"%s\">VI </span>", color2[1]);
+			printf("<span color=\"%s\">VI </span>", color[1]);
 		else if (strlen(engine) > 0) printf("%s ", engine);
 		if (!strcmp(layout, "us")) {
-			printf("<span color=\"%s\">US</span>", color2[0]);
+			printf("<span color=\"%s\">US</span>", color[0]);
 		} else if (!strcmp(layout, "jp")) {
 			printf("<span>JP</span>");
 		} else printf("%s ", layout);

@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
 				if (strstr(buf, "[on]") != NULL) status = 1;
 				if (p != NULL) sscanf(++p, "%d", &vol);
 			}
-		fclose(fp);
+		pclose(fp);
 		if (status) printf(" %d%%\n", vol);
 		else printf("\n");
 		return 0;
