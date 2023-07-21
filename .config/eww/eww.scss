@@ -1,0 +1,65 @@
+* {
+	all: unset; // Unsets everything so you can style everything from scratch
+	padding: 0px;
+	font-size: 20px;
+}
+
+// Global Styles
+.bar {
+	border-radius: 10px;
+	background-color: #1e1e2e;
+	margin: 4px;
+}
+
+.active,
+.visible,
+.inactive {
+	color: #4c4f69;
+	transition: 0.5s;
+	margin: 3px 0px 5px 1px;
+}
+
+.visible:hover,
+.inactive:hover {
+	color: #ca9ee6;
+}
+
+.active {
+	color: #89b4fa;
+}
+
+.visible {
+	color: #a3accd;
+}
+
+.bri-slider scale trough highlight,
+.vol-slider scale trough highlight {
+	border-radius: 5px;
+}
+
+.bri-slider scale trough,
+.vol-slider scale trough {
+	all: unset;
+	background-color: #4c4f69;
+	border-radius: 5px;
+	min-height: 100px;
+	min-width: 10px;
+	margin-left: 2px;
+	margin-right: 2px;
+}
+
+.vol-icon {
+	margin: 4px 0px;
+	color: #a6e3a1;
+}
+.vol-slider scale trough highlight {
+	background-color: #a6e3a1;
+}
+
+.bri-icon {
+	margin: 4px 0px;
+	color: #f9e2af;
+}
+.bri-slider scale trough highlight {
+	background-color: #f9e2af;
+}

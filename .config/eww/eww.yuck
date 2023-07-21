@@ -1,0 +1,80 @@
+(defwidget bar []
+	(centerbox :orientation "v"
+
+		; top
+		(box :orientation "v"
+		     :class "bar"
+			(workspaces))
+		
+		; middle
+		(box "")
+
+		; bottom
+		(box :orientation "v"
+		     :class "bar"
+		     :valign "end"
+		     :space-evenly false
+			(bri-slider)
+			(vol-slider)
+		)))
+
+(deflisten workspace "python3 ~/.config/eww/workspace.py")
+(defwidget workspaces [] (literal :content workspace))
+
+(defvar brightness-slider false)
+(defpoll brightness :interval "1s" "light -G")
+(defwidget bri-slider []
+	(eventbox :onhover "eww update brightness-slider=true"
+	          :onhoverlost "eww update brightness-slider=false"
+		(box :orientation "v"
+		     :class "brightness-slider"
+		     :space-evenly false
+			(revealer :transition "slideup"
+			          :reveal brightness-slider
+			          :duration "550ms"
+				(metric :class "bri-slider"
+				        :value brightness
+				        :onchange "pamixer --set-volume {}"))
+			(box :class "bri-icon" ""))))
+
+(defvar volume-slider false)
+(defpoll volume :interval "1s" "pamixer --get-volume")
+(defwidget vol-slider []
+	(eventbox :onhover "eww update volume-slider=true"
+	          :onhoverlost "eww update volume-slider=false"
+		(box :orientation "v"
+		     :class "volume-slider"
+		     :space-evenly false
+			(revealer :transition "slideup"
+			          :reveal volume-slider
+			          :duration "550ms"
+				(metric :class "vol-slider"
+				        :value volume
+				        :onchange "pamixer --set-volume {}"))
+			(eventbox :onclick "pamixer -t"
+				(box :class "vol-icon" "")))))
+
+(defwidget metric [value onchange class]
+	(box :orientation "v"
+	     :class class
+			 :valign "end"
+			 :space-evenly false
+		(scale :min 0
+			   :max 101
+			   :orientation "v"
+			   :active { onchange != "" }
+			   :flipped true
+			   :value value
+			   :onchange onchange)))
+
+(defwindow bar
+	:exclusive true
+	:monitor 0
+	:windowtype "dock"
+	:stacking "bg"
+	:focusable false
+	:geometry (geometry :x "5px"
+	                    :height "758px"
+	                    :anchor "left center")
+	:reserve (struts :side "left" :distance "4%")
+	(bar))
