@@ -1,7 +1,18 @@
 * {
 	all: unset; // Unsets everything so you can style everything from scratch
-	padding: 0px;
-	font-size: 20px;
+	font-size: 24px;
+}
+
+tooltip label {
+	transition: 0.5s;
+	font-size: 14px;
+	font-family: "Cantarell";
+	border-radius: 6px;
+	border: #dce0e8 1px solid;
+	padding: 2px;
+	margin: 2px;
+	color: #dce0e8;
+	background-color: #11111b;
 }
 
 // Global Styles
@@ -9,6 +20,16 @@
 	border-radius: 10px;
 	background-color: #1e1e2e;
 	margin: 4px;
+}
+
+.launcher label {
+	font-size: 32px;
+	transition: 0.5s;
+	margin: 6px 0px 10px 0px;
+	color: #838ba7;
+}
+.launcher:hover label {
+	color: #b5a16b;
 }
 
 .active,
@@ -21,7 +42,7 @@
 
 .visible:hover,
 .inactive:hover {
-	color: #ca9ee6;
+	color: #c7c8fc;
 }
 
 .active {
@@ -29,7 +50,14 @@
 }
 
 .visible {
-	color: #a3accd;
+	color: #969cb5;
+}
+
+.iconmem label {
+	all: unset;
+	font-size: 14px;
+	color: #e0b089;
+	margin: 6px;
 }
 
 .bri-slider scale trough highlight,
@@ -44,22 +72,55 @@
 	border-radius: 5px;
 	min-height: 100px;
 	min-width: 10px;
-	margin-left: 2px;
-	margin-right: 2px;
+	margin: 4px 2px;
 }
 
-.vol-icon {
+.vol-icon,
+.bri-icon,
+.bat-icon {
 	margin: 4px 0px;
-	color: #a6e3a1;
 }
 .vol-slider scale trough highlight {
 	background-color: #a6e3a1;
 }
 
-.bri-icon {
-	margin: 4px 0px;
-	color: #f9e2af;
-}
 .bri-slider scale trough highlight {
 	background-color: #f9e2af;
+}
+.bri-icon {
+	color: #f9e2af;
+}
+.vol-icon {
+	color: #a6e3a1;
+}
+
+.clock {
+	min-width: 32px;
+	padding: 4px 0px;
+	color: #ca9ee6;
+}
+
+.button-pow,
+.button-res,
+.button-sus,
+.button-exit {
+	color: #626880;
+	margin: 4px 0px;
+	transition: 0.5s;
+}
+
+.button-pow {
+	color: #e78284;
+}
+.button-pow:hover {
+	color: #e64553;
+}
+.button-res:hover {
+	color: #f5c43d;
+}
+.button-exit:hover {
+	color: #8839ef;
+}
+.button-sus:hover {
+	color: #7287fd;
 }

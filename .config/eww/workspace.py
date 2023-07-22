@@ -28,24 +28,24 @@ elif argv_len == 2:
 
 
 def init_widget():
-    visible_workspace = set()
+    visible_workspaces = set()
 
     output = subprocess.check_output(["hyprctl", "workspaces"])
     for line in output.decode().splitlines():
         if line.startswith("workspace ID"):
             workspace_number = int(line.split()[2])
-            visible_workspace.add(workspace_number)
+            visible_workspaces.add(workspace_number)
 
     output = subprocess.check_output(["hyprctl", "activeworkspace"])
     active_workspace = int(output.decode().split()[2])
 
-    return visible_workspace, active_workspace
+    return visible_workspaces, active_workspace
 
 
-visible_workspace, active_workspace = init_widget()
+visible_workspaces, active_workspace = init_widget()
 
 
-def update_workspace(buf: str):
+def update_workspace(buf):
     global active_workspace
 
     def get_number(line):
@@ -56,10 +56,10 @@ def update_workspace(buf: str):
             active_workspace = get_number(line)
             return True
         if line.startswith("createworkspace>>"):
-            visible_workspace.add(get_number(line))
+            visible_workspaces.add(get_number(line))
             return True
         if line.startswith("destroyworkspace>>"):
-            visible_workspace.remove(get_number(line))
+            visible_workspaces.remove(get_number(line))
             return True
 
     return False
@@ -68,32 +68,38 @@ def update_workspace(buf: str):
 def print_widget():
     global icons
 
+    visible_set = set(sorted(visible_workspaces))
+
     print('(eventbox :onscroll "python3', "'" + __file__ + "'", '{}"', end=" ")
     print('(box :class "works" :orientation "v" :space-evenly false', end=" ")
 
-    def get_icon(index):
-        global icons, other_icon
-
-        if index < len(icons):
-            return icons[index - 1]
-
-        return other_icon
-
+    # print all workspaces in icons list
     for i, icon in enumerate(icons):
         index = i + 1
 
         print('(button :onclick "hyprctl dispatch workspace', index, end='" ')
         print(':onrightclick "hyprctl dispatch workspace', index, end='" ')
 
+        button_class = "inactive"
         if index == active_workspace:
-            print(':class "active" "' + icon + '")', end=" ")
-        elif index in visible_workspace:
-            print(':class "visible" "' + icon + '")', end=" ")
-        else:
-            print(':class "inactive" "' + icon + '")', end=" ")
+            button_class = "active"
+            visible_set.remove(index)
+        elif index in visible_set:
+            button_class = "visible"
+            visible_set.remove(index)
 
-    if active_workspace > len(icons):
-        print('(button :class "active" "' + other_icon + '")', end=" ")
+        print(':class "{}" "{}")'.format(button_class, icon), end=" ")
+
+    # if there are any visible workspaces that are not in the icons list
+    for i in visible_set:
+        if i == active_workspace:
+            print('(button :class "active" "' + other_icon + '")', end=" ")
+            continue
+
+        # visible workspace not in icons list
+        print('(button :onclick "hyprctl dispatch workspace', i, end='" ')
+        print(':onrightclick "hyprctl dispatch workspace', i, end='" ')
+        print(':class "visible" "' + other_icon + '")', end=" ")
 
     print("))")
 

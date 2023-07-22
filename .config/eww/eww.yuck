@@ -1,25 +1,46 @@
-(defwidget bar []
-	(centerbox :orientation "v"
+(defwindow bar
+	:exclusive true
+	:monitor 0
+	:windowtype "dock"
+	:stacking "overlay"
+	:focusable false
+	:geometry (geometry :x "5px"
+	                    :height "758px"
+	                    :anchor "left center")
+	:reserve (struts :side "left" :distance "4%")
 
-		; top
+	(box :orientation "v"
+
 		(box :orientation "v"
 		     :class "bar"
+		     :space-evenly false
+			(launcher)
 			(workspaces))
 		
-		; middle
-		(box "")
-
-		; bottom
 		(box :orientation "v"
 		     :class "bar"
 		     :valign "end"
 		     :space-evenly false
+			(battery)
 			(bri-slider)
 			(vol-slider)
-		)))
+			(clock)
+			(power-buttons))))
+
+(defwidget launcher []
+	(button :class "launcher"
+	        :tooltip "App launcher"
+	        :onclick "wofi --fork --show run" ""))
 
 (deflisten workspace "python3 ~/.config/eww/workspace.py")
 (defwidget workspaces [] (literal :content workspace))
+
+(defpoll battery_icon :interval "60s" "~/.config/eww/battery")
+(defpoll battery_tooltip :interval "60s" "~/.config/eww/battery tooltip")
+(defwidget battery []
+	(box :class "bat-icon"
+	     :tooltip battery_tooltip
+		(label :markup battery_icon)))
 
 (defvar brightness-slider false)
 (defpoll brightness :interval "1s" "light -G")
@@ -35,7 +56,8 @@
 				(metric :class "bri-slider"
 				        :value brightness
 				        :onchange "pamixer --set-volume {}"))
-			(box :class "bri-icon" ""))))
+			(box :tooltip "Brightness: ${brightness}%"
+			     :class "bri-icon" ""))))
 
 (defvar volume-slider false)
 (defpoll volume :interval "1s" "pamixer --get-volume")
@@ -51,14 +73,31 @@
 				(metric :class "vol-slider"
 				        :value volume
 				        :onchange "pamixer --set-volume {}"))
-			(eventbox :onclick "pamixer -t"
-				(box :class "vol-icon" "")))))
+			(button :onclick "pamixer -t"
+			        :tooltip "Volume: ${volume}%"
+			        :class "vol-icon" ""))))
+
+(defvar date-visible false)
+(defpoll hour :interval "1s" "~/.config/eww/calendar hour")
+(defpoll min :interval "1s" "~/.config/eww/calendar minute")
+(defpoll sec :interval "1s" "~/.config/eww/calendar second")
+(defpoll date :run-while date-visible
+              :interval "1s" "date '+%a, %d %b %Y %H:%M:%S'")
+(defwidget clock []
+	(eventbox :onhover "eww update date-visible=true"
+			  :onhoverlost "eww update date-visible=false"
+		(box :class "clock"
+			 :orientation "v"
+			 :space-evenly false
+			 :tooltip "${date}"
+			 (box hour)
+			 (box min)
+			 (box sec))))
 
 (defwidget metric [value onchange class]
 	(box :orientation "v"
 	     :class class
-			 :valign "end"
-			 :space-evenly false
+		 :halign "center"
 		(scale :min 0
 			   :max 101
 			   :orientation "v"
@@ -67,14 +106,26 @@
 			   :value value
 			   :onchange onchange)))
 
-(defwindow bar
-	:exclusive true
-	:monitor 0
-	:windowtype "dock"
-	:stacking "bg"
-	:focusable false
-	:geometry (geometry :x "5px"
-	                    :height "758px"
-	                    :anchor "left center")
-	:reserve (struts :side "left" :distance "4%")
-	(bar))
+(defvar powermenu false)
+(defwidget power-buttons []
+	(eventbox :onhover "eww update powermenu=true"
+	          :onhoverlost "eww update powermenu=false"
+	(box :orientation "v"
+	     :space-evenly false
+		(revealer :transition "slideup"
+		          :reveal powermenu
+		          :duration "550ms"
+			(box :orientation "v"
+			     :space-evenly false
+				(button :class "button-sus"
+				        :tooltip "Suspend"
+				        :onclick "systemctl suspend" "")
+				(button :class "button-exit"
+				        :tooltip "Exit"
+				        :onclick "hyprctl dispatch exit --" "")
+				(button :class "button-res"
+				        :tooltip "Restart"
+				        :onclick "shutdown -r now" "")))
+		(button :class "button-pow"
+		        :tooltip "Shutdown"
+		        :onclick "shutdown -P now" ""))))
