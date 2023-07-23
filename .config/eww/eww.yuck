@@ -20,6 +20,7 @@
 			(box :class "container"
 			     :orientation "v"
 			     :space-evenly false
+				(network)
 				(battery)
 				(bri-slider)
 				(vol-slider))
@@ -34,14 +35,20 @@
 (deflisten workspace "python3 ~/.config/eww/src/workspace.py")
 (defwidget workspaces [] (literal :content workspace))
 
-(defpoll battery :interval "60s" "~/.config/eww/bin/battery")
+(defpoll network :interval "30s" "~/.config/eww/bin/network")
+(defwidget network []
+	(box :tooltip { network["tooltip"] }
+	     :class { network["class"] }
+	     { network["icon"] }))
+
+(defpoll battery :interval "30s" "~/.config/eww/bin/battery")
 (defwidget battery []
 	(box :class "bat-icon"
 	     :tooltip { battery["tooltip"] }
 		(label :markup { battery["icon"] })))
 
 (defvar brightness-slider false)
-(defpoll brightness :interval "1s" "light -G")
+(defpoll brightness :interval "1s" "xbacklight -get")
 (defwidget bri-slider []
 	(eventbox :onhover "eww update brightness-slider=true"
 	          :onhoverlost "eww update brightness-slider=false"
@@ -53,7 +60,7 @@
 			          :duration "550ms"
 				(metric :class "bri-slider"
 				        :value brightness
-				        :onchange "light -S {}"))
+				        :onchange "xbacklight -set {}"))
 			(box :tooltip "Brightness: ${brightness}%"
 			     :class "bri-icon" ""))))
 
@@ -66,13 +73,13 @@
 		     :class "volume-slider"
 		     :space-evenly false
 			(revealer :transition "slideup"
-			          :reveal volume-slider
+			          :reveal { volume-slider && !volume["muted"] }
 			          :duration "550ms"
 				(metric :class "vol-slider"
 				        :value { volume["vol"] }
 				        :onchange "pamixer --set-volume {}"))
 			(button :onclick "pamixer -t"
-			        :tooltip 'Volume: ${ volume["vol"] }%'
+			        :tooltip { volume["tooltip"] }
 			        :class "vol-icon" { volume["icon"] }))))
 
 (defvar date-visible false)
@@ -106,23 +113,23 @@
 (defwidget power-buttons []
 	(eventbox :onhover "eww update powermenu=true"
 	          :onhoverlost "eww update powermenu=false"
-	(box :orientation "v"
-	     :space-evenly false
-	     :class "container"
-		(revealer :transition "slideup"
-		          :reveal powermenu
-		          :duration "550ms"
-			(box :orientation "v"
-			     :space-evenly false
-				(button :class "button-sus"
-				        :tooltip "Suspend"
-				        :onclick "systemctl suspend" "")
-				(button :class "button-exit"
-				        :tooltip "Exit"
-				        :onclick "hyprctl dispatch exit --" "")
-				(button :class "button-res"
-				        :tooltip "Restart"
-				        :onclick "shutdown -r now" "")))
-		(button :class "button-pow"
-		        :tooltip "Shutdown"
-		        :onclick "shutdown -P now" ""))))
+		(box :orientation "v"
+			 :space-evenly false
+			 :class "container"
+			(revealer :transition "slideup"
+					  :reveal powermenu
+					  :duration "550ms"
+				(box :orientation "v"
+					 :space-evenly false
+					(button :class "button-sus"
+							:tooltip "Suspend"
+							:onclick "systemctl suspend" "")
+					(button :class "button-exit"
+							:tooltip "Exit"
+							:onclick "hyprctl dispatch exit --" "")
+					(button :class "button-res"
+							:tooltip "Restart"
+							:onclick "shutdown -r now" "")))
+			(button :class { powermenu ? "button-pow-alt" : "button-pow" }
+					:tooltip "Shutdown"
+					:onclick "shutdown -P now" ""))))

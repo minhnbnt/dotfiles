@@ -1,6 +1,6 @@
 * {
 	all: unset; // Unsets everything so you can style everything from scratch
-	font-size: 24px;
+	font-size: 22px;
 }
 
 tooltip label {
@@ -37,7 +37,7 @@ tooltip label {
 	font-size: 32px;
 	transition: 0.5s;
 	padding: 0px;
-	margin: 6px 0px;
+	margin: 4px 0px;
 	color: #838ba7;
 }
 .launcher:hover label {
@@ -45,7 +45,7 @@ tooltip label {
 }
 
 .works {
-	padding: 3px 4px;
+	padding: 5px 4px;
 }
 .active,
 .visible,
@@ -92,9 +92,23 @@ tooltip label {
 
 .vol-icon,
 .bri-icon,
-.bat-icon {
+.bat-icon,
+.net-wired,
+.net-wireless,
+.net-disconnected {
 	margin: 4px 0px;
 }
+
+.net-disconnected label {
+	color: #838ba7;
+}
+.net-wireless label {
+	color: #e882cd;
+}
+.net-wired label {
+	color: #dc8a78;
+}
+
 .vol-slider scale trough highlight {
 	background-color: #a6e3a1;
 }
@@ -118,7 +132,8 @@ tooltip label {
 .button-pow,
 .button-res,
 .button-sus,
-.button-exit {
+.button-exit,
+.button-pow-alt {
 	color: #8087a2;
 	margin: 4px 0px;
 	transition: 0.5s;
@@ -126,7 +141,7 @@ tooltip label {
 .button-pow {
 	color: #e78284;
 }
-.button-pow:hover {
+.button-pow-alt:hover {
 	color: #e64553;
 }
 .button-res:hover {
