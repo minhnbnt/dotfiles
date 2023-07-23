@@ -70,8 +70,6 @@ def update_workspace(buf):
 
 
 def print_widget():
-    global visible_workspaces, active_workspace
-
     visible_set = set(sorted(visible_workspaces))
 
     print('(eventbox :onscroll "python3', "'" + __file__ + "'", '{}"', end=" ")
@@ -83,6 +81,7 @@ def print_widget():
 
         print('(button :onclick "hyprctl dispatch workspace', index, end='" ')
         print(':onrightclick "hyprctl dispatch workspace', index, end='" ')
+        print(':tooltip "Workspace {}"'.format(index), end=" ")
 
         button_class = "inactive"
         if index == active_workspace:
@@ -96,17 +95,20 @@ def print_widget():
 
     # if there are any visible workspaces that are not in the icons list
     for i in visible_set:
+        print('(button :tooltip "Workspace {}"'.format(i), end=" ")
+
         if i == active_workspace:
-            print('(button :class "active" "' + other_icon + '")', end=" ")
+            print(':class "active" "' + other_icon, end='") ')
             continue
 
         # visible workspace not in icons list
-        print('(button :onclick "hyprctl dispatch workspace', i, end='" ')
+        print(':onclick "hyprctl dispatch workspace', i, end='" ')
         print(':onrightclick "hyprctl dispatch workspace', i, end='" ')
         print(':class "visible" "' + other_icon + '")', end=" ")
 
     print("))")
 
+    # flush stdout so that the widget is updated immediately
     sys.stdout.flush()
 
 
