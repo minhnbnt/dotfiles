@@ -4,7 +4,6 @@
 }
 
 tooltip label {
-	transition: 0.5s;
 	font-size: 14px;
 	font-family: "Cantarell";
 	border-radius: 6px;
@@ -15,29 +14,45 @@ tooltip label {
 	background-color: #11111b;
 }
 
-// Global Styles
-.bar {
-	border-radius: 10px;
-	background-color: #1e1e2e;
-	margin: 4px;
+.works,
+.clock,
+.launcher,
+.container {
+	background: #181825;
+	border-radius: 6px;
+	padding: 2px 4px;
+	margin-top: 4px;
 }
 
+.bar {
+	border-radius: 10px;
+	background-color: rgba(#1e1e2e, 0.75);
+	padding: 4px;
+}
+
+.launcher {
+	margin-top: 0px;
+}
 .launcher label {
 	font-size: 32px;
 	transition: 0.5s;
-	margin: 6px 0px 10px 0px;
+	padding: 0px;
+	margin: 6px 0px;
 	color: #838ba7;
 }
 .launcher:hover label {
 	color: #b5a16b;
 }
 
+.works {
+	padding: 3px 4px;
+}
 .active,
 .visible,
 .inactive {
 	color: #4c4f69;
 	transition: 0.5s;
-	margin: 3px 0px 5px 1px;
+	margin: 3px 0px 5px 0px;
 }
 
 .visible:hover,
@@ -71,7 +86,7 @@ tooltip label {
 	background-color: #4c4f69;
 	border-radius: 5px;
 	min-height: 100px;
-	min-width: 10px;
+	min-width: 16px;
 	margin: 4px 2px;
 }
 
@@ -96,7 +111,7 @@ tooltip label {
 
 .clock {
 	min-width: 32px;
-	padding: 4px 0px;
+	padding: 0px;
 	color: #ca9ee6;
 }
 
@@ -104,11 +119,10 @@ tooltip label {
 .button-res,
 .button-sus,
 .button-exit {
-	color: #626880;
+	color: #8087a2;
 	margin: 4px 0px;
 	transition: 0.5s;
 }
-
 .button-pow {
 	color: #e78284;
 }
@@ -119,7 +133,7 @@ tooltip label {
 	color: #f5c43d;
 }
 .button-exit:hover {
-	color: #8839ef;
+	color: #965be3;
 }
 .button-sus:hover {
 	color: #7287fd;
