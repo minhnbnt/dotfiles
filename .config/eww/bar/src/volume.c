@@ -28,13 +28,16 @@ int main(void) {
 
 	fgets(mute, 5, cmd), fclose(cmd);
 
-	if (strcmp(mute, "true") == 0) {
-		printf("{ \"icon\": \"\", \"vol\": \"%.0f\" }\n", vol);
+	if (mute[0] == 't') {
+		printf("{ \"icon\": \"\", \"vol\": \"%.0f\", \"muted\": true,"
+		       " \"tooltip\": \"Volume: muted\" }\n",
+		       vol);
 		return 0;
 	}
 
-	printf("{ \"icon\": \"%s\", \"vol\": \"%.0f\" }\n", //
-	       get_icon(vol), vol);
+	printf("{ \"icon\": \"%s\", \"vol\": \"%.0f\","
+	       " \"muted\": false, \"tooltip\": \"Volume: %.0f%%\"} \n",
+	       get_icon(vol), vol, vol);
 
 	return 0;
 }
