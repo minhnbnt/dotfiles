@@ -1,6 +1,6 @@
 vim.g.loaded = 1
 vim.g.loaded_netrwPlugin = 1
-vim.g.input_method = "ibus"
+--vim.g.input_method = "ibus"
 --vim.g.input_method = "fcitx5"
 
 -- Disable copilot ghost text
@@ -15,6 +15,7 @@ local neovide = {
 }
 
 local options = {
+
 	--clipboard = "unnamedplus",
 
 	showmode = false,
@@ -37,6 +38,7 @@ local options = {
 	wrap = true,
 	linebreak = true,
 	--showbreak = "⤹",
+	cmdheight = 0,
 
 	guifont = "FiraCode Nerd Font Mono:h10.5",
 	confirm = true,
@@ -48,34 +50,21 @@ local options = {
 	background = "dark",
 }
 
-for k, v in pairs(options) do
-	vim.opt[k] = v
-end
-
-if vim.g.neovide then
-	for k, v in pairs(neovide) do
-		vim.g[k] = v
-	end
-end
-
-vim.opt.cmdheight = 0
-
 vim.g.cursorhold_updatetime = 1000
 
 vim.api.nvim_create_autocmd({ "BufEnter", "WinResized" }, {
 	callback = function()
-		local changed = false
 		local excluded_ft = { "python" }
 		local ft = { "html", "xhtml", "xml", "typescriptreact", "javascriptreact" }
-		if vim.fn.winwidth(0) < 100 and excluded_ft[vim.bo.filetype] == nil then
+		vim.cmd("se tabstop=4 shiftwidth=4 softtabstop=4")
+		if vim.fn.winwidth(0) < 100 or vim.tbl_contains(ft, vim.bo.filetype) then
 			vim.cmd("se tabstop=2 shiftwidth=2 softtabstop=2")
-			changed = true
-		elseif not vim.tbl_contains(ft, vim.bo.filetype) then
-			vim.cmd("setlocal tabstop=4 shiftwidth=4 softtabstop=4")
-			changed = true
+		end
+		if vim.tbl_contains(excluded_ft, vim.bo.filetype) then
+			vim.cmd("se tabstop=4 shiftwidth=4 softtabstop=4")
 		end
 		local ok, ident = pcall(require, "indent_blankline")
-		if ok and changed then
+		if ok then
 			ident.refresh()
 		end
 	end,
@@ -116,28 +105,28 @@ keymap("n", "<C-Left>", ":vertical resize -2<CR>", opts)
 keymap("n", "<C-Right>", ":vertical resize +2<CR>", opts)
 
 vim.cmd([[
-    vnoremap <BS>                               <DEL>
-    vnoremap <RightMouse>                       <C-\><C-g>gv<cmd>:popup! PopUp<cr>
+	vnoremap <BS>                               <DEL>
+	vnoremap <RightMouse>                       <C-\><C-g>gv<cmd>:popup! PopUp<cr>
 	tnoremap <esc>                              <C-\><C-N>
 
-    aunmenu PopUp
-    nnoremenu <silent> PopUp.NvimTree           :NvimTreeToggle <cr>
-    nnoremenu <silent> PopUp.Open\ File         :Telescope file_browser hidden=true grouped=true<cr>
-    nnoremenu <silent> PopUp.Format\ code       :lua vim.lsp.buf.format()<cr>
+	aunmenu PopUp
+	nnoremenu <silent> PopUp.NvimTree           :NvimTreeToggle <cr>
+	nnoremenu <silent> PopUp.Open\ File         :Telescope file_browser hidden=true grouped=true<cr>
+	nnoremenu <silent> PopUp.Format\ code       :lua vim.lsp.buf.format()<cr>
 	nnoremenu <silent> PopUp.Find\ File         :Telescope find_files hidden=true<cr>
-    nnoremenu <silent> PopUp.Toggle\ DAP\ UI    :DapUi toggle<cr>
-    vnoremenu PopUp.Cut                         "+x
-    vnoremenu PopUp.Copy                        "+ygv
-    anoremenu PopUp.Paste                       "+gP
-    vnoremenu PopUp.Paste                       "+P
-    vnoremenu PopUp.Delete                      "_x
-    nnoremenu PopUp.Select\ all                 gg0vG$
-    vnoremenu PopUp.Select\ all                 gg0oG$
-    inoremenu PopUp.Select\ all                 <C-Home><C-O>vG$
-    nnoremenu PopUp.Find                        /
+	nnoremenu <silent> PopUp.Toggle\ DAP\ UI    :DapUi toggle<cr>
+	vnoremenu PopUp.Cut                         "+x
+	vnoremenu PopUp.Copy                        "+ygv
+	anoremenu PopUp.Paste                       "+gP
+	vnoremenu PopUp.Paste                       "+P
+	vnoremenu PopUp.Delete                      "_x
+	nnoremenu PopUp.Select\ all                 gg0vG$
+	vnoremenu PopUp.Select\ all                 gg0oG$
+	inoremenu PopUp.Select\ all                 <C-Home><C-O>vG$
+	nnoremenu PopUp.Find                        /
 ]])
 
-local IMOff, IMOn
+local IMOff, IMOn = function() end, function() end
 
 if vim.g.input_method == "ibus" and io.open("/usr/bin/ibus", "r") ~= nil then
 	IMOff = function()
@@ -181,3 +170,13 @@ vim.api.nvim_create_autocmd({ "InsertEnter", "VimLeave" }, {
 vim.api.nvim_create_autocmd({ "InsertLeave", "VimEnter" }, {
 	callback = IMOff,
 })
+
+for k, v in pairs(options) do
+	vim.opt[k] = v
+end
+
+if vim.g.neovide then
+	for k, v in pairs(neovide) do
+		vim.g[k] = v
+	end
+end
