@@ -2,7 +2,7 @@
 	:exclusive true
 	:monitor 0
 	:windowtype "dock"
-	:stacking "overlay"
+	:stacking "fg"
 	:focusable false
 	:geometry (geometry :x "5px"
 	                    :height "758px"
@@ -77,8 +77,8 @@
 			          :duration "550ms"
 				(metric :class "vol-slider"
 				        :value { volume["vol"] }
-				        :onchange "pamixer --set-volume {}"))
-			(button :onclick "pamixer -t"
+				        :onchange "~/.config/eww/bar/bin/volume {}"))
+			(button :onclick "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
 			        :tooltip { volume["tooltip"] }
 			        :class "vol-icon" { volume["icon"] }))))
 
@@ -88,7 +88,7 @@
 (defpoll cal :interval "1s" "~/.config/eww/bar/bin/calendar")
 (defwidget clock []
 	(eventbox :onhover "eww update date-visible=true"
-			  :onhoverlost "eww update date-visible=false"
+	          :onhoverlost "eww update date-visible=false"
 		(box :class "clock"
 			 :orientation "v"
 			 :space-evenly false
