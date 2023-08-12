@@ -137,13 +137,13 @@ block_user+=$reset$col_line']'
 
 block_pwd=$col_line'['$col_pwd'%~'$col_line']'
 
-line_1=$col_line'┌─'
-line_1+=$block_cmd_num$block_err'─'$block_user'─'
-line_1+=$block_pwd'$vcs_info_msg_0_'
+PS1=$col_line'┌─'
+PS1+=$block_cmd_num$block_err'─'$block_user'─'
+PS1+=$block_pwd'$vcs_info_msg_0_'
 
-line_2=$col_line'└╼'$reset' '$col_sh$bold$sh_char$reset' '
+PS1+=$'\n' # new line
 
-PS1=$line_1$'\n'$line_2
+PS1+=$col_line'└╼'$reset' '$col_sh$bold$sh_char$reset' '
 
 # Better history
 
