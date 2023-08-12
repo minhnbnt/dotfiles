@@ -39,12 +39,13 @@ fi
 
 function command_not_found_handler {
 
-    local purple = '\e[1;35m' bright = '\e[0;1m' green = '\e[1;32m' reset = '\e[0m'
+    local purple='\e[1;35m' bright='\e[0;1m' green='\e[1;32m' reset='\e[0m'
     printf 'zsh: command not found: %s\n' "$1"
 
     local entries=( ${(f)"$(/usr/bin/pacman -F --machinereadable -- "/usr/bin/$1")"} )
 
     if (( ${#entries[@]} )); then
+
         local pkg
 
         printf "${bright}$1${reset} may be found in the following packages:\n"
@@ -69,21 +70,45 @@ function command_not_found_handler {
 
 bindkey "^[[3~" delete-char
 
-# Git diff in prompt
-
-precmd() { vcs_info }
-
-zstyle ':vcs_info:git:*' formats '%F{6}[%F{#f05033}%f %b%F{6}]%f'
-zstyle ':vcs_info:*' formats " %F{cyan}%c%u(%b)%f"
-zstyle ':vcs_info:*' actionformats " %F{cyan}%c%u(%b)%f %a"
-zstyle ':vcs_info:*' stagedstr "%F{green}"
-zstyle ':vcs_info:*' unstagedstr "%F{red}"
-zstyle ':vcs_info:*' check-for-changes true
-
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
 source /usr/share/zsh/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 source /usr/share/zsh/plugins/zsh-autopair/autopair.zsh
+
+### prompt color ###
+
+reset="%f%b"
+bold="%B"
+
+col_user="%F{10}" # green
+sh_char='$'
+if [[ $UID == 0 ]]; then
+	col_user="%F{11}" # yellow
+	sh_char='#'
+fi
+
+col_line="%F{cyan}"
+
+col_cmdnum="%F{15}"
+col_err="%F{red}"
+col_host="%F{12}"
+col_at="%F{8}"   # dark gray
+col_sh="%F{14}"  # bright cyan
+col_pwd="%F{13}" # bright magenta
+
+col_git="%F{#f05033}" # orange
+
+# Git diff in prompt
+
+precmd() { vcs_info }
+
+zstyle ':vcs_info:git:*' formats \
+	$col_line'['$col_git'%f %b'$col_line']'
+zstyle ':vcs_info:*' formats " $col_line%c%u(%b)%f"
+zstyle ':vcs_info:*' actionformats " $col_line%c%u(%b)%f %a"
+zstyle ':vcs_info:*' stagedstr "%F{green}"
+zstyle ':vcs_info:*' unstagedstr "%F{red}"
+zstyle ':vcs_info:*' check-for-changes true
 
 # Command number
 
@@ -100,6 +125,25 @@ ZSH_HIGHLIGHT_STYLES[double-hyphen-option]=fg=3
 # Use local file only for zsh-autocomplete
 
 __git_files () { _wanted files expl 'local files' _files }
+
+block_cmd_num=$col_line'['$col_cmdnum$bold'$cmdcount'$reset$col_line']'
+block_err='%(?,,'$col_line'['$col_err$bold'%?'$reset$col_line'])'
+
+block_user=$col_line'['$bold
+block_user+=$col_user'%n' # username
+block_user+=$col_at'@'
+block_user+=$col_host'%m' # hostname
+block_user+=$reset$col_line']'
+
+block_pwd=$col_line'['$col_pwd'%~'$col_line']'
+
+line_1=$col_line'┌─'
+line_1+=$block_cmd_num$block_err'─'$block_user'─'
+line_1+=$block_pwd'$vcs_info_msg_0_'
+
+line_2=$col_line'└╼'$reset' '$col_sh$bold$sh_char$reset' '
+
+PS1=$line_1$'\n'$line_2
 
 # Better history
 
@@ -123,15 +167,6 @@ setopt HIST_SAVE_NO_DUPS         # Don't write duplicate entries in the history 
 setopt HIST_REDUCE_BLANKS        # Remove superfluous blanks before recording entry.
 setopt HIST_VERIFY               # Don't execute immediately upon history expansion.
 setopt HIST_BEEP                 # Beep when accessing nonexistent history.
-
-# PS1 prompt, look bad right?
-
-if [[ $(whoami) == "root" ]]; then
-	PS1='%F{6}┌─%f%F{6}[%f%B%F{15}$cmdcount%f%b%F{6}]%(?,,%F{6}[%f%B%F{9}%?%f%b%F{6}])─%f%F{6}[%f%B%F{11}%n%f%b%B%F{8}@%f%b%B%F{12}%m%f%b%F{6}]─[%f%F{13}%~%f%F{6}]%f'$'\n''%F{6}└╼%f%b %f%B%F{14}$%f%b '
-else
-    #RPROMPT='${vcs_info_msg_0_}'
-	PS1='%F{6}┌─%f%F{6}[%f%B%F{15}$cmdcount%f%b%F{6}]%(?,,%F{6}[%f%B%F{9}%?%f%b%F{6}])─%f%F{6}[%f%B%F{10}%n%f%b%B%F{8}@%f%b%B%F{12}%m%f%b%F{6}]─[%f%F{13}%~%f%F{6}]${vcs_info_msg_0_}%f'$'\n''%F{6}└╼%f%b %f%B%F{14}$%f%b '
-fi
 
 # Some of my custom command
 
