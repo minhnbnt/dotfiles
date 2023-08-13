@@ -1,18 +1,17 @@
-// compile: gcc -o im im.c -lX11 -lX11-xkb
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-// x11 headers
-#include <X11/XKBlib.h>
-#include <X11/extensions/XKBrules.h>
+
+// compile: gcc -o im im.c -lX11 -lX11-xkb
+#define _USE_XKB 0
 
 const char *color[] = { "#1E66F5", "#D20F39" };
 
 void switch_layout(const char *layout) {
 	if (!strcmp(layout, "us")) {
 		system("setxkbmap jp OADG109A");
-	} else if (!strcmp(layout, "jp")) {
+	}
+	if (!strcmp(layout, "jp")) {
 		system("setxkbmap us");
 	}
 }
@@ -20,17 +19,23 @@ void switch_layout(const char *layout) {
 void switch_engine(const char *engine) {
 	if (!strcmp(engine, "BambooUs")) {
 		system("ibus engine Bamboo");
-	} else if (!strcmp(engine, "Bamboo")) {
+	}
+	if (!strcmp(engine, "Bamboo")) {
 		system("ibus engine BambooUs");
 	}
 }
+
+#ifdef _USE_XKB
+
+#include <X11/XKBlib.h>
+#include <X11/extensions/XKBrules.h>
 
 const char *getxkb_map(void) {
 
 	Display *dpy = XOpenDisplay(NULL);
 
 	if (dpy == NULL) {
-		fprintf(stderr, "Cannot open display\n");
+		fputs("Cannot open display", stdout);
 		exit(1);
 	}
 
@@ -51,12 +56,33 @@ const char *getxkb_map(void) {
 	return tok;
 }
 
+#else // _USE_XKB
+
+const char *getxkb_map(void) {
+
+	FILE *fp = popen("setxkbmap -query", "r");
+
+	char *layout = (char *)calloc(8, sizeof(char)), buf[30];
+
+	while (fgets(buf, 30, fp) != NULL)
+
+		if (strstr(buf, "layout") != NULL) {
+			sscanf(buf, "layout: %s", layout);
+		}
+
+	pclose(fp);
+
+	return layout;
+}
+
+#endif // _USE_XKB
+
 const char *getibus_engine(void) {
 
 	FILE *fp = popen("ibus engine", "r");
 
 	if (fp == NULL) {
-		fprintf(stderr, "Cannot open pipe\n");
+		fputs("Cannot open pipe", stdout);
 		exit(1);
 	}
 
@@ -87,12 +113,14 @@ int main(int argc, char *argv[]) {
 		} else if (!strcmp(engine, "Bamboo"))
 			printf("<span color=\"%s\">VI </span>", color[1]);
 		else if (strlen(engine) > 0) printf("%s ", engine);
+
 		if (!strcmp(layout, "us")) {
 			printf("<span color=\"%s\">US</span>", color[0]);
 		} else if (!strcmp(layout, "jp")) {
 			printf("<span>JP</span>");
 		} else printf("%s ", layout);
-		printf("\n");
+
+		putchar('\n');
 	}
 	free((char *)layout);
 	return 0;
