@@ -50,8 +50,10 @@
 (defvar brightness-active false)
 (defpoll brightness :interval "1s" "xbacklight -get")
 (defwidget bri-slider []
-	(eventbox :onhover "eww update brightness-active=true"
+	(eventbox :onhover "eww update brightness-active=true \
+	                    volume-active=false powermenu=false"
 	          :onhoverlost "eww update brightness-active=false"
+	          :timeout "1s"
 		(box :orientation "v"
 		     :class "brightness-slider"
 		     :space-evenly false
@@ -67,8 +69,10 @@
 (defvar volume-active false)
 (defpoll volume :interval "1s" "~/.config/eww/bar/bin/volume")
 (defwidget vol-slider []
-	(eventbox :onhover "eww update volume-active=true"
+	(eventbox :onhover "eww update volume-active=true \
+	                    brightness-active=false powermenu=false"
 	          :onhoverlost "eww update volume-active=false"
+	          :timeout "1s"
 		(box :orientation "v"
 		     :class "volume-slider"
 		     :space-evenly false
@@ -89,6 +93,7 @@
 (defwidget clock []
 	(eventbox :onhover "eww update date-visible=true"
 	          :onhoverlost "eww update date-visible=false"
+	          :timeout "1s"
 		(box :class "clock"
 			 :orientation "v"
 			 :space-evenly false
@@ -111,8 +116,10 @@
 
 (defvar powermenu false)
 (defwidget power-buttons []
-	(eventbox :onhover "eww update powermenu=true"
+	(eventbox :onhover "eww update powermenu=true \
+	                    brightness-active=false volume-active=false"
 	          :onhoverlost "eww update powermenu=false"
+			  :timeout "1s"
 		(box :orientation "v"
 			 :space-evenly false
 			 :class "container"
