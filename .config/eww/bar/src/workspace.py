@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 
-import os, socket, subprocess, sys
+import json, os, socket, subprocess, sys
 
 icons = ["", "", "", "", "", "", ""]
 other_icon = ""
-
-signature = os.environ["HYPRLAND_INSTANCE_SIGNATURE"]
-sever_address = "/tmp/hypr/" + signature + "/.socket2.sock"
 
 argv_len = len(sys.argv)
 
@@ -30,14 +27,13 @@ elif argv_len == 2:
 def init_widget():
     visible_workspaces = set()
 
-    output = subprocess.check_output(["hyprctl", "workspaces"])
-    for line in output.decode().splitlines():
-        if line.startswith("workspace ID"):
-            workspace_number = int(line.split()[2])
-            visible_workspaces.add(workspace_number)
+    output = subprocess.check_output(["hyprctl", "workspaces", "-j"])
 
-    output = subprocess.check_output(["hyprctl", "activeworkspace"])
-    active_workspace = int(output.decode().split()[2])
+    for workspace in json.loads(output):
+        visible_workspaces.add(workspace["id"])
+
+    output = subprocess.check_output(["hyprctl", "activeworkspace", "-j"])
+    active_workspace = json.loads(output)["id"]
 
     return visible_workspaces, active_workspace
 
@@ -57,11 +53,14 @@ def update_workspace(buf):
         if line.startswith("workspace>>"):
             active_workspace = get_number(line)
             changed = True
+
         if line.startswith("createworkspace>>"):
             visible_workspaces.add(get_number(line))
             changed = True
+
         if line.startswith("destroyworkspace>>"):
             workspace_id = get_number(line)
+
             if workspace_id in visible_workspaces:
                 visible_workspaces.remove(workspace_id)
                 changed = True
@@ -73,38 +72,40 @@ def print_widget():
     visible_set = set(sorted(visible_workspaces))
 
     print('(eventbox :onscroll "python3', "'" + __file__ + "'", '{}"', end=" ")
-    print('(box :class "works" :orientation "v" :space-evenly false', end=" ")
+    print('(box :class "works" :orientation "v" :space-evenly false', end="")
 
     # print all workspaces in icons list
     for i, icon in enumerate(icons):
         index = i + 1
 
-        print('(button :onclick "hyprctl dispatch workspace', index, end='" ')
+        print(' (button :tooltip "Workspace {}"'.format(index), end=" ")
+
+        print(':onclick "hyprctl dispatch workspace', index, end='" ')
         print(':onrightclick "hyprctl dispatch workspace', index, end='" ')
-        print(':tooltip "Workspace {}"'.format(index), end=" ")
 
         button_class = "inactive"
         if index == active_workspace:
             button_class = "active"
-            visible_set.remove(index)
         elif index in visible_set:
             button_class = "visible"
+
+        if index in visible_set:
             visible_set.remove(index)
 
-        print(':class "{}" "{}")'.format(button_class, icon), end=" ")
+        print(':class "{}" "{}"'.format(button_class, icon), end=")")
 
     # if there are any visible workspaces that are not in the icons list
     for i in visible_set:
-        print('(button :tooltip "Workspace {}"'.format(i), end=" ")
+        print(' (button :tooltip "Workspace {}"'.format(i), end=" ")
 
         if i == active_workspace:
-            print(':class "active" "' + other_icon, end='") ')
+            print(':class "active" "' + other_icon, end='")')
             continue
 
         # visible workspace not in icons list
         print(':onclick "hyprctl dispatch workspace', i, end='" ')
         print(':onrightclick "hyprctl dispatch workspace', i, end='" ')
-        print(':class "visible" "' + other_icon + '")', end=" ")
+        print(':class "visible" "' + other_icon, end='")')
 
     print("))")
 
@@ -112,13 +113,11 @@ def print_widget():
     sys.stdout.flush()
 
 
-sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+signature = os.environ["HYPRLAND_INSTANCE_SIGNATURE"]
+sever_address = "/tmp/hypr/" + signature + "/.socket2.sock"
 
-try:
-    sock.connect(sever_address)
-except Exception as e:
-    print("Failed to connect to server: ", e)
-    sys.exit(1)
+sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+sock.connect(sever_address)
 
 print_widget()
 
@@ -126,9 +125,7 @@ while True:
     buf = sock.recv(1024).decode()
 
     if not buf:
-        break
+        continue
 
-    changed = update_workspace(buf)
-
-    if changed:
+    if update_workspace(buf):
         print_widget()
