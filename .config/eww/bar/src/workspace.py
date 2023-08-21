@@ -75,36 +75,36 @@ def print_widget():
     print('(box :class "works" :orientation "v" :space-evenly false', end="")
 
     # print all workspaces in icons list
-    for i, icon in enumerate(icons):
-        index = i + 1
+    for id, icon in enumerate(icons):
+        id = id + 1
 
-        print(' (button :tooltip "Workspace {}"'.format(index), end=" ")
+        print(' (button :tooltip "Workspace {}"'.format(id), end=" ")
 
-        print(':onclick "hyprctl dispatch workspace', index, end='" ')
-        print(':onrightclick "hyprctl dispatch workspace', index, end='" ')
+        print(':onclick "hyprctl dispatch workspace', id, end='" ')
+        print(':onrightclick "hyprctl dispatch workspace', id, end='" ')
 
         button_class = "inactive"
-        if index == active_workspace:
+        if id == active_workspace:
             button_class = "active"
-        elif index in visible_set:
+        elif id in visible_set:
             button_class = "visible"
 
-        if index in visible_set:
-            visible_set.remove(index)
+        if id in visible_set:
+            visible_set.remove(id)
 
         print(':class "{}" "{}"'.format(button_class, icon), end=")")
 
     # if there are any visible workspaces that are not in the icons list
-    for i in visible_set:
-        print(' (button :tooltip "Workspace {}"'.format(i), end=" ")
+    for id in visible_set:
+        print(' (button :tooltip "Workspace {}"'.format(id), end=" ")
 
-        if i == active_workspace:
+        if id == active_workspace:
             print(':class "active" "' + other_icon, end='")')
             continue
 
         # visible workspace not in icons list
-        print(':onclick "hyprctl dispatch workspace', i, end='" ')
-        print(':onrightclick "hyprctl dispatch workspace', i, end='" ')
+        print(':onclick "hyprctl dispatch workspace', id, end='" ')
+        print(':onrightclick "hyprctl dispatch workspace', id, end='" ')
         print(':class "visible" "' + other_icon, end='")')
 
     print("))")
