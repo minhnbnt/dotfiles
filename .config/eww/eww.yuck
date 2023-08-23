@@ -1,1 +1,1 @@
-(include "./bar/main.lisp")
+(include "./bar/main.yuck")
