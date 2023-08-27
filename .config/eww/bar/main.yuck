@@ -129,14 +129,30 @@
 				(box :orientation "v"
 					 :space-evenly false
 					(button :class "button-sus" ; amogus
-							:tooltip "Suspend"
-							:onclick "systemctl suspend" "")
+					        :timeout "60s"
+							:onclick '~/.config/eww/bar/bin/eww_power_dialog \
+							          -t "Are you sure?" \
+									  -m "Do you really want to suspend?" \
+					                  -c "systemctl suspend"'
+							:tooltip "Suspend" "")
 					(button :class "button-exit"
-							:tooltip "Exit"
-							:onclick "hyprctl dispatch exit --" "")
+					        :timeout "60s"
+							:onclick '~/.config/eww/bar/bin/eww_power_dialog \
+							          -t "Are you sure?" \
+									  -m "Do you really want to exit Hyprland?"
+					                  -c "hyprctl dispatch exit --"'
+							:tooltip "Exit" "")
 					(button :class "button-res"
-							:tooltip "Restart"
-							:onclick "shutdown -r now" "")))
+					        :timeout "60s"
+							:onclick '~/.config/eww/bar/bin/eww_power_dialog \
+							          -t "Are you sure?" \
+									  -m "Do you really want to restart?" \
+									  -c "reboot"'
+							:tooltip "Restart" "")))
 			(button :class { powermenu ? "button-pow-alt" : "button-pow" }
-					:tooltip "Shutdown"
-					:onclick "shutdown -P now" ""))))
+			        :timeout "60s"
+					:onclick '~/.config/eww/bar/bin/eww_power_dialog \
+					          -t "Are you sure?" \
+							  -m "Do you really want to shutdown?" \
+					          -c "shutdown -P now"'
+					:tooltip "Shutdown" ""))))
