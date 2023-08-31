@@ -122,14 +122,14 @@ cmp.setup({
 		--{ name = "cmp_ai" },
 		--{ name = "nvim_lsp_signature_help" },
 		--[[{
-			name = "look",
-			keyword_length = 2,
-			option = {
-				convert_case = true,
-				loud = true,
-				--dict = '/usr/share/dict/words'
-			},
-		},]]
+					name = "look",
+					keyword_length = 2,
+					option = {
+						convert_case = true,
+						loud = true,
+						--dict = '/usr/share/dict/words'
+					},
+				},]]
 		{
 			name = "spell",
 			option = {
@@ -185,33 +185,6 @@ cmp.setup.cmdline(":", {
 		{ name = "cmdline" },
 	}),
 })
-
---[[ require("cmp_tabnine.config"):setup({
-	max_lines = 1000,
-	max_num_results = 20,
-	sort = true,
-	run_on_every_keystroke = true,
-	snippet_placeholder = "..",
-	ignored_file_types = {
-		-- default is not to ignore
-		-- uncomment to ignore in lua:
-		-- lua = true
-	},
-	show_prediction_strength = false,
-}) ]]
-
---[[ require("cmp_ai.config"):setup({
-	max_lines = 1000,
-	provider = "OpenAI",
-	model = "gpt-4",
-	notify = true,
-	run_on_every_keystroke = true,
-	ignored_file_types = {
-		-- default is not to ignore
-		-- uncomment to ignore in lua:
-		-- lua = true
-	},
-}) ]]
 
 vim.cmd("hi CmpItemMenu cterm=bold gui=bold")
 vim.api.nvim_set_hl(0, "CmpItemKindCopilot", { fg = "#04A5E5" })

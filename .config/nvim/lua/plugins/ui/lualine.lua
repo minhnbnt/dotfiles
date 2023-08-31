@@ -1,5 +1,5 @@
 local function server_name()
-	local len = 20 -- more than max length of server name
+	local len = 25 -- more than max length of server name
 	local attached = {} -- list of attached servers
 	local buf_ft = vim.api.nvim_buf_get_option(0, "filetype")
 	local clients = vim.lsp.get_active_clients()
@@ -24,23 +24,11 @@ local function server_name()
 			vim.b.copilot_active = true -- for later
 		end
 	end
-	-- shorten names
-	local displayed, not_displayed = {}, #attached
-	while true do -- shorten names until they fit
-		local server = table.remove(attached, 1)
-		not_displayed = not_displayed - 1
-		table.insert(displayed, server)
-		if not_displayed < 2 then
-			-- i don't want to see + 1 more
-			table.insert(displayed, attached[1])
-			break -- displays = attached
-		end
-		local str = table.concat(displayed, ", ")
-		if str:len() > len then -- if too long
-			return str .. " + " .. not_displayed .. " more"
-		end
+	local str = table.concat(attached, ", ")
+	if #str > len then
+		str = str:sub(1, len - 3) .. "..."
 	end
-	return table.concat(displayed, ", ")
+	return str
 end
 
 local filetype = require("lualine.components.filetype")

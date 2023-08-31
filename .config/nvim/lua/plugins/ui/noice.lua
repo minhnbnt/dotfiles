@@ -186,7 +186,7 @@ require("noice").setup({
 	---@type NoiceConfigViews
 	views = {
 		cmdline_popup = {
-			size = { min_width = 60 },
+			--size = { min_width = 60 },
 			-- border = { style = { "┌", "─", "┐", "│", "┘", "─", "└", "│" } },
 		},
 		--[[ popup = { border = { style = { "┌", "─", "┐", "│", "┘", "─", "└", "│" } } },

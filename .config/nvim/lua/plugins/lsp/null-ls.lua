@@ -65,7 +65,7 @@ null_ls.setup({
 		formatting.prettier.with({ extra_args = { "--use-tabs" } }),
 		formatting.rustfmt.with({ extra_args = { "--config=" .. config.rustfmt() } }),
 		formatting.stylua,
-		formatting.yapf,
+		formatting.black,
 
 		completion.spell,
 
