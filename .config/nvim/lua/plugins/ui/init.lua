@@ -42,4 +42,10 @@ return {
 		enabled = true,
 		config = load("statuscol"),
 	},
+
+	{
+		"lewis6991/gitsigns.nvim",
+		enabled = true,
+		opts = {},
+	},
 }

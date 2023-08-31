@@ -8,6 +8,7 @@ return {
 
 	{
 		"neovim/nvim-lspconfig",
+		enabled = true,
 
 		dependencies = {
 			"p00f/clangd_extensions.nvim",
@@ -20,16 +21,23 @@ return {
 
 	{
 		"L3MON4D3/LuaSnip",
-		-- follow latest release.
-		version = "2.*", -- Replace <CurrentMajor> by the latest released major (first number of latest release)
-		-- install jsregexp (optional!).
+		enabled = true,
+		version = "*",
 		build = "make install_jsregexp",
 	},
 
 	{
 		"jose-elias-alvarez/null-ls.nvim",
+		enabled = true,
 		dependencies = { "nvim-lua/plenary.nvim" },
 		config = load("null-ls"),
+	},
+
+	{
+		"zbirenbaum/copilot-cmp",
+		enabled = false,
+		dependencies = { "zbirenbaum/copilot.lua" },
+		config = load("copilot"),
 	},
 
 	{
@@ -56,7 +64,6 @@ return {
 			--"hrsh7th/cmp-omni",
 			--"hrsh7th/cmp-nvim-lsp-signature-help",
 			--"hrsh7th/cmp-copilot",
-			"zbirenbaum/copilot-cmp",
 			--"tzachar/cmp-ai",
 			--[[ {
 				"tzachar/cmp-tabnine",
