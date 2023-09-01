@@ -2,9 +2,9 @@ local builtin = require("statuscol.builtin")
 
 require("statuscol").setup({
 	setopt = true,
-			-- stylua: ignore
-			ft_ignore = { "dapui_watches", "dapui_stacks", "dapui_breakpoints", "dapui_scopes", "dapui_console",
-			              "dapui_watches", "dap-repl", "NvimTree", "" },
+	-- stylua: ignore
+	ft_ignore = { "dapui_watches", "dapui_stacks", "dapui_breakpoints", "dapui_scopes",
+	              "dapui_console", "dapui_watches", "dap-repl", "NvimTree", "" },
 
 	segments = {
 		{
