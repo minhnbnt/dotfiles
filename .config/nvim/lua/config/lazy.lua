@@ -14,13 +14,12 @@ end
 vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 
 require("lazy").setup({
+
 	spec = {
 		{ import = "plugins" },
 	},
-	defaults = {
 
-		autocmds = true,
-		keymaps = true,
+	defaults = {
 
 		lazy = false,
 		version = false,

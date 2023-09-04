@@ -22,6 +22,7 @@ return {
 		enabled = true,
 
 		opts = {
+
 			startinsert = false,
 			term = {
 				size = 6, -- Window size, this option is ignored if tab is true

@@ -2,7 +2,7 @@ require("notify").setup({
 	background_colour = "#000000",
 	render = "compact",
 	stages = "slide",
-	top_down = false,
+	top_down = true,
 
 	max_height = function()
 		return math.floor(vim.o.lines * 0.75)

@@ -5,6 +5,7 @@ if vim.g.input_method == "ibus" and io.open("/usr/bin/ibus", "r") ~= nil then
 		vim.g.im_prev_engine = io.popen("ibus engine", "r"):read("*all")
 		os.execute("ibus engine BambooUs")
 	end
+
 	IMOn = function()
 		os.execute("ibus engine " .. vim.g.im_prev_engine)
 		local current_engine = io.popen("ibus engine", "r"):read("*all")
@@ -19,6 +20,7 @@ if vim.g.input_method == "fcitx5" and io.open("/usr/bin/fcitx5", "r") ~= nil the
 		vim.g.im_prev_engine = io.popen("fcitx5-remote -n", "r"):read("*all")
 		os.execute("fcitx5-remote -g keyboard-us")
 	end
+
 	IMOn = function()
 		os.execute("fcitx5-remote -g " .. vim.g.im_prev_engine)
 		local current_engine = io.popen("fcitx5-remote -n", "r"):read("*all")
@@ -32,13 +34,17 @@ vim.api.nvim_create_autocmd({ "BufEnter", "WinResized" }, {
 	callback = function()
 		local excluded_ft = { "python" }
 		local ft = { "html", "xhtml", "xml", "typescriptreact", "javascriptreact" }
+
 		vim.cmd("se tabstop=4 shiftwidth=4 softtabstop=4")
+
 		if vim.fn.winwidth(0) < 100 or vim.tbl_contains(ft, vim.bo.filetype) then
 			vim.cmd("se tabstop=2 shiftwidth=2 softtabstop=2")
 		end
+
 		if vim.tbl_contains(excluded_ft, vim.bo.filetype) then
 			vim.cmd("se tabstop=4 shiftwidth=4 softtabstop=4")
 		end
+
 		local ok, ident = pcall(require, "indent_blankline")
 		if ok then
 			ident.refresh()

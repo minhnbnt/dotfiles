@@ -61,3 +61,25 @@ if vim.g.neovide then
 		vim.g[k] = v
 	end
 end
+
+vim.cmd([[
+    vnoremap <BS>                               <DEL>
+    vnoremap <RightMouse>                       <C-\><C-g>gv<cmd>:popup! PopUp<cr>
+	tnoremap <esc>                              <C-\><C-N>
+
+    aunmenu PopUp
+    nnoremenu <silent> PopUp.NvimTree           :NvimTreeToggle <cr>
+    nnoremenu <silent> PopUp.Open\ File         :Telescope file_browser hidden=true grouped=true<cr>
+    nnoremenu <silent> PopUp.Format\ code       :lua vim.lsp.buf.format()<cr>
+	nnoremenu <silent> PopUp.Find\ File         :Telescope find_files hidden=true<cr>
+    nnoremenu <silent> PopUp.Toggle\ DAP\ UI    :DapUi toggle<cr>
+    vnoremenu PopUp.Cut                         "+x
+    vnoremenu PopUp.Copy                        "+ygv
+    anoremenu PopUp.Paste                       "+gP
+    vnoremenu PopUp.Paste                       "+P
+    vnoremenu PopUp.Delete                      "_x
+    nnoremenu PopUp.Select\ all                 gg0vG$
+    vnoremenu PopUp.Select\ all                 gg0oG$
+    inoremenu PopUp.Select\ all                 <C-Home><C-O>vG$
+    nnoremenu PopUp.Find                        /
+]])
