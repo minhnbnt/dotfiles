@@ -48,7 +48,23 @@ return {
 		},
 	},
 
-	{ "windwp/nvim-autopairs", enabled = true, opts = {} },
+	{
+		"windwp/nvim-autopairs",
+		event = "InsertEnter",
+
+		enabled = true,
+		opts = {},
+	},
+
+	{
+		"antoinemadec/FixCursorHold.nvim",
+		enabled = true,
+		init = function()
+			vim.g.cursorhold_updatetime = 1000
+		end,
+	},
+
+	{ "numToStr/Comment.nvim", opts = {}, lazy = false },
 
 	{
 		"lukas-reineke/indent-blankline.nvim",

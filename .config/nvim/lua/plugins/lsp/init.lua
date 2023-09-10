@@ -20,10 +20,21 @@ return {
 	},
 
 	{
+		"ray-x/lsp_signature.nvim",
+		enabled = true,
+		opts = {
+			noice = false,
+			handler_opts = { border = "none" },
+			hint_prefix = " ",
+		},
+	},
+
+	{
 		"L3MON4D3/LuaSnip",
 		enabled = true,
 		version = "*",
 		build = "make install_jsregexp",
+		config = load("luasnip"),
 	},
 
 	{

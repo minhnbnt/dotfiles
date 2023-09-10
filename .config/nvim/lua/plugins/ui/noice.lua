@@ -30,9 +30,7 @@ require("noice").setup({
 	},
 	views = {
 		cmdline_popup = {
-			size = {
-				width = "60%",
-			},
+			size = { width = "60%" },
 			-- border = { style = "single" },
 		},
 	},

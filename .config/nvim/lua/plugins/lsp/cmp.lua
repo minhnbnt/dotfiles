@@ -54,11 +54,22 @@ bordered.max_height = 25
 
 cmp.setup({
 	preselect = cmp.PreselectMode.None,
+	sorting = {
+		comparators = {
+			cmp.config.compare.offset,
+			cmp.config.compare.exact,
+			cmp.config.compare.recently_used,
+			cmp.config.compare.kind,
+			cmp.config.compare.sort_text,
+			cmp.config.compare.length,
+			cmp.config.compare.order,
+		},
+	},
 	snippet = {
 		-- REQUIRED - you must specify a snippet engine
 		expand = function(args)
 			--vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-			require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
+			luasnip.lsp_expand(args.body) -- For `luasnip` users.
 			--require("snippy").expand_snippet(args.body) -- For `snippy` users.
 			--vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
 		end,
@@ -110,8 +121,8 @@ cmp.setup({
 		--{ name = "emoji", insert = true }, -- emoji completion
 	}, {
 		{ name = "buffer" },
-		{ name = "calc" },
-		{ name = "cmp_tabnine" },
+		--{ name = "calc" },
+		--{ name = "cmp_tabnine" },
 		{ name = "treesitter" },
 		{ name = "nvim_lua" },
 		{
@@ -122,21 +133,21 @@ cmp.setup({
 		--{ name = "cmp_ai" },
 		--{ name = "nvim_lsp_signature_help" },
 		--[[{
-					name = "look",
-					keyword_length = 2,
-					option = {
-						convert_case = true,
-						loud = true,
-						--dict = '/usr/share/dict/words'
-					},
-				},]]
-		{
+			name = "look",
+			keyword_length = 2,
+			option = {
+				convert_case = true,
+				loud = true,
+				--dict = '/usr/share/dict/words'
+			},
+		},]]
+		--[[{
 			name = "spell",
 			option = {
 				keep_all_entries = false,
 				enable_in_context = true,
 			},
-		},
+		},]]
 	}),
 	formatting = {
 		fields = { "menu", "abbr", "kind" },

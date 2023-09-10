@@ -16,6 +16,8 @@ return {
 
 	{
 		"folke/noice.nvim",
+		version = "*",
+		event = "VeryLazy",
 		enabled = true,
 
 		dependencies = {
@@ -33,6 +35,7 @@ return {
 
 	{
 		"akinsho/bufferline.nvim",
+		version = "*",
 		enabled = true,
 		config = load("bufferline"),
 	},

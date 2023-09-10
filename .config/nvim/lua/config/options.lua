@@ -33,7 +33,7 @@ local options = {
 	undofile = true,
 	completeopt = { "menuone", "noselect" },
 	pumheight = 15,
-	--updatetime = 3000,
+	updatetime = 3000,
 
 	wrap = true,
 	linebreak = true,

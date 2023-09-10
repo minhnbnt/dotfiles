@@ -1,8 +1,8 @@
 -- just comment out the servers you don't want to use
 local servers = {
 	"bashls",
-	"ccls",
-	--"clangd",
+	--"ccls",
+	"clangd",
 	"cmake",
 	"cssls",
 	--"denols",
@@ -24,7 +24,10 @@ local servers = {
 -- for servers that need custom setup function(opts)
 local init = {
 	-- ccls = require("ccls").setup,
-	clangd = require("clangd_extensions").setup,
+	clangd = function(opts)
+		require("lspconfig")["clangd"].setup(opts.server)
+		require("clangd_extensions").setup(opts.extensions)
+	end,
 	jdtls = function(opts)
 		vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 			pattern = "*.java",
@@ -45,7 +48,8 @@ local signs = {
 	Info = "",
 }
 
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.documentFormattingProvider = false
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 -- Mappings.
@@ -80,15 +84,6 @@ local on_attach = function(client, bufnr)
 	vim.keymap.set("n", "<space>f", function()
 		vim.lsp.buf.format({ async = true })
 	end, bufopts)
-	if client.name == "jdtls" then
-		-- With `hotcodereplace = 'auto' the debug adapter will try to apply code changes
-		-- you make during a debug session immediately.
-		-- Remove the option if you do not want that.
-		-- You can use the `JdtHotcodeReplace` command to trigger it manually
-		require("jdtls.dap").setup_dap_main_class_configs()
-		require("jdtls").setup_dap({ hotcodereplace = "auto" })
-		require("jdtls.setup").add_commands()
-	end
 end
 
 -- for servers that need custom config
@@ -100,7 +95,10 @@ local config = {
 	clangd = {
 		extensions = { inlay_hints = { show_parameter_hints = false } },
 		server = {
-			capabilities = capabilities,
+			capabilities = {
+				textDocument = { completion = { editsNearCursor = true } },
+				offsetEncoding = {},
+			},
 			on_attach = on_attach,
 		},
 	},
@@ -131,13 +129,23 @@ local config = {
 		},
 	},
 	jdtls = {
-		on_attach = on_attach,
+		on_attach = function(client, bufnr)
+			on_attach(client, bufnr)
+
+			-- With `hotcodereplace = 'auto' the debug adapter will try to apply code changes
+			-- you make during a debug session immediately.
+			-- Remove the option if you do not want that.
+			-- You can use the `JdtHotcodeReplace` command to trigger it manually
+			require("jdtls.dap").setup_dap_main_class_configs()
+			require("jdtls").setup_dap({ hotcodereplace = "auto" })
+			require("jdtls.setup").add_commands()
+		end,
 		capabilities = capabilities,
 		filetypes = { "java" },
 		single_file_support = true,
 		init_options = {
 			bundles = { "/usr/share/java-debug/com.microsoft.java.debug.plugin.jar" },
-			jvm_args = { "-Xmx1G" },
+			jvm_args = { "-Xmx500M" },
 		},
 		cmd = { "/usr/share/java/jdtls/bin/jdtls" }, -- AUR package jdtls
 		root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew" }),

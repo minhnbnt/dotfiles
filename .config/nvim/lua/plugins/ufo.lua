@@ -1,6 +1,6 @@
 local ftMap = {
 	vim = "indent",
-	python = { "lsp" },
+	python = "indent",
 	git = "",
 }
 
@@ -62,7 +62,7 @@ return {
 		provider_selector = function(bufnr, filetype, buftype)
 			-- if you prefer treesitter provider rather than lsp,
 			--return ftMap[filetype] or { "treesitter", "indent" }
-			return ftMap[filetype] or { "indent" }
+			return ftMap[filetype] or { "treesitter", "indent" }
 			-- refer to ./doc/example.lua for detail
 		end,
 	},
