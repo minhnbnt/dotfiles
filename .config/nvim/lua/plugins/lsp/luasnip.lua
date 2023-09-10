@@ -16,16 +16,32 @@ require("luasnip.loaders.from_snipmate").lazy_load()
 ls.filetype_extend("all", { "_" })
 
 local cpp = {
+
 	snip({
-		trig = "main",
+		trig = "#include <bits/stdc++.h>",
 		namr = "initial",
-		dscr = "initial c++ file",
+		dscr = "initial c++ file for contests",
 	}, {
 		text("#include <bits/stdc++.h>"),
 		text({ "", "", "using namespace std;" }),
 		text({ "", "", "int main(void) {" }),
 		text({ "", "", "\tios_base::sync_with_stdio(false);", "" }),
 		text({ "\tcin.tie(nullptr), cout.tie(nullptr);", "", "\t" }),
+		insert(0, ""),
+		text({ "", "", "\treturn 0;", "}" }),
+	}, {
+		condition = conds.line_begin,
+	}),
+
+	snip({
+		trig = "#include <iostream>",
+		namr = "initial",
+		dscr = "initial c++ file",
+	}, {
+		text("#include <iostream>"),
+		text({ "", "", "int main(void) {" }),
+		text({ "", "", "\tstd::ios_base::sync_with_stdio(false);", "" }),
+		text({ "\tstd::cin.tie(nullptr), std::cout.tie(nullptr);", "", "\t" }),
 		insert(0, ""),
 		text({ "", "", "\treturn 0;", "}" }),
 	}, {
