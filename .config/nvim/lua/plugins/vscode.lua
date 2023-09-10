@@ -1,5 +1,32 @@
-local function config()
-	require("vscode").setup({
+return {
+
+	"Mofiqul/vscode.nvim",
+
+	enabled = true,
+
+	init = function()
+		require("vscode").load("dark")
+
+		vim.cmd([[
+			hi BufferLineSeparator guifg=#565970 guibg=#232634
+			hi BufferLineSeparatorSelected guifg=#565970
+			hi BufferLineSeparatorVisible guifg=#565970
+			hi BufferLineBackground guibg=#232634
+			hi BufferLineFill guibg=#565970
+			hi BufferLineBufferSelected guifg=#99d1db
+			hi BufferLineCloseButton guibg=#232634
+			hi BufferLineDuplicate guibg=#232634
+			hi BufferLineModified guibg=#232634
+			hi ModeMsg guibg=none gui=bold
+			hi DiagnosticSignHint guifg=#99d1db
+		]])
+
+		vim.api.nvim_set_hl(0, "RainbowDelimiterYellow", { fg = "#dfcf1d" })
+		vim.api.nvim_set_hl(0, "RainbowDelimiterPink", { fg = "#ea76cb" })
+		vim.api.nvim_set_hl(0, "RainbowDelimiterBlue", { fg = "#5480f7" })
+	end,
+
+	opts = {
 		-- Enable transparent background
 		transparent = true,
 		-- Enable italic comment
@@ -76,26 +103,5 @@ local function config()
 			-- this supports the same val table as vim.api.nvim_set_hl
 			-- use colors from this colorscheme by requiring vscode.colors!
 		},
-	})
-
-	require("vscode").load("dark")
-
-	vim.cmd([[
-		hi BufferLineSeparator guifg=#565970 guibg=#232634
-		hi BufferLineSeparatorSelected guifg=#565970
-		hi BufferLineSeparatorVisible guifg=#565970
-		hi BufferLineBackground guibg=#232634
-		hi BufferLineFill guibg=#565970
-		hi BufferLineBufferSelected guifg=#99d1db
-		hi BufferLineCloseButton guibg=#232634
-		hi BufferLineDuplicate guibg=#232634
-		hi BufferLineModified guibg=#232634
-		hi ModeMsg guibg=none gui=bold
-		hi DiagnosticSignHint guifg=#99d1db
-	]])
-end
-
-return {
-	"Mofiqul/vscode.nvim",
-	config = config,
+	},
 }
