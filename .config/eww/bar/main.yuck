@@ -86,21 +86,15 @@
 			        :tooltip { volume["tooltip"] }
 			        :class "vol-icon" { volume["icon"] }))))
 
-(defvar date-visible false)
-(defpoll date :run-while date-visible
-              :interval "1s" "date '+%a, %d %b %Y %H:%M:%S'")
 (defpoll cal :interval "1s" "~/.config/eww/bar/bin/calendar")
 (defwidget clock []
-	(eventbox :onhover "eww update date-visible=true"
-	          :onhoverlost "eww update date-visible=false"
-	          :timeout "1s"
-		(box :class "clock"
-			 :orientation "v"
-			 :space-evenly false
-			 :tooltip "${date}"
-			 (box { cal["hour"] })
-			 (box { cal["minute"] })
-			 (box { cal["second"] }))))
+	(box :class "clock"
+		 :orientation "v"
+		 :space-evenly false
+		 :tooltip { cal["tooltip"] }
+		 (box { cal["hour"] })
+		 (box { cal["minute"] })
+		 (box { cal["second"] })))
 
 (defwidget metric [value onchange class]
 	(box :orientation "v"
@@ -130,29 +124,33 @@
 					 :space-evenly false
 					(button :class "button-sus" ; amogus
 					        :timeout "60s"
-							:onclick '~/.config/eww/bar/bin/eww_power_dialog \
-							          -t "Are you sure?" \
-									  -m "Do you really want to suspend?" \
+					        :onclick 'killall ~/.config/eww/bar/bin/eww_power_dialog; \
+					                  ~/.config/eww/bar/bin/eww_power_dialog \
+					                  -t "Are you sure?" \
+					                  -m "Do you really want to suspend?" \
 					                  -c "systemctl suspend"'
 							:tooltip "Suspend" "")
 					(button :class "button-exit"
 					        :timeout "60s"
-							:onclick '~/.config/eww/bar/bin/eww_power_dialog \
-							          -t "Are you sure?" \
-									  -m "Do you really want to exit Hyprland?"
+					        :onclick 'killall ~/.config/eww/bar/bin/eww_power_dialog; \
+					                  ~/.config/eww/bar/bin/eww_power_dialog \
+					                  -t "Are you sure?" \
+					                  -m "Do you really want to exit Hyprland?" \
 					                  -c "hyprctl dispatch exit --"'
-							:tooltip "Exit" "")
+					        :tooltip "Exit" "")
 					(button :class "button-res"
 					        :timeout "60s"
-							:onclick '~/.config/eww/bar/bin/eww_power_dialog \
-							          -t "Are you sure?" \
-									  -m "Do you really want to restart?" \
-									  -c "reboot"'
-							:tooltip "Restart" "")))
+					        :onclick 'killall ~/.config/eww/bar/bin/eww_power_dialog; \
+					                  ~/.config/eww/bar/bin/eww_power_dialog \
+					                  -t "Are you sure?" \
+					                  -m "Do you really want to restart?" \
+					                  -c "reboot"'
+					        :tooltip "Restart" "")))
 			(button :class { powermenu ? "button-pow-alt" : "button-pow" }
 			        :timeout "60s"
-					:onclick '~/.config/eww/bar/bin/eww_power_dialog \
+			        :onclick 'killall ~/.config/eww/bar/bin/eww_power_dialog; \
+					          ~/.config/eww/bar/bin/eww_power_dialog \
 					          -t "Are you sure?" \
-							  -m "Do you really want to shutdown?" \
+			                  -m "Do you really want to shutdown?" \
 					          -c "shutdown -P now"'
-					:tooltip "Shutdown" ""))))
+			        :tooltip "Shutdown" ""))))
