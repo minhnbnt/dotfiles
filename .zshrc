@@ -8,11 +8,11 @@
 #clear
 
 autoload -Uz add-zsh-hook
-autoload -Uz vcs_info
+#autoload -Uz vcs_info
 
 # Title for terminal
 
-function xterm_title_precmd () {
+function xterm_title_precmd() {
 
 	print -Pn -- '\e]2;%n@%m:%~\a'
 	if [[ "$TERM" == 'screen'* ]]; then
@@ -20,7 +20,7 @@ function xterm_title_precmd () {
 	fi
 }
 
-function xterm_title_preexec () {
+function xterm_title_preexec() {
 
 	print -Pn -- '\e]2;%n@%m:%~ %# '
 	print -n -- "${(q)1}\a"
@@ -50,9 +50,9 @@ function command_not_found_handler {
 
         printf "${bright}$1${reset} may be found in the following packages:\n"
 
-        for entry in "${entries[@]}"; do
-            # (repo package version file)
-            local fields=( ${(0)entry} )
+		for entry in "${entries[@]}"; do
+			# (repo package version file)
+			local fields=( ${(0)entry} )
 
 			if [[ "$pkg" != "${fields[2]}" ]]; then
 				printf "${purple}%s/${bright}%s ${green}%s${reset}\n" \
@@ -62,6 +62,7 @@ function command_not_found_handler {
 			printf '    /%s\n' "${fields[4]}"
 
 			pkg="${fields[2]}"
+
 		done
 	fi
 
@@ -90,7 +91,7 @@ fi
 col_line="%F{cyan}"
 
 col_cmdnum="%F{15}"
-col_err="%F{red}"
+col_err="%F{9}"  # bright red
 col_host="%F{12}"
 col_at="%F{8}"   # dark gray
 col_sh="%F{14}"  # bright cyan
@@ -100,15 +101,15 @@ col_git="%F{#f05033}" # orange
 
 # Git diff in prompt
 
-precmd() { vcs_info }
+#precmd() { vcs_info }
 
-zstyle ':vcs_info:git:*' formats \
-	$col_line'['$col_git'%f %b'$col_line']'
-zstyle ':vcs_info:*' formats " $col_line%c%u(%b)%f"
-zstyle ':vcs_info:*' actionformats " $col_line%c%u(%b)%f %a"
-zstyle ':vcs_info:*' stagedstr "%F{green}"
-zstyle ':vcs_info:*' unstagedstr "%F{red}"
-zstyle ':vcs_info:*' check-for-changes true
+#zstyle ':vcs_info:git:*' formats \
+#	$col_line'['$col_git'%f %b'$col_line']'
+#zstyle ':vcs_info:*' formats " $col_line%c%u(%b)%f"
+#zstyle ':vcs_info:*' actionformats " $col_line%c%u(%b)%f %a"
+#zstyle ':vcs_info:*' stagedstr "%F{green}"
+#zstyle ':vcs_info:*' unstagedstr "%F{red}"
+#zstyle ':vcs_info:*' check-for-changes true
 
 # Command number
 
@@ -122,10 +123,6 @@ ZSH_HIGHLIGHT_STYLES[command]=fg=14
 ZSH_HIGHLIGHT_STYLES[single-hyphen-option]=fg=3
 ZSH_HIGHLIGHT_STYLES[double-hyphen-option]=fg=3
 
-# Use local file only for zsh-autocomplete
-
-__git_files () { _wanted files expl 'local files' _files }
-
 block_cmd_num=$col_line'['$col_cmdnum$bold'$cmdcount'$reset$col_line']'
 block_err='%(?,,'$col_line'['$col_err$bold'%?'$reset$col_line'])'
 
@@ -137,19 +134,23 @@ block_user+=$reset$col_line']'
 
 block_pwd=$col_line'['$col_pwd'%~'$col_line']'
 
-PS1=$col_line'┌─'
-PS1+=$block_cmd_num$block_err'─'$block_user'─'
-PS1+=$block_pwd'$vcs_info_msg_0_'
+#PS1=$col_line'┌─'
+#PS1+=$block_cmd_num$block_err'─'$block_user'─'
+#PS1+=$block_pwd'$vcs_info_msg_0_'
 
-PS1+=$'\n' # new line
+#PS1+=$'\n' # new line
 
-PS1+=$col_line'└╼'$reset' '$col_sh$bold$sh_char$reset' '
+#PS1+=$col_line'└╼'$reset' '$col_sh$bold$sh_char$reset' '
 
 # Better history
 
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=1000000000
 SAVEHIST=1000000000
+
+# Use local file only for zsh-autocomplete
+
+# __git_files () { _wanted files expl 'local files' _files }
 
 # Some options
 
@@ -170,7 +171,7 @@ setopt HIST_BEEP                 # Beep when accessing nonexistent history.
 
 # Some of my custom command
 
-neofetch(){/usr/bin/neofetch --stdout --config ~/.config/neofetch/configzsh.conf | sed '/^$/d'}
+neofetch() {/usr/bin/neofetch --stdout --config ~/.config/neofetch/configzsh.conf | sed '/^$/d'}
 ls(){/usr/bin/ls -Ahv --color --group-directories-first "$@"}
 matrix(){/usr/bin/neo-matrix -D "$@"}
 
@@ -243,3 +244,5 @@ power(){
 }
 
 neofetch # I use Arch btw
+
+eval "$(starship init zsh)"

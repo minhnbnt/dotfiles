@@ -1,0 +1,38 @@
+add_newline = false
+palette = 'arch'
+
+format = '[┌─\[](line)${custom.cmdcount}$username$hostname[\]](line)$directory$all[└╼](line) $character'
+
+[palettes.arch]
+line = "cyan"
+
+[character]
+success_symbol = '[\$](bold bright-cyan)'
+error_symbol = '[\$](bold bright-red)'
+
+[directory]
+style = "bright-purple"
+format = '[[─\[](line)$path[$read_only]($read_only_style)[\]](line)]($style)'
+read_only = " "
+truncation_length = 8
+truncation_symbol = '.../'
+
+[git_branch]
+symbol = ' '
+style = "#f05033"
+format = '[[─\[](line)[$symbol]($style)$branch(:$remote_branch)[\]](line)](bright-white)'
+
+[git_status]
+style = "#f2301b"
+format = '([[\[](line)$all_status$ahead_behind[\]](line)]($style)) '
+
+[username]
+style_user = '10 bold'
+style_root = '11 bold'
+format = '[$user]($style)'
+disabled = false
+show_always = true
+
+[hostname]
+format = '[$ssh_symbol](bold blue)[@](bold 8)[$hostname](bold 12)'
+ssh_only = false
