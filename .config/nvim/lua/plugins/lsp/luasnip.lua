@@ -30,7 +30,9 @@ local cpp = {
 		insert(0, ""),
 		text({ "", "", "\treturn 0;", "}" }),
 	}, {
-		condition = conds.line_begin,
+		condition = function()
+			return vim.fn.line(".") == 1
+		end,
 	}),
 
 	snip({
@@ -45,7 +47,9 @@ local cpp = {
 		insert(0, ""),
 		text({ "", "", "\treturn 0;", "}" }),
 	}, {
-		condition = conds.line_begin,
+		condition = function()
+			return false
+		end,
 	}),
 }
 

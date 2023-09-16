@@ -1,8 +1,10 @@
+local Plug = require("core.functions").plugin
+
 return {
-	{
-		"nvim-telescope/telescope.nvim",
+
+	Plug("nvim-telescope/telescope.nvim", {
+
 		branch = "0.1.x",
-		enabled = true,
 
 		dependencies = {
 
@@ -11,9 +13,8 @@ return {
 
 			{
 				"ahmedkhalf/project.nvim",
-				config = function()
-					require("project_nvim").setup()
-				end,
+				main = "project_nvim",
+				opts = {},
 			},
 
 			{
@@ -33,13 +34,12 @@ return {
 				-- borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
 			},
 		},
-	},
+	}),
 
-	{
-		"nvim-tree/nvim-tree.lua",
+	Plug("nvim-tree/nvim-tree.lua", {
+
 		version = "*",
 		lazy = false,
-		enabled = true,
 
 		opts = {
 			sort_by = "case_sensitive",
@@ -64,5 +64,5 @@ return {
 				end,
 			})
 		end,
-	},
+	}),
 }

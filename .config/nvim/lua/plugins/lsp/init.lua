@@ -21,6 +21,7 @@ return {
 
 	{
 		"ray-x/lsp_signature.nvim",
+		event = "VeryLazy",
 		enabled = true,
 		opts = {
 			noice = false,
@@ -31,6 +32,11 @@ return {
 
 	{
 		"L3MON4D3/LuaSnip",
+		dependencies = {
+			"rafamadriz/friendly-snippets",
+			"honza/vim-snippets",
+		},
+
 		enabled = true,
 		version = "*",
 		build = "make install_jsregexp",

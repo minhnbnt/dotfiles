@@ -33,7 +33,7 @@ local options = {
 	undofile = true,
 	completeopt = { "menuone", "noselect" },
 	pumheight = 15,
-	updatetime = 3000,
+	--updatetime = 3000,
 
 	wrap = true,
 	linebreak = true,
@@ -48,6 +48,12 @@ local options = {
 	cursorline = true,
 	mousemoveevent = true,
 	background = "dark",
+
+	fillchars = {
+		foldopen = "-",
+		foldsep = "│",
+		foldclose = "+",
+	},
 }
 
 vim.g.cursorhold_updatetime = 1000
@@ -63,23 +69,23 @@ if vim.g.neovide then
 end
 
 vim.cmd([[
-    vnoremap <BS>                               <DEL>
-    vnoremap <RightMouse>                       <C-\><C-g>gv<cmd>:popup! PopUp<cr>
+	vnoremap <BS>                               <DEL>
+	vnoremap <RightMouse>                       <C-\><C-g>gv<cmd>:popup! PopUp<cr>
 	tnoremap <esc>                              <C-\><C-N>
 
-    aunmenu PopUp
-    nnoremenu <silent> PopUp.NvimTree           :NvimTreeToggle <cr>
-    nnoremenu <silent> PopUp.Open\ File         :Telescope file_browser hidden=true grouped=true<cr>
-    nnoremenu <silent> PopUp.Format\ code       :lua vim.lsp.buf.format()<cr>
+	aunmenu PopUp
+	nnoremenu <silent> PopUp.NvimTree           :NvimTreeToggle <cr>
+	nnoremenu <silent> PopUp.Open\ File         :Telescope file_browser hidden=true grouped=true<cr>
+	nnoremenu <silent> PopUp.Format\ code       :lua vim.lsp.buf.format()<cr>
 	nnoremenu <silent> PopUp.Find\ File         :Telescope find_files hidden=true<cr>
-    nnoremenu <silent> PopUp.Toggle\ DAP\ UI    :DapUi toggle<cr>
-    vnoremenu PopUp.Cut                         "+x
-    vnoremenu PopUp.Copy                        "+ygv
-    anoremenu PopUp.Paste                       "+gP
-    vnoremenu PopUp.Paste                       "+P
-    vnoremenu PopUp.Delete                      "_x
-    nnoremenu PopUp.Select\ all                 gg0vG$
-    vnoremenu PopUp.Select\ all                 gg0oG$
-    inoremenu PopUp.Select\ all                 <C-Home><C-O>vG$
-    nnoremenu PopUp.Find                        /
+	nnoremenu <silent> PopUp.Toggle\ DAP\ UI    :DapUi toggle<cr>
+	vnoremenu PopUp.Cut                         "+x
+	vnoremenu PopUp.Copy                        "+ygv
+	anoremenu PopUp.Paste                       "+gP
+	vnoremenu PopUp.Paste                       "+P
+	vnoremenu PopUp.Delete                      "_x
+	nnoremenu PopUp.Select\ all                 gg0vG$
+	vnoremenu PopUp.Select\ all                 gg0oG$
+	inoremenu PopUp.Select\ all                 <C-Home><C-O>vG$
+	nnoremenu PopUp.Find                        /
 ]])

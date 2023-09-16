@@ -56,10 +56,11 @@ cmp.setup({
 	preselect = cmp.PreselectMode.None,
 	sorting = {
 		comparators = {
+			require("clangd_extensions.cmp_scores"),
+			cmp.config.compare.kind,
 			cmp.config.compare.offset,
 			cmp.config.compare.exact,
 			cmp.config.compare.recently_used,
-			cmp.config.compare.kind,
 			cmp.config.compare.sort_text,
 			cmp.config.compare.length,
 			cmp.config.compare.order,
@@ -78,6 +79,9 @@ cmp.setup({
 		--autocomplete = true,
 		keyword_length = 1,
 		--completeopt = "menu,menuone,noinsert",
+	},
+	matching = {
+		disallow_prefix_unmatching = true,
 	},
 	window = {
 		--completion = cmp.config.window.bordered(),
@@ -113,13 +117,15 @@ cmp.setup({
 		{ name = "nvim_lsp" },
 		{ name = "path" },
 		--{ name = "vsnip" }, -- For vsnip users.
-		{ name = "luasnip" }, -- For luasnip users.
+		{
+			name = "luasnip",
+			--keyword_length = 3,
+		}, -- For luasnip users.
 		--{ name = "ultisnips" }, -- For ultisnips users.
 		--{ name = "snippy" }, -- For snippy users.
 		--{ name = "omni" },
 		{ name = "tags" },
 		--{ name = "emoji", insert = true }, -- emoji completion
-	}, {
 		{ name = "buffer" },
 		--{ name = "calc" },
 		--{ name = "cmp_tabnine" },

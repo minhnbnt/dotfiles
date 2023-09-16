@@ -145,7 +145,7 @@ local config = {
 		single_file_support = true,
 		init_options = {
 			bundles = { "/usr/share/java-debug/com.microsoft.java.debug.plugin.jar" },
-			jvm_args = { "-Xmx500M" },
+			jvm_args = { "-Xmx1G" },
 		},
 		cmd = { "/usr/share/java/jdtls/bin/jdtls" }, -- AUR package jdtls
 		root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew" }),

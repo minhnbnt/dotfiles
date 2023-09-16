@@ -1,9 +1,7 @@
+local Plug = require("core.functions").plugin
+
 local function get_command(compile, run)
-	if compile == nil or compile == "" then
-		compile = ""
-	else
-		compile = compile .. " && "
-	end
+	compile = compile or ""
 
 	return {
 
@@ -17,12 +15,10 @@ local function get_command(compile, run)
 end
 
 return {
-	{
-		"CRAG666/code_runner.nvim",
-		enabled = true,
+
+	Plug("CRAG666/code_runner.nvim", {
 
 		opts = {
-
 			startinsert = false,
 			term = {
 				size = 6, -- Window size, this option is ignored if tab is true
@@ -46,15 +42,13 @@ return {
 				typescript = get_command("tsc $fileName", "node $fileNameWithoutExt.js"),
 			},
 		},
-	},
+	}),
 
-	{
-		"windwp/nvim-autopairs",
+	Plug("windwp/nvim-autopairs", {
+
 		event = "InsertEnter",
-
-		enabled = true,
 		opts = {},
-	},
+	}),
 
 	{
 		"antoinemadec/FixCursorHold.nvim",
@@ -64,13 +58,11 @@ return {
 		end,
 	},
 
-	{ "numToStr/Comment.nvim", opts = {}, lazy = false },
+	Plug("numToStr/Comment.nvim", { opts = {}, lazy = false }),
 
-	{
-		"lukas-reineke/indent-blankline.nvim",
+	Plug("lukas-reineke/indent-blankline.nvim", {
 
 		opts = {
-
 			show_trailing_blankline_indent = false,
 			show_first_indent_level = true,
 			use_treesitter = true,
@@ -103,5 +95,5 @@ return {
 			show_end_of_line = true,
 			space_char_blankline = " ",
 		},
-	},
+	}),
 }
