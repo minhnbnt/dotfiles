@@ -1,26 +1,3 @@
--- just comment out the servers you don't want to use
-local servers = {
-	"bashls",
-	--"ccls",
-	"clangd",
-	"cmake",
-	"cssls",
-	--"denols",
-	--"emmet_ls",
-	"emmet_language_server",
-	"eslint",
-	"gopls",
-	"html",
-	"jdtls",
-	"jsonls",
-	"rust_analyzer",
-	"tailwindcss",
-	"tsserver",
-	"pyright",
-	"lua_ls",
-	--"vimls",
-}
-
 -- for servers that need custom setup function(opts)
 local init = {
 	-- ccls = require("ccls").setup,
@@ -184,6 +161,7 @@ for type, icon in pairs(signs) do -- set signs
 	vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 end
 
+local servers = require("handle").lsp_servers
 local vscode_extracted = { "html", "cssls", "eslint", "jsonls" }
 
 -- reqiure all servers

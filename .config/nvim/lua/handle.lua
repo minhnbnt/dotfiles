@@ -34,4 +34,27 @@ M.enabled_plugins = {
 	"lewis6991/gitsigns.nvim",
 }
 
+M.lsp_servers = {
+
+	"bashls",
+	--"ccls",
+	"clangd",
+	"cmake",
+	"cssls",
+	--"denols",
+	--"emmet_ls",
+	"emmet_language_server",
+	"eslint",
+	"gopls",
+	"html",
+	"jdtls",
+	"jsonls",
+	"rust_analyzer",
+	"tailwindcss",
+	"tsserver",
+	"pyright",
+	"lua_ls",
+	--"vimls",
+}
+
 return M
