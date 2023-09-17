@@ -1,4 +1,4 @@
-local enabled = require("plugged").enabled
+local enabled = require("handle").enabled_plugins
 
 local M = {}
 

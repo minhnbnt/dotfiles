@@ -1,3 +1,5 @@
+local Plug = require("core.functions").plugin
+
 local function load(module)
 	return function()
 		require("plugins.lsp." .. module)
@@ -6,9 +8,7 @@ end
 
 return {
 
-	{
-		"neovim/nvim-lspconfig",
-		enabled = true,
+	Plug("neovim/nvim-lspconfig", {
 
 		dependencies = {
 			"p00f/clangd_extensions.nvim",
@@ -17,49 +17,43 @@ return {
 		},
 
 		config = load("config"),
-	},
+	}),
 
-	{
-		"ray-x/lsp_signature.nvim",
+	Plug("ray-x/lsp_signature.nvim", {
+
 		event = "VeryLazy",
-		enabled = true,
+
 		opts = {
 			noice = false,
 			handler_opts = { border = "none" },
 			hint_prefix = " ",
 		},
-	},
+	}),
 
-	{
-		"L3MON4D3/LuaSnip",
+	Plug("L3MON4D3/LuaSnip", {
+
 		dependencies = {
 			"rafamadriz/friendly-snippets",
 			"honza/vim-snippets",
 		},
 
-		enabled = true,
 		version = "*",
 		build = "make install_jsregexp",
 		config = load("luasnip"),
-	},
+	}),
 
-	{
-		"jose-elias-alvarez/null-ls.nvim",
-		enabled = true,
+	Plug("jose-elias-alvarez/null-ls.nvim", {
 		dependencies = { "nvim-lua/plenary.nvim" },
 		config = load("null-ls"),
-	},
+	}),
 
-	{
-		"zbirenbaum/copilot-cmp",
-		enabled = false,
+	Plug("zbirenbaum/copilot-cmp", {
 		dependencies = { "zbirenbaum/copilot.lua" },
 		config = load("copilot"),
-	},
+	}),
 
-	{
-		"hrsh7th/nvim-cmp",
-		enabled = true,
+	Plug("hrsh7th/nvim-cmp", {
+
 		config = load("cmp"),
 
 		dependencies = {
@@ -91,5 +85,5 @@ return {
 			--"dcampos/nvim-snippy",
 			--"dcampos/cmp-snippy",
 		},
-	},
+	}),
 }
