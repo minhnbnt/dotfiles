@@ -13,11 +13,8 @@ M.enabled_plugins = {
 
 	"kevinhwang91/nvim-ufo",
 
-	"nvim-telescope/telescope.nvim",
-	"nvim-tree/nvim-tree.lua",
-
-	"HiPhish/rainbow-delimiters.nvim",
-	"nvim-treesitter/nvim-treesitter",
+	"mfussenegger/nvim-dap",
+	"rcarriga/nvim-dap-ui",
 
 	"neovim/nvim-lspconfig",
 	"ray-x/lsp_signature.nvim",
@@ -25,6 +22,12 @@ M.enabled_plugins = {
 	"jose-elias-alvarez/null-ls.nvim",
 	--"zbirenbaum/copilot-cmp",
 	"hrsh7th/nvim-cmp",
+
+	"nvim-telescope/telescope.nvim",
+	"nvim-tree/nvim-tree.lua",
+
+	"HiPhish/rainbow-delimiters.nvim",
+	"nvim-treesitter/nvim-treesitter",
 
 	"rcarriga/nvim-notify",
 	"folke/noice.nvim",
