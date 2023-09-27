@@ -1,7 +1,13 @@
 add_newline = false
 palette = 'arch'
+command_timeout = 2000
 
-format = '[┌─\[](line)${custom.cmdcount}$username$hostname[\]](line)$directory$all[└╼](line) $character'
+format = """
+[(\\[$username$hostname\\])](line)\
+$directory$git_branch$git_status\
+[(\n┆ [$all](bright-white))()](line)\
+$line_break[└╼](line) $character\
+"""
 
 [palettes.arch]
 line = "cyan"
@@ -10,19 +16,23 @@ line = "cyan"
 success_symbol = '[\$](bold bright-cyan)'
 error_symbol = '[\$](bold bright-red)'
 
+[line_break]
+disabled = false
+
 [directory]
 style = "bright-purple"
 format = '[[─\[](line)$path[$read_only]($read_only_style)[\]](line)]($style)'
 read_only = " "
-truncation_length = 8
+truncation_length = 2
 truncation_symbol = '.../'
 
 [git_branch]
-symbol = ' '
+symbol = ''
 style = "#f05033"
-format = '[[─\[](line)[$symbol]($style)$branch(:$remote_branch)[\]](line)](bright-white)'
+format = '[[─\[](line)[$symbol]($style) $branch(:$remote_branch)[\]](line)](bright-white)'
 
 [git_status]
+deleted	= '-'
 style = "#f2301b"
 format = '([[\[](line)$all_status$ahead_behind[\]](line)]($style)) '
 
@@ -36,3 +46,8 @@ show_always = true
 [hostname]
 format = '[$ssh_symbol](bold blue)[@](bold 8)[$hostname](bold 12)'
 ssh_only = false
+
+[status]
+format = '[[\[](line)$int: [$common_meaning$signal_name$maybe_int](white)[\]](line)]($style) '
+map_symbol = true
+disabled = false

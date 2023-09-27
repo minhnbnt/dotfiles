@@ -134,7 +134,9 @@ block_user+=$reset$col_line']'
 
 block_pwd=$col_line'['$col_pwd'%~'$col_line']'
 
-#PS1=$col_line'┌─'
+eval "$(starship init zsh)"
+
+PS1=$col_line'┌─'$block_cmd_num${PS1}
 #PS1+=$block_cmd_num$block_err'─'$block_user'─'
 #PS1+=$block_pwd'$vcs_info_msg_0_'
 
@@ -245,4 +247,3 @@ power(){
 
 neofetch # I use Arch btw
 
-eval "$(starship init zsh)"
