@@ -1,6 +1,6 @@
 local M = require("core.functions").create_plug("Mofiqul/vscode.nvim")
 
-M.init = function()
+function M.init()
 	require("vscode").load("dark")
 
 	vim.cmd([[
