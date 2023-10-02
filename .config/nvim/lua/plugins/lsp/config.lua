@@ -6,8 +6,8 @@ local init = {
 		require("clangd_extensions").setup(opts.extensions)
 	end,
 	jdtls = function(opts)
-		vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-			pattern = "*.java",
+		vim.api.nvim_create_autocmd("Filetype", {
+			pattern = { "java" },
 			callback = function()
 				require("jdtls").start_or_attach(opts)
 			end,
@@ -70,7 +70,7 @@ local config = {
 		flags = { debounce_text_changes = 150 },
 	},
 	clangd = {
-		extensions = { inlay_hints = { show_parameter_hints = false } },
+		extensions = { inlay_hints = { show_parameter_hints = true } },
 		server = {
 			capabilities = {
 				textDocument = { completion = { editsNearCursor = true } },
@@ -80,7 +80,10 @@ local config = {
 		},
 	},
 	lua_ls = {
-		settings = { Lua = { diagnostics = { globals = { "vim" } } } },
+		settings = { Lua = {
+			telemetry = { enable = false },
+			diagnostics = { globals = { "vim" } },
+		} },
 	},
 	emmet_ls = {
 		cmd = { "emmet-ls", "--stdio" },

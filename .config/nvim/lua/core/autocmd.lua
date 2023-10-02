@@ -44,11 +44,6 @@ vim.api.nvim_create_autocmd({ "BufEnter", "WinResized" }, {
 		if vim.tbl_contains(excluded_ft, vim.bo.filetype) then
 			vim.cmd("se tabstop=4 shiftwidth=4 softtabstop=4")
 		end
-
-		local ok, ident = pcall(require, "indent_blankline")
-		if ok then
-			ident.refresh()
-		end
 	end,
 })
 

@@ -26,7 +26,7 @@ return {
 		},
 
 		init = function()
-			require("telescope").load_extension("file_browser", "projects")
+			require("telescope").load_extension("file_browser", "fzy_native", "projects")
 		end,
 
 		opts = {

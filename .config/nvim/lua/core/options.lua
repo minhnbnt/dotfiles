@@ -1,6 +1,6 @@
 vim.g.loaded = 1
 vim.g.loaded_netrwPlugin = 1
-vim.g.input_method = "ibus"
+vim.g.input_method = ""
 --vim.g.input_method = "fcitx5"
 
 -- Disable copilot ghost text
@@ -16,7 +16,7 @@ local neovide = {
 
 local options = {
 
-	--clipboard = "unnamedplus",
+	clipboard = "unnamedplus",
 
 	showmode = false,
 	number = true,

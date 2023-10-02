@@ -11,8 +11,8 @@ local function get_command(compile, run)
 
 		"ulimit -d 524288;", -- limit memory to 512MB
 		'cd "$dir" && ' .. compile .. "if [[ -f input.txt ]];", -- check if input.txt exists
-		'then cat input.txt && read -p "Run with input.txt? [Y/n]: " answer;', -- ask if user wants to run with input.txt
-		'while [[ $answer != [yYnN] ]]; do read -p "Invalid option: " answer; done;', -- check if answer is valid
+		'then cat input.txt && printf "Run with input.txt? [Y/n]: "; read answer;', -- ask if user wants to run with input.txt
+		'while [[ $answer != [yYnN] ]]; do printf "Invalid option: "; read answer; done;', -- check if answer is valid
 		"clear; if [[ $answer == [yY] ]]; then " .. run .. " < input.txt;", -- run with input.txt
 		"else " .. run .. "; fi; else " .. run .. "; fi", -- run without input.txt
 	}
@@ -40,7 +40,7 @@ return {
 				java = get_command(nil, "java -cp . $fileName"),
 				javascript = get_command(nil, "node $fileName"),
 				lua = get_command(nil, "lua $fileName"),
-				python = get_command(nil, "python3 $fileName"),
+				python = get_command(nil, "python3 -u $fileName"),
 				rust = get_command("rustc $fileName", "./$fileNameWithoutExt"),
 				sh = get_command(nil, "bash $fileName"),
 				typescript = get_command("tsc $fileName", "node $fileNameWithoutExt.js"),

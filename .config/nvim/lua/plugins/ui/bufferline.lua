@@ -2,8 +2,6 @@ require("bufferline").setup({
 	options = {
 		mode = "Buffers", -- set to "tabs" to only show tabpages instead
 		themable = true, -- allows highlight groups to be overriden i.e. sets highlights as default
-		close_command = "Bdelete %d", -- can be a string | function, see "Mouse actions"
-		right_mouse_command = "Bdelete %d", -- can be a string | function, see "Mouse actions"
 		numbers = "none",
 		indicator = {
 			icon = "┃", -- this should be omitted if indicator style is not 'icon'
