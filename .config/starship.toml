@@ -3,9 +3,8 @@ palette = 'arch'
 command_timeout = 2000
 
 format = """
-[(\\[$username$hostname\\])](line)\
-$directory$git_branch$git_status\
-[(\n┆ [$all](bright-white))()](line)\
+[┌─(\\[$username$hostname\\])](line)$directory \
+[(\n[┆](line) $all)$cmd_duration](bright-white)\
 $line_break[└╼](line) $character\
 """
 
@@ -16,6 +15,9 @@ line = "cyan"
 success_symbol = '[\$](bold bright-cyan)'
 error_symbol = '[\$](bold bright-red)'
 
+[cmd_duration]
+min_time = 0
+
 [line_break]
 disabled = false
 
@@ -23,18 +25,18 @@ disabled = false
 style = "bright-purple"
 format = '[[─\[](line)$path[$read_only]($read_only_style)[\]](line)]($style)'
 read_only = " "
-truncation_length = 2
+truncation_length = 7
 truncation_symbol = '.../'
 
 [git_branch]
 symbol = ''
 style = "#f05033"
-format = '[[─\[](line)[$symbol]($style) $branch(:$remote_branch)[\]](line)](bright-white)'
+format = '[$symbol]($style) $branch(:$remote_branch) '
 
 [git_status]
 deleted	= '-'
 style = "#f2301b"
-format = '([[\[](line)$all_status$ahead_behind[\]](line)]($style)) '
+format = '([$all_status$ahead_behind]($style) )'
 
 [username]
 style_user = '10 bold'
@@ -48,6 +50,7 @@ format = '[$ssh_symbol](bold blue)[@](bold 8)[$hostname](bold 12)'
 ssh_only = false
 
 [status]
-format = '[[\[](line)$int: [$common_meaning$signal_name$maybe_int](white)[\]](line)]($style) '
+format = '[$int]($style)[: $common_meaning$signal_name$maybe_int](#f0c6c6) '
+style = 'bold bright-red'
 map_symbol = true
 disabled = false

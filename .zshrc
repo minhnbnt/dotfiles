@@ -136,7 +136,7 @@ block_pwd=$col_line'['$col_pwd'%~'$col_line']'
 
 eval "$(starship init zsh)"
 
-PROMPT=$col_line'┌─'$block_cmd_num${PROMPT}'%f%b'
+#PROMPT=$col_line'┌─'$block_cmd_num${PROMPT}'%f%b'
 #PS1+=$block_cmd_num$block_err'─'$block_user'─'
 #PS1+=$block_pwd'$vcs_info_msg_0_'
 
