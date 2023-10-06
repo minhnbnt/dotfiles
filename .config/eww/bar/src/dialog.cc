@@ -33,15 +33,18 @@ int main(int argc, char *argv[]) {
 
 	std::string title, message, command;
 	for (int i = 1; i < argc; ++i) {
-		if (std::string(argv[i]) == "-t") {
+
+		const std::string arg(argv[i]);
+
+		if (arg == "-t") {
 			++i, title = argv[i];
 			continue;
 		}
-		if (std::string(argv[i]) == "-m") {
+		if (arg == "-m") {
 			++i, message = argv[i];
 			continue;
 		}
-		if (std::string(argv[i]) == "-c") {
+		if (arg == "-c") {
 			++i, command = argv[i];
 			continue;
 		}
