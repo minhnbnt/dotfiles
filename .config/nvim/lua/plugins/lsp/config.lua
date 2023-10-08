@@ -70,13 +70,17 @@ local config = {
 		flags = { debounce_text_changes = 150 },
 	},
 	clangd = {
-		extensions = { inlay_hints = { show_parameter_hints = true } },
 		server = {
 			capabilities = {
 				textDocument = { completion = { editsNearCursor = true } },
 				offsetEncoding = {},
 			},
-			on_attach = on_attach,
+			on_attach = function(client, bufnr)
+				on_attach(client, bufnr)
+
+				require("clangd_extensions.inlay_hints").setup_autocmd()
+				require("clangd_extensions.inlay_hints").set_inlay_hints()
+			end,
 		},
 	},
 	lua_ls = {
@@ -132,15 +136,15 @@ local config = {
 	},
 	rust_analyzer = {
 		server = {
+			cmd = { "/usr/lib/rustup/bin/rust-analyzer" },
 			standalone = true,
 			on_attach = on_attach,
 			capabilities = capabilities,
 			settings = {
-				["rust-analyzer"] = {
-					imports = { granularity = { group = "module" }, prefix = "self" },
-					cargo = { buildScripts = { enable = true } },
-					procMacro = { enable = true },
-				},
+				["rust_analyzer"] = { cargo = { allFeatures = true } },
+			},
+			checkOnSave = {
+				allFeatures = true,
 			},
 		},
 	},
