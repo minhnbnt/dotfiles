@@ -9,7 +9,7 @@ require("statuscol").setup({
 	segments = {
 		{
 			click = "v:lua.ScSa",
-			sign = { name = { ".*" }, maxwidth = 1, colwidth = 1, auto = false },
+			sign = { name = { ".*" }, text = { ".*" }, maxwidth = 1, colwidth = 1, wrap = true },
 		},
 		{
 			text = { " ", builtin.lnumfunc, " " },
