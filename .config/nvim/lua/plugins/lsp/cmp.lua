@@ -56,11 +56,11 @@ cmp.setup({
 	preselect = cmp.PreselectMode.None,
 	sorting = {
 		comparators = {
+			cmp.config.compare.recently_used,
 			require("clangd_extensions.cmp_scores"),
 			cmp.config.compare.kind,
 			cmp.config.compare.offset,
 			cmp.config.compare.exact,
-			cmp.config.compare.recently_used,
 			cmp.config.compare.sort_text,
 			cmp.config.compare.length,
 			cmp.config.compare.order,
@@ -84,9 +84,9 @@ cmp.setup({
 		disallow_prefix_unmatching = true,
 	},
 	window = {
-		--completion = cmp.config.window.bordered(),
-		--documentation = bordered,
-		documentation = { max_height = 30 },
+		completion = cmp.config.window.bordered(),
+		documentation = bordered,
+		-- documentation = { max_height = 30 },
 	},
 	confirm_opts = {
 		behavior = cmp.ConfirmBehavior.Replace,

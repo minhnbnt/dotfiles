@@ -16,14 +16,7 @@ local init = {
 	rust_analyzer = require("rust-tools").setup,
 }
 
-local signs = {
-	Error = "",
-	Warning = "",
-	Warn = "",
-	Hint = "",
-	Information = "",
-	Info = "",
-}
+local signs = { Error = "", Warn = "", Hint = "", Info = "" }
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.documentFormattingProvider = false
@@ -71,16 +64,16 @@ local config = {
 	},
 	clangd = {
 		server = {
-			capabilities = {
-				textDocument = { completion = { editsNearCursor = true } },
-				offsetEncoding = {},
-			},
 			on_attach = function(client, bufnr)
 				on_attach(client, bufnr)
 
 				require("clangd_extensions.inlay_hints").setup_autocmd()
 				require("clangd_extensions.inlay_hints").set_inlay_hints()
 			end,
+			capabilities = {
+				textDocument = { completion = { editsNearCursor = true } },
+				offsetEncoding = {},
+			},
 		},
 	},
 	lua_ls = {
@@ -152,7 +145,15 @@ local config = {
 
 vim.api.nvim_create_autocmd("CursorHold", {
 	callback = function() -- enable showing diagnostics in virtual text
-		vim.diagnostic.open_float(0, { scope = "cursor", focus = false })
+		local options = {
+			focusable = false,
+			close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+			border = "rounded",
+			source = "always",
+			prefix = " ",
+			scope = "cursor",
+		}
+		vim.diagnostic.open_float(nil, options)
 	end,
 })
 
