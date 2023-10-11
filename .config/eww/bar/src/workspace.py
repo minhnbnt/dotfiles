@@ -5,62 +5,6 @@ import json, os, socket, subprocess, sys
 ICONS = ["", "", "", "", "", "", ""]
 OTHER_ICON = ""
 
-argv = sys.argv
-
-if len(argv) > 2:
-    print("Too many arguments")
-    sys.exit(1)
-
-if len(argv) == 2:
-    if argv[1] == "up":
-        os.system("hyprctl dispatch workspace e-1")
-    elif argv[1] == "down":
-        os.system("hyprctl dispatch workspace e+1")
-
-    else:
-        print("Invalid argument")
-        sys.exit(1)
-
-    sys.exit(0)
-
-
-def init_widget():
-    output = subprocess.check_output(["hyprctl", "workspaces", "-j"])
-
-    visible_workspaces = set(work["id"] for work in json.loads(output))
-
-    output = subprocess.check_output(["hyprctl", "activeworkspace", "-j"])
-    active_workspace = json.loads(output)["id"]
-
-    return visible_workspaces, active_workspace
-
-
-def update_workspace(buf):
-    global active_workspace
-
-    changed = False
-
-    def get_number(line: str):
-        return int(line.split(">>")[1])
-
-    for line in buf.splitlines():
-        if line.startswith("workspace>>"):
-            active_workspace = get_number(line)
-            changed = True
-
-        elif line.startswith("createworkspace>>"):
-            visible_workspaces.add(get_number(line))
-            changed = True
-
-        elif line.startswith("destroyworkspace>>"):
-            workspace_id = get_number(line)
-
-            if workspace_id in visible_workspaces:
-                visible_workspaces.remove(workspace_id)
-                changed = True
-
-    return changed
-
 
 def print_widget(visible_workspaces, active_workspace):
     visible_set = set(sorted(visible_workspaces))
@@ -107,7 +51,67 @@ def print_widget(visible_workspaces, active_workspace):
     sys.stdout.flush()
 
 
+def init_widget():
+    output = subprocess.check_output(["hyprctl", "workspaces", "-j"])
+
+    visible_workspaces = set(work["id"] for work in json.loads(output))
+
+    output = subprocess.check_output(["hyprctl", "activeworkspace", "-j"])
+    active_workspace = json.loads(output)["id"]
+
+    return visible_workspaces, active_workspace
+
+
+def args_handle(argv):
+    if len(argv) == 1:
+        return
+
+    if len(argv) > 2:
+        print("Too many arguments.", file=sys.stderr)
+        sys.exit(1)
+
+    if argv[1] == "up":
+        os.system("hyprctl dispatch workspace e-1")
+    elif argv[1] == "down":
+        os.system("hyprctl dispatch workspace e+1")
+
+    else:
+        print("Invalid argument", file=sys.stderr)
+        sys.exit(1)
+
+    sys.exit(0)
+
+
+def update_workspace(buf):
+    global active_workspace
+
+    changed = False
+
+    def get_number(line: str):
+        return int(line.split(">>")[1])
+
+    for line in buf.splitlines():
+        if line.startswith("workspace>>"):
+            active_workspace = get_number(line)
+            changed = True
+
+        elif line.startswith("createworkspace>>"):
+            visible_workspaces.add(get_number(line))
+            changed = True
+
+        elif line.startswith("destroyworkspace>>"):
+            workspace_id = get_number(line)
+
+            if workspace_id in visible_workspaces:
+                visible_workspaces.remove(workspace_id)
+                changed = True
+
+    return changed
+
+
 with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
+    args_handle(sys.argv)
+
     signature = os.environ["HYPRLAND_INSTANCE_SIGNATURE"]
     sever_address = f"/tmp/hypr/{signature}/.socket2.sock"
 
