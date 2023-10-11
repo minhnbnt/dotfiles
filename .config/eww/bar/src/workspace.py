@@ -2,19 +2,19 @@
 
 import json, os, socket, subprocess, sys
 
-icons = ["", "", "", "", "", "", ""]
-other_icon = ""
+ICONS = ["", "", "", "", "", "", ""]
+OTHER_ICON = ""
 
-argv_len = len(sys.argv)
+argv = sys.argv
 
-if argv_len > 2:
+if len(argv) > 2:
     print("Too many arguments")
     sys.exit(1)
 
-if argv_len == 2:
-    if sys.argv[1] == "up":
+if len(argv) == 2:
+    if argv[1] == "up":
         os.system("hyprctl dispatch workspace e-1")
-    elif sys.argv[1] == "down":
+    elif argv[1] == "down":
         os.system("hyprctl dispatch workspace e+1")
 
     else:
@@ -25,20 +25,14 @@ if argv_len == 2:
 
 
 def init_widget():
-    visible_workspaces = set()
-
     output = subprocess.check_output(["hyprctl", "workspaces", "-j"])
 
-    for workspace in json.loads(output):
-        visible_workspaces.add(workspace["id"])
+    visible_workspaces = set(work["id"] for work in json.loads(output))
 
     output = subprocess.check_output(["hyprctl", "activeworkspace", "-j"])
     active_workspace = json.loads(output)["id"]
 
     return visible_workspaces, active_workspace
-
-
-visible_workspaces, active_workspace = init_widget()
 
 
 def update_workspace(buf):
@@ -68,22 +62,20 @@ def update_workspace(buf):
     return changed
 
 
-def print_widget():
+def print_widget(visible_workspaces, active_workspace):
     visible_set = set(sorted(visible_workspaces))
 
-    print("; This is start")
-
-    print('(eventbox :onscroll "python3', f"'{__file__}'", '{}"', end=" ")
+    print(f"(eventbox :onscroll 'python3 {__file__} {{}}'", end=" ")
     print('(box :class "works" :orientation "v" :space-evenly false', end="")
 
     # print all workspaces in icons list
-    for id, icon in enumerate(icons):
+    for id, icon in enumerate(ICONS):
         id = id + 1
 
         print(f' (button :tooltip "Workspace {id}"', end=" ")
 
-        print(':onclick "hyprctl dispatch workspace', id, end='" ')
-        print(':onrightclick "hyprctl dispatch workspace', id, end='" ')
+        print(f':onclick "hyprctl dispatch workspace {id}"', end=" ")
+        print(f':onrightclick "hyprctl dispatch workspace {id}"', end=" ")
 
         button_class = "inactive"
         if id == active_workspace:
@@ -101,13 +93,13 @@ def print_widget():
         print(f' (button :tooltip "Workspace {id}"', end=" ")
 
         if id == active_workspace:
-            print(f':class "active" "{other_icon}', end='")')
+            print(f':class "active" "{OTHER_ICON}', end='")')
             continue
 
         # visible workspace not in icons list
         print(':onclick "hyprctl dispatch workspace', id, end='" ')
         print(':onrightclick "hyprctl dispatch workspace', id, end='" ')
-        print(':class "visible" "' + other_icon, end='")')
+        print(f':class "visible" " {OTHER_ICON}', end='")')
 
     print("))")
 
@@ -115,16 +107,17 @@ def print_widget():
     sys.stdout.flush()
 
 
-signature = os.environ["HYPRLAND_INSTANCE_SIGNATURE"]
-sever_address = f"/tmp/hypr/{signature}/.socket2.sock"
+with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
+    signature = os.environ["HYPRLAND_INSTANCE_SIGNATURE"]
+    sever_address = f"/tmp/hypr/{signature}/.socket2.sock"
 
-sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-sock.connect(sever_address)
+    sock.connect(sever_address)
 
-print_widget()
+    visible_workspaces, active_workspace = init_widget()
+    print_widget(visible_workspaces, active_workspace)
 
-while True:
-    buf = sock.recv(1024).decode()
+    while True:
+        buf = sock.recv(1024).decode()
 
-    if buf and update_workspace(buf):
-        print_widget()
+        if buf and update_workspace(buf):
+            print_widget(visible_workspaces, active_workspace)
