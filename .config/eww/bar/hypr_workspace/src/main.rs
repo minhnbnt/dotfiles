@@ -1,7 +1,11 @@
+use json;
+
 use std::collections::BTreeSet;
+use std::env::{args, current_exe, var};
 use std::io::{BufRead, BufReader, Read, Write};
 use std::os::unix::net::UnixStream;
 use std::path::PathBuf;
+use std::process::{exit, Command};
 
 pub fn print_workspaces(exec_path: &PathBuf, workspaces: &BTreeSet<u8>, focused: &u8) {
 	const OTHER_ICON: &str = "";
@@ -21,8 +25,8 @@ pub fn print_workspaces(exec_path: &PathBuf, workspaces: &BTreeSet<u8>, focused:
 		print!(":onrightclick 'hyprctl dispatch workspace {index}' ");
 
 		let class = match index {
-			_ if index == *focused => "focused",
-			i if workspaces.contains(&i) => "active",
+			_ if index == *focused => "active",
+			i if workspaces.contains(&i) => "visible",
 			_ => "inactive",
 		};
 
@@ -52,8 +56,10 @@ pub fn print_workspaces(exec_path: &PathBuf, workspaces: &BTreeSet<u8>, focused:
 	println!("))");
 }
 
-pub fn main() {
-	let sock_dir = match std::env::var("HYPRLAND_INSTANCE_SIGNATURE") {
+pub fn main() -> std::io::Result<()> {
+	arg_handle();
+
+	let sock_dir = match var("HYPRLAND_INSTANCE_SIGNATURE") {
 		Ok(sig) => PathBuf::from(format!("/tmp/hypr/{sig}/")),
 		Err(msg) => panic!("{}", msg),
 	};
@@ -63,10 +69,10 @@ pub fn main() {
 	let stream_path = format!("{}.socket2.sock", sock_dir.display());
 	println!("; Connecting to: {stream_path}...");
 
-	let stream = UnixStream::connect(stream_path).unwrap();
+	let stream = UnixStream::connect(stream_path)?;
 	let mut reader = BufReader::new(stream);
 
-	let exec_path: PathBuf = std::env::current_exe().unwrap();
+	let exec_path: PathBuf = current_exe()?;
 
 	println!("; Successed!");
 
@@ -74,7 +80,7 @@ pub fn main() {
 
 	loop {
 		let mut buffer = String::new();
-		reader.read_line(&mut buffer).unwrap();
+		reader.read_line(&mut buffer)?;
 
 		if update(buffer, &mut workspaces, &mut focused_workspace) {
 			print_workspaces(&exec_path, &workspaces, &focused_workspace);
@@ -115,7 +121,7 @@ pub fn update(buf: String, workspaces: &mut BTreeSet<u8>, focused: &mut u8) -> b
 	let mut changed = false;
 
 	fn get_number(number: &str) -> u8 {
-		return number.parse::<u8>().unwrap();
+		return number.parse().unwrap();
 	}
 
 	for line in buf.lines() {
@@ -138,4 +144,28 @@ pub fn update(buf: String, workspaces: &mut BTreeSet<u8>, focused: &mut u8) -> b
 	}
 
 	return changed;
+}
+
+pub fn arg_handle() {
+	let args: Vec<String> = args().collect();
+
+	if args.len() == 1 {
+		return;
+	}
+
+	assert!(args.len() == 2, "Too many arguments.");
+
+	let mut command = Command::new("hyprctl");
+	let mut args_command = vec!["dispatch", "workspace"];
+
+	match args[1].as_str() {
+		"up" => args_command.push("e-1"),
+		"down" => args_command.push("e+1"),
+
+		_ => panic!("Invalid argument."),
+	};
+
+	command.args(args_command).spawn().unwrap();
+
+	exit(0);
 }
