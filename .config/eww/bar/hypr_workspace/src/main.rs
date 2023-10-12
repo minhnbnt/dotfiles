@@ -2,7 +2,8 @@ use json;
 
 use std::collections::BTreeSet;
 use std::env::{args, current_exe, var};
-use std::io::{BufRead, BufReader, Read, Write};
+use std::error::Error;
+use std::io::{BufReader, Read, Write};
 use std::os::unix::net::UnixStream;
 use std::path::PathBuf;
 use std::process::{exit, Command};
@@ -56,7 +57,7 @@ pub fn print_workspaces(exec_path: &PathBuf, workspaces: &BTreeSet<u8>, focused:
 	println!("))");
 }
 
-pub fn main() -> std::io::Result<()> {
+pub fn main() -> Result<(), Box<dyn Error>> {
 	arg_handle();
 
 	let sock_dir = match var("HYPRLAND_INSTANCE_SIGNATURE") {
@@ -64,7 +65,7 @@ pub fn main() -> std::io::Result<()> {
 		Err(msg) => panic!("{}", msg),
 	};
 
-	let (mut workspaces, mut focused_workspace) = init(&sock_dir).unwrap();
+	let (mut workspaces, mut focused_workspace) = init(&sock_dir)?;
 
 	let stream_path = format!("{}.socket2.sock", sock_dir.display());
 	println!("; Connecting to: {stream_path}...");
@@ -79,8 +80,10 @@ pub fn main() -> std::io::Result<()> {
 	print_workspaces(&exec_path, &workspaces, &focused_workspace);
 
 	loop {
-		let mut buffer = String::new();
-		reader.read_line(&mut buffer)?;
+		let mut bytes = [0; 1024];
+		reader.read(&mut bytes)?;
+
+		let buffer = std::str::from_utf8(&bytes)?;
 
 		if update(buffer, &mut workspaces, &mut focused_workspace) {
 			print_workspaces(&exec_path, &workspaces, &focused_workspace);
@@ -88,53 +91,53 @@ pub fn main() -> std::io::Result<()> {
 	}
 }
 
-pub fn init(sock_dir: &PathBuf) -> Option<(BTreeSet<u8>, u8)> {
+pub fn init(sock_dir: &PathBuf) -> Result<(BTreeSet<u8>, u8), Box<dyn Error>> {
 	let mut workspaces: BTreeSet<u8> = BTreeSet::new();
 
 	let stream_path = format!("{}.socket.sock", sock_dir.display());
 
 	println!("; Connecting to: {stream_path}...");
-	let mut stream = UnixStream::connect(&stream_path).ok()?;
+	let mut stream = UnixStream::connect(&stream_path)?;
 
 	let mut output = String::new();
-	stream.write(b"j/activeworkspace").ok()?;
-	stream.read_to_string(&mut output).ok()?;
+	stream.write(b"j/activeworkspace")?;
+	stream.read_to_string(&mut output)?;
 
-	let focused = json::parse(&output).ok()?["id"].as_u8()?;
-	stream.shutdown(std::net::Shutdown::Both).ok()?;
+	let focused = json::parse(&output)?["id"].as_u8().unwrap();
+	stream.shutdown(std::net::Shutdown::Both)?;
 
-	let mut stream = UnixStream::connect(stream_path).ok()?;
+	let mut stream = UnixStream::connect(stream_path)?;
 
 	output.clear();
-	stream.write(b"j/workspaces").ok()?;
-	stream.read_to_string(&mut output).ok()?;
+	stream.write(b"j/workspaces")?;
+	stream.read_to_string(&mut output)?;
 
-	for workspace in json::parse(&output).ok()?.members() {
-		let id = workspace["id"].as_u8()?;
+	for workspace in json::parse(&output)?.members() {
+		let id = workspace["id"].as_u8().unwrap();
 		workspaces.insert(id);
 	}
 
-	return Some((workspaces, focused));
+	return Ok((workspaces, focused));
 }
 
-pub fn update(buf: String, workspaces: &mut BTreeSet<u8>, focused: &mut u8) -> bool {
+pub fn update(buffer: &str, workspaces: &mut BTreeSet<u8>, focused: &mut u8) -> bool {
 	let mut changed = false;
 
 	fn get_number(number: &str) -> u8 {
 		return number.parse().unwrap();
 	}
 
-	for line in buf.lines() {
+	for line in buffer.lines() {
 		if line.starts_with("workspace>>") {
 			*focused = get_number(&line[11 ..]);
 
 			changed = true;
 		} else if line.starts_with("createworkspace>>") {
-			workspaces.insert(get_number(&line[16 ..]));
+			workspaces.insert(get_number(&line[17 ..]));
 
 			changed = true;
 		} else if line.starts_with("destroyworkspace>>") {
-			let destroyed = get_number(&line[17 ..]);
+			let destroyed = get_number(&line[18 ..]);
 
 			if workspaces.contains(&destroyed) {
 				workspaces.remove(&destroyed);
