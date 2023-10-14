@@ -16,7 +16,7 @@ local neovide = {
 
 local options = {
 
-	clipboard = "unnamedplus",
+	-- clipboard = "unnamedplus",
 
 	showmode = false,
 	number = true,
@@ -51,7 +51,7 @@ local options = {
 
 	fillchars = {
 		foldopen = "-",
-		foldsep = "│",
+		foldsep = "┆",
 		foldclose = "+",
 	},
 }
@@ -69,9 +69,10 @@ if vim.g.neovide then
 end
 
 vim.cmd([[
+
 	vnoremap <BS>                               <DEL>
-	vnoremap <RightMouse>                       <C-\><C-g>gv<cmd>:popup! PopUp<cr>
 	tnoremap <esc>                              <C-\><C-N>
+	vnoremap <RightMouse>                       <C-\><C-g>gv<cmd>:popup! PopUp<cr>
 
 	aunmenu PopUp
 	nnoremenu <silent> PopUp.NvimTree           :NvimTreeToggle <cr>
