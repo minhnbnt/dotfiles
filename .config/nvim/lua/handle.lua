@@ -8,6 +8,7 @@ M.enabled_plugins = {
 	"windwp/nvim-autopairs",
 	"numToStr/Comment.nvim",
 	"lukas-reineke/indent-blankline.nvim",
+	"michaelb/sniprun",
 
 	"goolord/alpha-nvim",
 
@@ -19,7 +20,7 @@ M.enabled_plugins = {
 	"neovim/nvim-lspconfig",
 	"ray-x/lsp_signature.nvim",
 	"L3MON4D3/LuaSnip",
-	"jose-elias-alvarez/null-ls.nvim",
+	"nvimtools/none-ls.nvim",
 	--"zbirenbaum/copilot-cmp",
 	"hrsh7th/nvim-cmp",
 

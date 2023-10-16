@@ -21,14 +21,16 @@ return {
 
 	Plug("ray-x/lsp_signature.nvim", {
 
-		event = "VeryLazy",
+		enabled = true,
 
 		opts = {
-			bind = true, -- This is mandatory, otherwise border config won't get registered.
-			handler_opts = {
-				border = "rounded",
-			},
-			hint_prefix = "󰌶 ",
+			bind = true,
+			max_height = 15,
+			max_width = 80,
+			noice = true,
+			extra_trigger_chars = { "<", "," },
+			handler_opts = { border = "rounded" },
+			hint_prefix = " ",
 		},
 	}),
 
@@ -44,7 +46,7 @@ return {
 		config = load("luasnip"),
 	}),
 
-	Plug("jose-elias-alvarez/null-ls.nvim", {
+	Plug("nvimtools/none-ls.nvim", {
 		dependencies = { "nvim-lua/plenary.nvim" },
 		config = load("null-ls"),
 	}),
