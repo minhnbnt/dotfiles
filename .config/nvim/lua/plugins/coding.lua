@@ -63,6 +63,15 @@ return {
 
 	Plug("numToStr/Comment.nvim", { opts = {}, lazy = false }),
 
+	Plug("michaelb/sniprun", {
+
+		build = "sh ./install.sh",
+
+		opts = {
+			display = { "NvimNotify" },
+		},
+	}),
+
 	Plug("lukas-reineke/indent-blankline.nvim", {
 
 		main = "ibl",
@@ -70,13 +79,16 @@ return {
 		opts = function()
 			vim.api.nvim_set_hl(0, "CurrScope", { fg = "#787f96" })
 
+			local hooks = require("ibl.hooks")
+			--[[ hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_tab_indent_level)
+			hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level) ]]
+
 			return {
 
 				indent = { char = "│" },
 				scope = {
-					highlight = {
-						"CurrScope",
-					},
+					highlight = { "CurrScope" },
+					enabled = true,
 					show_start = false,
 					show_end = false,
 				},
