@@ -32,7 +32,7 @@
 	        :tooltip "App launcher"
 	        :onclick "wofi -f -S run" ""))
 
-(deflisten workspace "python3 ~/.config/eww/bar/src/workspace.py")
+(deflisten workspace "~/.config/eww/bar/bin/workspace")
 (defwidget workspaces [] (literal :content workspace))
 
 (defpoll network :interval "30s" "~/.config/eww/bar/bin/network")
@@ -113,7 +113,7 @@
 	(eventbox :onhover "eww update powermenu=true \
 	                    brightness-active=false volume-active=false"
 	          :onhoverlost "eww update powermenu=false"
-			  :timeout "1s"
+		      :timeout "1s"
 		(box :orientation "v"
 			 :space-evenly false
 			 :class "container"
@@ -129,7 +129,7 @@
 					                  -t "Are you sure?" \
 					                  -m "Do you really want to suspend?" \
 					                  -c "systemctl suspend"'
-							:tooltip "Suspend" "")
+					        :tooltip "Suspend" "")
 					(button :class "button-exit"
 					        :timeout "60s"
 					        :onclick 'killall ~/.config/eww/bar/bin/eww_power_dialog; \
@@ -149,8 +149,8 @@
 			(button :class { powermenu ? "button-pow-alt" : "button-pow" }
 			        :timeout "60s"
 			        :onclick 'killall ~/.config/eww/bar/bin/eww_power_dialog; \
-					          ~/.config/eww/bar/bin/eww_power_dialog \
-					          -t "Are you sure?" \
+			                  ~/.config/eww/bar/bin/eww_power_dialog \
+			                  -t "Are you sure?" \
 			                  -m "Do you really want to shutdown?" \
-					          -c "shutdown -P now"'
+			                  -c "shutdown -P now"'
 			        :tooltip "Shutdown" ""))))
