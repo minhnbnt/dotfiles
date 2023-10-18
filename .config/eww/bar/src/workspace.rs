@@ -1,5 +1,3 @@
-use json;
-
 use std::collections::BTreeSet;
 use std::env::{args, current_exe, var};
 use std::error::Error;
@@ -20,10 +18,10 @@ pub fn print_workspaces(exec_path: &PathBuf, workspaces: &BTreeSet<u8>, focused:
 	for (index, icon) in ICONS.iter().enumerate() {
 		let index = index as u8 + 1;
 
-		print!(" (button :tooltip 'Workspace {index}' ");
+		print!(" (button :tooltip 'Workspace {}' ", index);
 
-		print!(":onclick 'hyprctl dispatch workspace {index}' ");
-		print!(":onrightclick 'hyprctl dispatch workspace {index}' ");
+		print!(":onclick 'hyprctl dispatch workspace {}' ", index);
+		print!(":onrightclick 'hyprctl dispatch workspace {}' ", index);
 
 		let class = match index {
 			_ if index == *focused => "active",
@@ -35,23 +33,21 @@ pub fn print_workspaces(exec_path: &PathBuf, workspaces: &BTreeSet<u8>, focused:
 			workspaces.remove(&index);
 		}
 
-		print!(":class '{class}' '{icon}')");
+		print!(":class '{}' '{}')", class, icon);
 	}
 
 	for &index in workspaces.iter() {
-		let index = index as u8 + 1;
-
-		print!(" (button :tooltip 'Workspace {index}'");
+		print!(" (button :tooltip 'Workspace {}' ", index);
 
 		if index == *focused {
-			print!(":class 'focused' '{OTHER_ICON}')");
+			print!(":class 'focused' '{}')", OTHER_ICON);
 			continue;
 		}
 
-		print!(":onclick 'hyprctl dispatch workspace {index}' ");
-		print!(":onrightclick 'hyprctl dispatch workspace {index}' ");
+		print!(":onclick 'hyprctl dispatch workspace {}' ", index);
+		print!(":onrightclick 'hyprctl dispatch workspace {}' ", index);
 
-		print!(":class 'active' '{OTHER_ICON}')");
+		print!(":class 'active' '{}')", OTHER_ICON);
 	}
 
 	println!("))");
@@ -94,27 +90,36 @@ pub fn main() -> Result<(), Box<dyn Error>> {
 pub fn init(sock_dir: &PathBuf) -> Result<(BTreeSet<u8>, u8), Box<dyn Error>> {
 	let mut workspaces: BTreeSet<u8> = BTreeSet::new();
 
+	fn get_number(buf: &str) -> u8 {
+		let buf = buf[13 .. 15].trim();
+		return buf.parse().unwrap();
+	}
+
 	let stream_path = format!("{}.socket.sock", sock_dir.display());
 
 	println!("; Connecting to: {stream_path}...");
 	let mut stream = UnixStream::connect(&stream_path)?;
 
 	let mut output = String::new();
-	stream.write(b"j/activeworkspace")?;
+	stream.write(b"activeworkspace")?;
 	stream.read_to_string(&mut output)?;
 
-	let focused = json::parse(&output)?["id"].as_u8().unwrap();
+	let focused = get_number(&output);
 	stream.shutdown(std::net::Shutdown::Both)?;
 
 	let mut stream = UnixStream::connect(stream_path)?;
 
 	output.clear();
-	stream.write(b"j/workspaces")?;
+	stream.write(b"workspaces")?;
 	stream.read_to_string(&mut output)?;
 
-	for workspace in json::parse(&output)?.members() {
-		let id = workspace["id"].as_u8().unwrap();
-		workspaces.insert(id);
+	for line in output.lines() {
+		if !line.starts_with("workspace ID") {
+			continue;
+		}
+
+		let workspace_id = get_number(line);
+		workspaces.insert(workspace_id);
 	}
 
 	return Ok((workspaces, focused));
