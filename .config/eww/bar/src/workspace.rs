@@ -12,7 +12,7 @@ pub fn print_workspaces(exec_path: &PathBuf, workspaces: &BTreeSet<u8>, focused:
 
 	let mut workspaces = workspaces.clone();
 
-	print!("(eventbox :onscroll \"{} {{}}\" ", exec_path.display());
+	print!("(eventbox :onscroll '{} {{}}' ", exec_path.display());
 	print!("(box :class 'works' :orientation 'v' :space-evenly false");
 
 	for (index, icon) in ICONS.iter().enumerate() {
@@ -23,7 +23,7 @@ pub fn print_workspaces(exec_path: &PathBuf, workspaces: &BTreeSet<u8>, focused:
 		print!(":onclick 'hyprctl dispatch workspace {}' ", index);
 		print!(":onrightclick 'hyprctl dispatch workspace {}' ", index);
 
-		let class = match index {
+		let class: &str = match index {
 			_ if index == *focused => "active",
 			i if workspaces.contains(&i) => "visible",
 			_ => "inactive",
@@ -40,14 +40,14 @@ pub fn print_workspaces(exec_path: &PathBuf, workspaces: &BTreeSet<u8>, focused:
 		print!(" (button :tooltip 'Workspace {}' ", index);
 
 		if index == *focused {
-			print!(":class 'focused' '{}')", OTHER_ICON);
+			print!(":class 'active' '{}')", OTHER_ICON);
 			continue;
 		}
 
 		print!(":onclick 'hyprctl dispatch workspace {}' ", index);
 		print!(":onrightclick 'hyprctl dispatch workspace {}' ", index);
 
-		print!(":class 'active' '{}')", OTHER_ICON);
+		print!(":class 'visible' '{}')", OTHER_ICON);
 	}
 
 	println!("))");
@@ -57,11 +57,11 @@ pub fn main() -> Result<(), Box<dyn Error>> {
 	arg_handle();
 
 	let sock_dir = match var("HYPRLAND_INSTANCE_SIGNATURE") {
-		Ok(sig) => PathBuf::from(format!("/tmp/hypr/{sig}/")),
+		Ok(sig) => PathBuf::from(format!("/tmp/hypr/{}/", sig)),
 		Err(msg) => panic!("{}", msg),
 	};
 
-	let (mut workspaces, mut focused_workspace) = init(&sock_dir)?;
+	let (mut workspaces, mut focused_workspace) = init(&sock_dir).unwrap();
 
 	let stream_path = format!("{}.socket2.sock", sock_dir.display());
 	println!("; Connecting to: {stream_path}...");
@@ -87,31 +87,31 @@ pub fn main() -> Result<(), Box<dyn Error>> {
 	}
 }
 
-pub fn init(sock_dir: &PathBuf) -> Result<(BTreeSet<u8>, u8), Box<dyn Error>> {
+pub fn init(sock_dir: &PathBuf) -> Option<(BTreeSet<u8>, u8)> {
 	let mut workspaces: BTreeSet<u8> = BTreeSet::new();
 
 	fn get_number(buf: &str) -> u8 {
-		let buf = buf[13 .. 15].trim();
+		let buf = buf[13 .. 15].trim_end();
 		return buf.parse().unwrap();
 	}
 
 	let stream_path = format!("{}.socket.sock", sock_dir.display());
 
 	println!("; Connecting to: {stream_path}...");
-	let mut stream = UnixStream::connect(&stream_path)?;
+	let mut stream = UnixStream::connect(&stream_path).ok()?;
 
 	let mut output = String::new();
-	stream.write(b"activeworkspace")?;
-	stream.read_to_string(&mut output)?;
+	stream.write(b"activeworkspace").ok()?;
+	stream.read_to_string(&mut output).ok()?;
 
 	let focused = get_number(&output);
-	stream.shutdown(std::net::Shutdown::Both)?;
+	stream.shutdown(std::net::Shutdown::Both).ok()?;
 
-	let mut stream = UnixStream::connect(stream_path)?;
+	let mut stream = UnixStream::connect(stream_path).ok()?;
 
 	output.clear();
-	stream.write(b"workspaces")?;
-	stream.read_to_string(&mut output)?;
+	stream.write(b"workspaces").ok()?;
+	stream.read_to_string(&mut output).ok()?;
 
 	for line in output.lines() {
 		if !line.starts_with("workspace ID") {
@@ -122,7 +122,7 @@ pub fn init(sock_dir: &PathBuf) -> Result<(BTreeSet<u8>, u8), Box<dyn Error>> {
 		workspaces.insert(workspace_id);
 	}
 
-	return Ok((workspaces, focused));
+	return Some((workspaces, focused));
 }
 
 pub fn update(buffer: &str, workspaces: &mut BTreeSet<u8>, focused: &mut u8) -> bool {
