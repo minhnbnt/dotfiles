@@ -14,6 +14,11 @@ require("lazy").setup({
 		{ import = "plugins" },
 	},
 
+	git = { timeout = 300 },
+
+	colorscheme = { "vscode" },
+	ui = { border = "rounded" },
+
 	defaults = {
 
 		lazy = false,
