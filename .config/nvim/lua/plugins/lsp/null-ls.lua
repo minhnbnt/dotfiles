@@ -8,9 +8,10 @@ local config = {
 		AllowShortFunctionsOnASingleLine = "Empty",
 		AllowShortIfStatementsOnASingleLine = "AllIfsAndElse",
 		AllowShortLoopsOnASingleLine = true,
-		ColumnLimit = 80,
+		ColumnLimit = 100,
 		Cpp11BracedListStyle = false,
-		EmptyLineBeforeAccessModifier = "Never",
+		EmptyLineAfterAccessModifier = "Leave",
+		EmptyLineBeforeAccessModifier = "Leave",
 		IncludeBlocks = "Regroup",
 		IndentAccessModifiers = false,
 		IndentWidth = 4,
@@ -20,7 +21,7 @@ local config = {
 	--[[yapf = function()
 		local config = {
 			based_on_style = "pep8",
-			column_limit = 80,
+			column_limit = 100,
 			indent_width = 4,
 			use_tabs = true,
 		}
@@ -32,7 +33,7 @@ local config = {
 	end,]]
 	rustfmt = function()
 		local config = {
-			max_width = 80,
+			max_width = 100,
 			hard_tabs = true,
 			tab_spaces = 4,
 			brace_style = "PreferSameLine",
@@ -62,7 +63,7 @@ null_ls.setup({
 		formatting.beautysh.with({ extra_args = { "-t", "-i 4" } }),
 		formatting.clang_format.with({ extra_args = { "--style=" .. vim.fn.json_encode(config.clang_format) } }),
 		formatting.gofmt,
-		--formatting.prettier.with({ extra_args = { "--use-tabs" } }),
+		formatting.prettier.with({ extra_args = { "--use-tabs" } }),
 		formatting.rustfmt.with({ extra_args = { "--config=" .. config.rustfmt() } }),
 		formatting.stylua,
 		formatting.black,
