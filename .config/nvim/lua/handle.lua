@@ -3,6 +3,7 @@ local M = {}
 M.enabled_plugins = {
 
 	"Mofiqul/vscode.nvim",
+	--"catppuccin/nvim",
 
 	"CRAG666/code_runner.nvim",
 	"windwp/nvim-autopairs",
