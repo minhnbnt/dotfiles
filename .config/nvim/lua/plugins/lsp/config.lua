@@ -124,8 +124,19 @@ local config = {
 			bundles = { "/usr/share/java-debug/com.microsoft.java.debug.plugin.jar" },
 			jvm_args = { "-Xmx1G" },
 		},
+		settings = {
+			java = {
+				signatureHelp = { enabled = true },
+				contentProvider = { preferred = "fernflower" },
+			},
+		},
 		cmd = { "/usr/share/java/jdtls/bin/jdtls" }, -- AUR package jdtls
 		root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew" }),
+		on_init = function(client)
+			if client.config.settings then
+				client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
+			end
+		end,
 	},
 	rust_analyzer = {
 		server = {
@@ -169,7 +180,7 @@ for type, icon in pairs(signs) do -- set signs
 	vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 end
 
-local servers = require("handle").lsp_servers
+local servers = require("handle").lsp_servers or {}
 local vscode_extracted = { "html", "cssls", "eslint", "jsonls" }
 
 -- reqiure all servers
