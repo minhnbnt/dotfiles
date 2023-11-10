@@ -246,7 +246,7 @@ ins.left({
 		return "-- " .. mode .. " --"
 	end,
 	color = { gui = "bold" },
-	cond = conditions.hide_in_width(1),
+	-- cond = conditions.hide_in_width(1),
 })
 
 ins.right({

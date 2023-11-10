@@ -37,7 +37,7 @@ return {
 				cpp = get_command("clang++ $fileName -o $fileNameWithoutExt", "./$fileNameWithoutExt"),
 				go = get_command("go build $fileName", "./$fileNameWithoutExt"),
 				html = 'cd "$dir" && live-server --open=$fileName',
-				java = get_command(nil, "java -cp . $fileName"),
+				java = get_command("javac $fileName", "java $fileNameWithoutExt"),
 				javascript = get_command(nil, "node $fileName"),
 				lua = get_command(nil, "lua $fileName"),
 				python = get_command(nil, "python3 -u $fileName"),
@@ -79,8 +79,8 @@ return {
 		opts = function()
 			vim.api.nvim_set_hl(0, "CurrScope", { fg = "#787f96" })
 
-			local hooks = require("ibl.hooks")
-			--[[ hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_tab_indent_level)
+			--[[ local hooks = require("ibl.hooks")
+			hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_tab_indent_level)
 			hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level) ]]
 
 			return {
