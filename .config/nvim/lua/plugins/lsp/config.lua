@@ -13,10 +13,10 @@ local init = {
 			end,
 		})
 	end,
-	rust_analyzer = require("rust-tools").setup,
+	rust_analyzer = function(opts)
+		vim.g.rustaceanvim = opts
+	end,
 }
-
-local signs = { Error = "", Warn = "", Hint = "", Info = "" }
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.documentFormattingProvider = false
@@ -56,6 +56,27 @@ local function on_attach(client, bufnr)
 	end, bufopts)
 end
 
+vim.api.nvim_create_autocmd("CursorHold", {
+	callback = function()
+		vim.diagnostic.open_float(nil, { scope = "cursor" })
+	end,
+})
+
+vim.diagnostic.config({
+
+	float = {
+		focusable = false,
+		close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+		border = "rounded",
+		source = "always",
+		prefix = " ",
+	},
+
+	virtual_text = false,
+	update_in_insert = false,
+	severity_sort = true,
+})
+
 -- for servers that need custom config
 local config = {
 	ccls = {
@@ -65,10 +86,12 @@ local config = {
 	clangd = {
 		server = {
 			on_attach = function(client, bufnr)
+				local clang_inlay = require("clangd_extensions.inlay_hints")
+
 				on_attach(client, bufnr)
 
-				require("clangd_extensions.inlay_hints").setup_autocmd()
-				require("clangd_extensions.inlay_hints").set_inlay_hints()
+				clang_inlay.setup_autocmd()
+				clang_inlay.set_inlay_hints()
 			end,
 			capabilities = {
 				textDocument = { completion = { editsNearCursor = true } },
@@ -133,9 +156,10 @@ local config = {
 		cmd = { "/usr/share/java/jdtls/bin/jdtls" }, -- AUR package jdtls
 		root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew" }),
 		on_init = function(client)
-			if client.config.settings then
-				client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
+			if not client.config.settings then
+				return
 			end
+			client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
 		end,
 	},
 	rust_analyzer = {
@@ -145,39 +169,25 @@ local config = {
 			on_attach = on_attach,
 			capabilities = capabilities,
 			settings = {
-				["rust_analyzer"] = { cargo = { allFeatures = true } },
-			},
-			checkOnSave = {
-				allFeatures = true,
+				["rust-analyzer"] = {
+					check = { command = "clippy" },
+					diagnostics = { experimental = true },
+				},
 			},
 		},
 	},
 }
 
-vim.api.nvim_create_autocmd("CursorHold", {
-	callback = function() -- enable showing diagnostics in virtual text
-		local options = {
-			focusable = false,
-			close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
-			border = "rounded",
-			source = "always",
-			prefix = " ",
-			scope = "cursor",
-		}
-		vim.diagnostic.open_float(nil, options)
-	end,
-})
-
-vim.lsp.handlers["textDocument/publishDiagnostics"] = --
-	vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-		virtual_text = false,
-		update_in_insert = false,
-	})
+local signs = {
+	Error = "■", -- ""
+	Warn = "■", -- ""
+	Hint = "■", -- ""
+	Info = "■", -- ""
+}
 
 for type, icon in pairs(signs) do -- set signs
-	-- local hl = "LspDiagnosticsSign" .. type
 	local hl = "DiagnosticSign" .. type
-	vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+	vim.fn.sign_define(hl, { text = icon, texthl = hl })
 end
 
 local servers = require("handle").lsp_servers or {}
@@ -188,14 +198,12 @@ for _, server in pairs(servers) do
 	if config[server] == nil then
 		config[server] = {}
 	end
-	if init[server] ~= nil then
-		-- if server needs custom init options
+	if init[server] ~= nil then -- if server needs custom init options
 		init[server](config[server])
 	elseif not vim.tbl_contains(vscode_extracted, server) then
-		table.insert(config[server], {
-			capabilities = capabilities,
-			on_attach = on_attach,
-		})
+		config[server].on_attach = on_attach
+		config[server].capabilities = capabilities
+
 		require("lspconfig")[server].setup(config[server])
 	end
 end

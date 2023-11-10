@@ -13,10 +13,15 @@ return {
 		dependencies = {
 			"p00f/clangd_extensions.nvim",
 			"mfussenegger/nvim-jdtls",
-			"simrat39/rust-tools.nvim",
 		},
 
 		config = load("config"),
+	}),
+
+	Plug("mrcjkb/rustaceanvim", {
+
+		version = "^3",
+		ft = { "rust" },
 	}),
 
 	Plug("ray-x/lsp_signature.nvim", {
@@ -28,7 +33,7 @@ return {
 			max_height = 15,
 			max_width = 80,
 			noice = true,
-			extra_trigger_chars = { "<", "," },
+			always_trigger = true,
 			handler_opts = { border = "rounded" },
 			hint_prefix = " ",
 		},

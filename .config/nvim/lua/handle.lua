@@ -20,6 +20,7 @@ M.enabled_plugins = {
 
 	"neovim/nvim-lspconfig",
 	"ray-x/lsp_signature.nvim",
+	"mrcjkb/rustaceanvim",
 	"L3MON4D3/LuaSnip",
 	"nvimtools/none-ls.nvim",
 	--"zbirenbaum/copilot-cmp",
