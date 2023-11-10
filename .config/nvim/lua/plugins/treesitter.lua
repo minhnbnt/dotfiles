@@ -4,29 +4,20 @@ return {
 
 	Plug("HiPhish/rainbow-delimiters.nvim", {
 
-		config = function()
-			local rainbow_delimiters = require("rainbow-delimiters")
+		main = "rainbow-delimiters.setup",
 
-			require("rainbow-delimiters.setup")({
-				strategy = {
-					[""] = rainbow_delimiters.strategy["global"],
-					vim = rainbow_delimiters.strategy["local"],
-				},
-				query = {
-					[""] = "rainbow-delimiters",
-				},
-				highlight = {
-					"RainbowDelimiterYellow",
-					"RainbowDelimiterPink",
-					"RainbowDelimiterBlue",
-				},
-			})
-		end,
+		opts = {
+			highlight = {
+				"RainbowDelimiterYellow",
+				"RainbowDelimiterPink",
+				"RainbowDelimiterBlue",
+			},
+		},
 	}),
 
 	Plug("nvim-treesitter/nvim-treesitter", {
 
-		version = "*",
+		build = ":TSUpdate",
 		dependencies = {
 			"nvim-treesitter/nvim-treesitter-refactor",
 			"windwp/nvim-ts-autotag",
@@ -60,12 +51,8 @@ return {
 			-- parser_install_dir = "/some/path/to/store/parsers",
 			-- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
 
-			autopairs = {
-				enable = true,
-			},
-			autotag = {
-				enable = true,
-			},
+			autopairs = { enable = true },
+			autotag = { enable = true },
 			highlight = {
 				-- `false` will disable the whole extension
 				enable = true,
