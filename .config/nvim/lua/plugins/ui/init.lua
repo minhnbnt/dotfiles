@@ -10,13 +10,13 @@ return {
 
 	{ "nvim-tree/nvim-web-devicons" },
 
-	Plug(
-		"lewis6991/gitsigns.nvim",
-		{ opts = {
-			_extmark_signs = false,
+	Plug("lewis6991/gitsigns.nvim", {
+
+		opts = {
+			signs = { untracked = { text = "╏" } },
 			preview_config = { border = "rounded" },
-		} }
-	),
+		},
+	}),
 
 	Plug("rcarriga/nvim-notify", { config = load("notify") }),
 
