@@ -1,12 +1,11 @@
 use std::collections::BTreeSet;
 use std::env::{args, current_exe, var};
-use std::error::Error;
 use std::io::{BufReader, Read, Write};
 use std::os::unix::net::UnixStream;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::process::{exit, Command};
 
-pub fn print_workspaces(exec_path: &PathBuf, workspaces: &BTreeSet<u8>, focused: &u8) {
+pub fn print_workspaces(exec_path: &Path, workspaces: &BTreeSet<u8>, focused: u8) {
 	const OTHER_ICON: &str = "";
 	const ICONS: [&str; 7] = ["", "", "", "", "", "", ""];
 
@@ -23,8 +22,8 @@ pub fn print_workspaces(exec_path: &PathBuf, workspaces: &BTreeSet<u8>, focused:
 		print!(":onclick 'hyprctl dispatch workspace {}' ", index);
 		print!(":onrightclick 'hyprctl dispatch workspace {}' ", index);
 
-		let class: &str = match index {
-			_ if index == *focused => "active",
+		let class: &'static str = match index {
+			_ if index == focused => "active",
 			i if workspaces.contains(&i) => "visible",
 			_ => "inactive",
 		};
@@ -39,7 +38,7 @@ pub fn print_workspaces(exec_path: &PathBuf, workspaces: &BTreeSet<u8>, focused:
 	for &index in workspaces.iter() {
 		print!(" (button :tooltip 'Workspace {}' ", index);
 
-		if index == *focused {
+		if index == focused {
 			print!(":class 'active' '{}')", OTHER_ICON);
 			continue;
 		}
@@ -53,7 +52,7 @@ pub fn print_workspaces(exec_path: &PathBuf, workspaces: &BTreeSet<u8>, focused:
 	println!("))");
 }
 
-pub fn main() -> Result<(), Box<dyn Error>> {
+pub fn main() -> std::io::Result<()> {
 	arg_handle();
 
 	let sock_dir = match var("HYPRLAND_INSTANCE_SIGNATURE") {
@@ -73,26 +72,26 @@ pub fn main() -> Result<(), Box<dyn Error>> {
 
 	println!("; Successed!");
 
-	print_workspaces(&exec_path, &workspaces, &focused_workspace);
+	print_workspaces(&exec_path, &workspaces, focused_workspace);
 
 	loop {
 		let mut bytes = [0; 1024];
-		reader.read(&mut bytes)?;
+		let _ = reader.read(&mut bytes)?;
 
-		let buffer = std::str::from_utf8(&bytes)?;
+		let buffer = std::str::from_utf8(&bytes).unwrap();
 
 		if update(buffer, &mut workspaces, &mut focused_workspace) {
-			print_workspaces(&exec_path, &workspaces, &focused_workspace);
+			print_workspaces(&exec_path, &workspaces, focused_workspace);
 		}
 	}
 }
 
-pub fn init(sock_dir: &PathBuf) -> Option<(BTreeSet<u8>, u8)> {
+pub fn init(sock_dir: &Path) -> Option<(BTreeSet<u8>, u8)> {
 	let mut workspaces: BTreeSet<u8> = BTreeSet::new();
 
 	fn get_number(buf: &str) -> u8 {
 		let buf = buf[13 .. 15].trim_end();
-		return buf.parse().unwrap();
+		buf.parse::<u8>().unwrap()
 	}
 
 	let stream_path = format!("{}.socket.sock", sock_dir.display());
@@ -101,7 +100,7 @@ pub fn init(sock_dir: &PathBuf) -> Option<(BTreeSet<u8>, u8)> {
 	let mut stream = UnixStream::connect(&stream_path).ok()?;
 
 	let mut output = String::new();
-	stream.write(b"activeworkspace").ok()?;
+	stream.write_all(b"activeworkspace").ok()?;
 	stream.read_to_string(&mut output).ok()?;
 
 	let focused = get_number(&output);
@@ -110,7 +109,7 @@ pub fn init(sock_dir: &PathBuf) -> Option<(BTreeSet<u8>, u8)> {
 	let mut stream = UnixStream::connect(stream_path).ok()?;
 
 	output.clear();
-	stream.write(b"workspaces").ok()?;
+	stream.write_all(b"workspaces").ok()?;
 	stream.read_to_string(&mut output).ok()?;
 
 	for line in output.lines() {
@@ -122,27 +121,31 @@ pub fn init(sock_dir: &PathBuf) -> Option<(BTreeSet<u8>, u8)> {
 		workspaces.insert(workspace_id);
 	}
 
-	return Some((workspaces, focused));
+	Some((workspaces, focused))
 }
 
 pub fn update(buffer: &str, workspaces: &mut BTreeSet<u8>, focused: &mut u8) -> bool {
 	let mut changed = false;
 
-	fn get_number(number: &str) -> u8 {
-		return number.parse().unwrap();
-	}
+	let get_number = |buf: &str| buf.parse::<u8>().unwrap();
 
 	for line in buffer.lines() {
-		if line.starts_with("workspace>>") {
-			*focused = get_number(&line[11 ..]);
-
+		if let Some(num) = line.strip_prefix("workspace>>") {
+			*focused = get_number(num);
 			changed = true;
-		} else if line.starts_with("createworkspace>>") {
-			workspaces.insert(get_number(&line[17 ..]));
 
+			continue;
+		}
+
+		if let Some(num) = line.strip_prefix("createworkspace>>") {
+			workspaces.insert(get_number(num));
 			changed = true;
-		} else if line.starts_with("destroyworkspace>>") {
-			let destroyed = get_number(&line[18 ..]);
+
+			continue;
+		}
+
+		if let Some(num) = line.strip_prefix("destroyworkspace>>") {
+			let destroyed = get_number(num);
 
 			if workspaces.contains(&destroyed) {
 				workspaces.remove(&destroyed);
@@ -151,7 +154,7 @@ pub fn update(buffer: &str, workspaces: &mut BTreeSet<u8>, focused: &mut u8) -> 
 		}
 	}
 
-	return changed;
+	changed
 }
 
 pub fn arg_handle() {
