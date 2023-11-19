@@ -19,17 +19,20 @@ require("statuscol").setup({
 	segments = {
 		{
 			click = "v:lua.ScSa",
-			sign = {
-				namespace = { "gitsigns_extmark_signs_" },
-				name = { "Diagnostic" },
-				maxwidth = 1,
-				colwidth = 1,
-			},
+			sign = { namespace = { "gitsigns_extmark_signs_" }, colwidth = 1 },
 		},
 		{
-			text = { " ", builtin.lnumfunc, " " },
+			click = "v:lua.ScLa",
+			sign = { name = { "Dap" }, colwidth = 1 },
+		},
+		{
+			text = { builtin.lnumfunc },
 			condition = { true, builtin.not_empty },
 			click = "v:lua.ScLa",
+		},
+		{
+			click = "v:lua.ScSa",
+			sign = { name = { "Diagnostic" }, colwidth = 1 },
 		},
 		{
 			text = { builtin.foldfunc },
