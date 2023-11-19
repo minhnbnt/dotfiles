@@ -32,7 +32,6 @@ return {
 			bind = true,
 			max_height = 15,
 			max_width = 80,
-			noice = true,
 			always_trigger = true,
 			handler_opts = { border = "rounded" },
 			hint_prefix = " ",
