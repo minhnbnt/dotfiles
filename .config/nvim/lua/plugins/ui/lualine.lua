@@ -162,31 +162,28 @@ ins.left({
 })
 
 ins.left({
-	function()
-		local b = vim.api.nvim_get_current_buf()
-		if next(vim.treesitter.highlighter.active[b]) then
-			return ""
-		end
-		return ""
-	end,
-	color = { fg = "#5ea64e" },
-	cond = conditions.hide_in_width(1),
-	padding = { left = 1, right = 0 },
-})
-
-ins.left({
 	filetype,
 	icon_only = true,
 })
 
 ins.left({
-	function() -- filetype name
-		return vim.bo.filetype
-	end,
+	"bo:filetype",
 	cond = conditions.hide_in_width(2),
+
+	color = function()
+		local buf = vim.api.nvim_get_current_buf()
+		local ts = vim.treesitter.highlighter.active[buf]
+
+		if ts and not vim.tbl_isempty(ts) then
+			return { fg = "#85edb5" }
+		end
+		return {}
+	end,
+
 	fmt = function(str)
 		return str:gsub("^%l", string.upper)
 	end,
+
 	padding = { left = 0, right = 1 },
 })
 
@@ -221,9 +218,7 @@ ins.left({
 })
 
 ins.left({
-	function()
-		return "%="
-	end,
+	"%=",
 	padding = 0,
 })
 
@@ -246,7 +241,7 @@ ins.left({
 		return "-- " .. mode .. " --"
 	end,
 	color = { gui = "bold" },
-	-- cond = conditions.hide_in_width(1),
+	cond = conditions.hide_in_width(1),
 })
 
 ins.right({
@@ -323,7 +318,6 @@ config.options = {
 	component_separators = "",
 	section_separators = "",
 	padding = 1, -- padding between components
-	refresh = { statusline = 5000 },
 	theme = {
 		normal = {
 			a = { fg = "#303446", bg = "#1E66F5" },
