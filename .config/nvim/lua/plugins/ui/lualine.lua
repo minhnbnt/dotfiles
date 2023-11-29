@@ -1,33 +1,55 @@
 local function server_name()
 	local len = 25 -- more than max length of server name
-	local attached = {} -- list of attached servers
+
 	local buf_ft = vim.api.nvim_buf_get_option(0, "filetype")
 	local clients = vim.lsp.get_active_clients()
+
 	if next(clients) == nil then
 		return ""
 	end
-	-- gen list of attached servers
-	for _, client in ipairs(clients) do
-		local filetypes = client.config.filetypes
-		if filetypes and vim.tbl_contains(filetypes, buf_ft) then
-			if client.name == "null-ls" then -- null-ls clients
-				local sources = require("null-ls").get_sources()
-				for _, source in ipairs(sources) do
-					if source.filetypes[buf_ft] then
-						table.insert(attached, source.name)
-					end
-				end
-			else -- regular lsp clients
-				table.insert(attached, client.name)
-			end
-		elseif client.name == "copilot" then
-			vim.b.copilot_active = true -- for later
+
+	local attached = {} -- list of attached servers
+
+	local function get_attached_names(client)
+		local filetypes = client.config.filetypes or {}
+
+		if not vim.tbl_contains(filetypes, buf_ft) then
+			return {}
 		end
+
+		if client.name ~= "null-ls" then
+			return { client.name }
+		end
+
+		local attached_names = {}
+		local sources = require("null-ls").get_sources()
+
+		for _, source in ipairs(sources) do
+			if vim.tbl_get(source.filetypes, buf_ft) then
+				table.insert(attached_names, source.name)
+			end
+		end
+
+		return attached_names
 	end
+
+	for _, client in ipairs(clients) do
+		local attached_names = get_attached_names(client)
+		vim.list_extend(attached, attached_names)
+	end
+
+	table.sort(attached)
+
 	local str = table.concat(attached, ", ")
+
 	if #str > len then
 		str = str:sub(1, len - 3) .. "..."
 	end
+
+	if #attached > 1 then
+		str = "[" .. str .. "]"
+	end
+
 	return str
 end
 
@@ -37,99 +59,103 @@ function filetype.update_status()
 		highlight = "lualine.highlight",
 		utils = "lualine.utils.utils",
 	})
+
 	local ft = vim.fn.expand("%:e")
-	if ft == "" then
+	if string.len(ft) == 0 then
 		ft = vim.bo.filetype or ""
 	end
+
 	return modules.utils.stl_escape(ft)
 end
+
+local ident_level = {
+	function()
+		local chars = { "▏", "▎", "▍", "▌", "▋", "▊", "▉", "█" }
+		local tab_width = vim.api.nvim_buf_get_option(0, "tabstop")
+		return chars[tab_width] or "█"
+	end,
+	color = { bg = "#363A4F" },
+	padding = 0,
+}
+
+local position = {
+	function() -- show current position in file
+		local current_line = vim.fn.line(".")
+		local total_lines = vim.fn.line("$")
+		-- local chars = { " ", "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█" }
+		local chars = { "█", "▇", "▆", "▅", "▄", "▃", "▂", "▁", " " }
+		local line_ratio = current_line / total_lines
+		local index = math.ceil(line_ratio * #chars)
+		return chars[index]
+	end,
+	color = { fg = "#363A4F" },
+	padding = 0,
+}
+
+local file_status = {
+	"filename",
+	file_status = true, -- displays file status (readonly status, modified status)
+	path = 0, -- 0 = just filename, 1 = relative path, 2 = absolute path
+	symbols = {
+		modified = "●", -- Text to show when the file is modified.
+		readonly = "", -- Text to show when the file is non-modifiable or readonly.
+	}, -- Text to show for new created file before first writting
+	padding = { left = 2, right = 1 },
+}
+
+local cursor_pos = {
+	function()
+		local line = vim.fn.line(".")
+		local col = vim.fn.virtcol(".")
+		return ("%d:%-1d"):format(line, col)
+	end,
+	padding = { left = 1, right = 2 },
+}
 
 local config = {
 	sections = {
 		lualine_a = {},
+		lualine_b = { ident_level },
 		lualine_y = {},
-		lualine_b = {
-			{
-				function() -- show identation level
-					local chars = { "▏", "▎", "▍", "▌", "▋", "▊", "▉", "█" }
-					local tab_width = vim.api.nvim_buf_get_option(0, "tabstop")
-					return chars[tab_width] or "█"
-				end,
-				color = { bg = "#363A4F" },
-				padding = 0,
-			},
-		},
-		lualine_z = {
-			{
-				function() -- show current position in file
-					local current_line = vim.fn.line(".")
-					local total_lines = vim.fn.line("$")
-					-- local chars = { " ", "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█" }
-					local chars = { "█", "▇", "▆", "▅", "▄", "▃", "▂", "▁", " " }
-					local line_ratio = current_line / total_lines
-					local index = math.ceil(line_ratio * #chars)
-					return chars[index]
-				end,
-				color = { fg = "#363A4F" },
-				padding = 0,
-			},
-		},
+		lualine_z = { position },
+
 		-- These will be filled later
 		lualine_c = {},
 		lualine_x = {},
 	},
 	inactive_sections = {
-		lualine_c = {
-			{
-				"filename",
-				file_status = true, -- displays file status (readonly status, modified status)
-				path = 0, -- 0 = just filename, 1 = relative path, 2 = absolute path
-				symbols = {
-					modified = "●", -- Text to show when the file is modified.
-					readonly = "", -- Text to show when the file is non-modifiable or readonly.
-				}, -- Text to show for new created file before first writting
-				padding = { left = 2, right = 1 },
-			},
-		},
-		lualine_x = {
-			{
-				function()
-					local line = vim.fn.line(".")
-					local col = vim.fn.virtcol(".")
-					return ("%d:%-1d"):format(line, col)
-				end,
-				padding = { left = 1, right = 2 },
-			},
-		},
+		lualine_c = { file_status },
+		lualine_x = { cursor_pos },
 	},
 }
 
-local ins = {
-	left = function(component) -- insert left
-		table.insert(config.sections.lualine_c, component)
-	end,
-	right = function(component) -- insert right
-		table.insert(config.sections.lualine_x, component)
-	end,
-}
+local ins, conditions = {}, {}
 
-local conditions = {
-	buffer_not_empty = function()
-		return vim.fn.empty(vim.fn.expand("%:t")) ~= 1
-	end,
-	check_git_workspace = function()
-		local filepath = vim.fn.expand("%:p:h")
-		local gitdir = vim.fn.finddir(".git", filepath .. ";")
-		return gitdir and #gitdir > 0 and #gitdir < #filepath
-	end,
-	hide_in_width = function(index)
-		local widths = { 115, 100, 95, 88, 78, 75, 70, 67, 55, 40 }
-		local width = widths[index] or 0 -- fallback to 0
-		return function()
-			return vim.fn.winwidth(0) > width
-		end
-	end,
-}
+function ins.left(component)
+	table.insert(config.sections.lualine_c, component)
+end
+
+function ins.right(component)
+	table.insert(config.sections.lualine_x, component)
+end
+
+function conditions.buffer_not_empty()
+	return vim.fn.empty(vim.fn.expand("%:t")) ~= 1
+end
+
+function conditions.check_git_workspace()
+	local filepath = vim.fn.expand("%:p:h")
+	local gitdir = vim.fn.finddir(".git", filepath .. ";")
+	return gitdir and #gitdir > 0 and #gitdir < #filepath
+end
+
+function conditions.hide_in_width(index)
+	local widths = { 115, 100, 95, 88, 78, 75, 70, 67, 55, 40 }
+	local width = widths[index] or 0 -- fallback to 0
+	return function()
+		return vim.fn.winwidth(0) > width
+	end
+end
 
 ins.left({
 	function() --[[
@@ -150,12 +176,14 @@ ins.left({
 })
 
 ins.left({
+
 	function()
 		if vim.b.copilot_active then
 			return ""
 		end
 		return ""
 	end,
+
 	color = { fg = "#04A5E5" },
 	cond = conditions.hide_in_width(1),
 	padding = { left = 1, right = 0 },
@@ -167,6 +195,7 @@ ins.left({
 })
 
 ins.left({
+
 	"bo:filetype",
 	cond = conditions.hide_in_width(2),
 
@@ -188,7 +217,9 @@ ins.left({
 })
 
 ins.left({
+
 	"encoding",
+
 	fmt = string.upper,
 	cond = conditions.hide_in_width(5),
 })
@@ -199,6 +230,7 @@ ins.left({
 })
 
 ins.left({
+
 	function()
 		if vim.bo.modified then
 			return "●" -- file modified
@@ -207,6 +239,7 @@ ins.left({
 		end
 		return "" -- normal
 	end,
+
 	color = { fg = "#ce9178" },
 	padding = { left = 1, right = 0 },
 })
@@ -223,7 +256,9 @@ ins.left({
 })
 
 ins.left({
+
 	"mode",
+
 	fmt = function(str)
 		-- stylua: ignore
 		local map = {
@@ -240,6 +275,7 @@ ins.left({
 		end
 		return "-- " .. mode .. " --"
 	end,
+
 	color = { gui = "bold" },
 	cond = conditions.hide_in_width(1),
 })
