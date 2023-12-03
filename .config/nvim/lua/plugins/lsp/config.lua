@@ -72,9 +72,32 @@ vim.diagnostic.config({
 		prefix = " ",
 	},
 
-	virtual_text = false,
+	virtual_text = {
+		format = function(diagnostic)
+			local max_len = 50
+
+			local first_line = diagnostic.message:match("[^\n]+")
+
+			if first_line:len() > max_len then
+				return first_line:sub(1, max_len - 3) .. "..."
+			end
+
+			return first_line
+		end,
+	},
 	update_in_insert = false,
 	severity_sort = true,
+})
+
+vim.api.nvim_create_autocmd("ModeChanged", {
+	callback = function()
+		local mode = vim.api.nvim_get_mode()
+		if mode.mode:find("n") then
+			vim.diagnostic.show()
+		else
+			vim.diagnostic.hide()
+		end
+	end,
 })
 
 -- for servers that need custom config
@@ -170,6 +193,7 @@ local config = {
 			capabilities = capabilities,
 			settings = {
 				["rust-analyzer"] = {
+					cargo = { allFeatures = true },
 					check = { command = "clippy" },
 					diagnostics = { experimental = true },
 				},
@@ -179,10 +203,10 @@ local config = {
 }
 
 local signs = {
-	Error = "■", -- ""
-	Warn = "■", -- ""
-	Hint = "■", -- ""
-	Info = "■", -- ""
+	Error = "",
+	Warn = "",
+	Hint = "",
+	Info = "",
 }
 
 for type, icon in pairs(signs) do -- set signs
@@ -193,7 +217,7 @@ end
 local servers = require("handle").lsp_servers or {}
 local vscode_extracted = { "html", "cssls", "eslint", "jsonls" }
 
--- reqiure all servers
+-- require all servers
 for _, server in pairs(servers) do
 	if config[server] == nil then
 		config[server] = {}
