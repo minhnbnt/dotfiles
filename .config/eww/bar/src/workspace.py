@@ -9,16 +9,19 @@ OTHER_ICON = ""
 def print_widget(visible_workspaces, active_workspace):
     visible_workspaces = set(visible_workspaces)
 
-    print(f"(eventbox :onscroll 'python3 {__file__}", "{}'", end=" ")
+    print(f'(eventbox :onscroll "python3 {__file__!r}', '{}"', end=" ")
     print('(box :class "works" :orientation "v" :space-evenly false', end="")
 
-    for id, icon in enumerate(ICONS):
-        id += 1
-
+    def print_button(id, button_class, icon):
         print(f' (button :tooltip "Workspace {id}"', end=" ")
 
         print(f':onclick "hyprctl dispatch workspace {id}"', end=" ")
         print(f':onrightclick "hyprctl dispatch workspace {id}"', end=" ")
+
+        print(f':class "{button_class}" "{icon}"', end=")")
+
+    for id, icon in enumerate(ICONS):
+        id += 1
 
         button_class = "inactive"
 
@@ -29,24 +32,21 @@ def print_widget(visible_workspaces, active_workspace):
         if id == active_workspace:
             button_class = "active"
 
-        print(f':class "{button_class}" "{icon}"', end=")")
+        print_button(id, button_class, icon)
 
     for id in sorted(visible_workspaces):
-        print(f' (button :tooltip "Workspace {id}"', end=" ")
+        button_class = "inactive"
 
-        print(f':onclick "hyprctl dispatch workspace {id}"', end=" ")
-        print(f':onrightclick "hyprctl dispatch workspace {id}"', end=" ")
+        if id == active_workspace:
+            button_class = "active"
 
-        button_class = "active" if id == active_workspace else "visible"
-
-        print(f':class "{button_class}" "{OTHER_ICON}"', end=")")
+        print_button(id, button_class, OTHER_ICON)
 
     print("))", flush=True)
 
 
 def init_widget():
     command = ["hyprctl", "workspaces", "-j"]
-
     output = subprocess.check_output(command)
 
     visible_workspaces = set()
@@ -55,6 +55,7 @@ def init_widget():
 
     command[1] = "activeworkspace"
     output = subprocess.check_output(command)
+
     active_workspace = json.loads(output)["id"]
 
     return visible_workspaces, active_workspace
@@ -109,9 +110,7 @@ with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
     args_handle(sys.argv)
 
     signature = os.environ["HYPRLAND_INSTANCE_SIGNATURE"]
-    sever_address = f"/tmp/hypr/{signature}/.socket2.sock"
-
-    sock.connect(sever_address)
+    sock.connect(f"/tmp/hypr/{signature}/.socket2.sock")
 
     visible_workspaces, active_workspace = init_widget()
     print_widget(visible_workspaces, active_workspace)
