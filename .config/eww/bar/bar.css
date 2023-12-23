@@ -1,5 +1,5 @@
 * {
-	all: unset; // Unsets everything so you can style everything from scratch
+	all: unset; /* Unsets everything so you can style everything from scratch */
 	font-size: 22px;
 }
 
@@ -26,7 +26,7 @@ tooltip label {
 
 .bar {
 	border-radius: 10px;
-	background-color: rgba(#1e1e2e, 0.75);
+	background-color: rgba(30, 30, 46, 0.75);
 	padding: 4px;
 }
 
@@ -57,11 +57,11 @@ tooltip label {
 
 .visible:hover,
 .inactive:hover {
-	color: #c7c8fc;
+	color: #84b0e3;
 }
 
 .active {
-	color: #89b4fa;
+	color: #669df6;
 }
 
 .visible {
