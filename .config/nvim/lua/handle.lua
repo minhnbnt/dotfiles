@@ -23,7 +23,7 @@ M.enabled_plugins = {
 	"mrcjkb/rustaceanvim",
 	"L3MON4D3/LuaSnip",
 	"nvimtools/none-ls.nvim",
-	--"zbirenbaum/copilot-cmp",
+	"zbirenbaum/copilot.lua",
 	"hrsh7th/nvim-cmp",
 
 	"nvim-telescope/telescope.nvim",
@@ -32,6 +32,7 @@ M.enabled_plugins = {
 	"HiPhish/rainbow-delimiters.nvim",
 	"nvim-treesitter/nvim-treesitter",
 
+	"folke/which-key.nvim",
 	"rcarriga/nvim-notify",
 	"folke/noice.nvim",
 	"nvim-lualine/lualine.nvim",
@@ -55,6 +56,7 @@ M.lsp_servers = {
 	"html",
 	"jdtls",
 	"jsonls",
+	"omnisharp",
 	"rust_analyzer",
 	"tailwindcss",
 	"tsserver",
