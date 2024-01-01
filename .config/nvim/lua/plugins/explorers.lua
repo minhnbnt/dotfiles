@@ -1,13 +1,32 @@
 local Plug = require("core.functions").plugin
 
 local function open_file_browser()
+	local ok, telescope = pcall(require, "telescope")
+
+	if not ok then
+		return
+	end
+
+	local file_browser = telescope.extensions.file_browser
+
+	if not file_browser then
+		return
+	end
+
 	local current_dir = vim.fn.expand("%:p")
 	local stat = vim.loop.fs_stat(current_dir)
 
-	if stat and stat.type == "directory" then
-		vim.api.nvim_buf_delete(0, { force = true })
-		vim.cmd(":Telescope file_browser hidden=true grouped=true")
+	if not stat or stat.type ~= "directory" then
+		return
 	end
+
+	vim.api.nvim_buf_delete(0, { force = true })
+
+	file_browser.file_browser({
+		path = current_dir,
+		grouped = true,
+		hidden = true,
+	})
 end
 
 return {
@@ -41,9 +60,7 @@ return {
 			vim.g.loaded_netrwPlugin = 1
 
 			vim.api.nvim_create_autocmd({ "QuitPre" }, {
-				callback = function()
-					vim.cmd("NvimTreeClose")
-				end,
+				callback = require("nvim-tree.api").tree.close,
 			})
 		end,
 	}),
