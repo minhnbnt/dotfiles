@@ -1,14 +1,12 @@
 local function server_name()
 	local len = 25 -- more than max length of server name
 
-	local buf_ft = vim.api.nvim_buf_get_option(0, "filetype")
+	local buf_ft = vim.bo.filetype
 	local clients = vim.lsp.get_active_clients()
 
 	if next(clients) == nil then
 		return ""
 	end
-
-	local attached = {} -- list of attached servers
 
 	local function get_attached_names(client)
 		local filetypes = client.config.filetypes or {}
@@ -33,6 +31,8 @@ local function server_name()
 		return attached_names
 	end
 
+	local attached = {} -- list of attached servers
+
 	for _, client in ipairs(clients) do
 		local attached_names = get_attached_names(client)
 		vim.list_extend(attached, attached_names)
@@ -42,7 +42,7 @@ local function server_name()
 
 	local str = table.concat(attached, ", ")
 
-	if #str > len then
+	if str:len() > len then
 		str = str:sub(1, len - 3) .. "..."
 	end
 
@@ -69,16 +69,19 @@ function filetype.update_status()
 end
 
 local ident_level = {
+
 	function()
 		local chars = { "▏", "▎", "▍", "▌", "▋", "▊", "▉", "█" }
 		local tab_width = vim.api.nvim_buf_get_option(0, "tabstop")
 		return chars[tab_width] or "█"
 	end,
+
 	color = { bg = "#363A4F" },
 	padding = 0,
 }
 
 local position = {
+
 	function() -- show current position in file
 		local current_line = vim.fn.line(".")
 		local total_lines = vim.fn.line("$")
@@ -88,6 +91,7 @@ local position = {
 		local index = math.ceil(line_ratio * #chars)
 		return chars[index]
 	end,
+
 	color = { fg = "#363A4F" },
 	padding = 0,
 }
@@ -99,7 +103,7 @@ local file_status = {
 	symbols = {
 		modified = "●", -- Text to show when the file is modified.
 		readonly = "", -- Text to show when the file is non-modifiable or readonly.
-	}, -- Text to show for new created file before first writting
+	}, -- Text to show for new created file before first writing
 	padding = { left = 2, right = 1 },
 }
 
@@ -157,6 +161,25 @@ function conditions.hide_in_width(index)
 	end
 end
 
+local function noice_command()
+	local ok, noice = pcall(require, "noice")
+
+	if not ok then
+		return
+	end
+
+	return {
+
+		noice.api.status.command.get,
+
+		cond = function() -- combine 2 conditions
+			local has_command = noice.api.status.command.has
+			local hide_in_width = conditions.hide_in_width(10)
+			return hide_in_width() and has_command()
+		end,
+	}
+end
+
 ins.left({
 	function() --[[
 		local ft = { "html", "xhtml", "xml", "typescriptreact", "javascriptreact" }
@@ -206,6 +229,7 @@ ins.left({
 		if ts and not vim.tbl_isempty(ts) then
 			return { fg = "#85edb5" }
 		end
+
 		return {}
 	end,
 
@@ -321,18 +345,7 @@ ins.right({
 	cond = conditions.hide_in_width(10),
 })
 
-local has_noice, noice = pcall(require, "noice")
-
-if has_noice then
-	ins.right({
-		noice.api.status.command.get,
-		cond = function() -- combine 2 conditions
-			local has_command = noice.api.status.command.has
-			local hide_in_width = conditions.hide_in_width(10)
-			return hide_in_width() and has_command()
-		end,
-	})
-end
+ins.right(noice_command())
 
 ins.right({
 	function()
