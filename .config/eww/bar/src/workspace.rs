@@ -1,6 +1,6 @@
 use std::collections::BTreeSet;
 use std::env;
-use std::io::{self, BufReader, Read, Write};
+use std::io::{BufReader, Read, Write};
 use std::os::unix::net::UnixStream;
 use std::path::{Path, PathBuf};
 use std::process::{exit, Command};
@@ -29,8 +29,7 @@ pub fn print_workspaces(exec_path: &Path, workspaces: &BTreeSet<u8>, focused: u8
 
 		let mut class = "inactive";
 
-		if workspaces.contains(&index) {
-			workspaces.remove(&index);
+		if workspaces.remove(&index) {
 			class = "visible";
 		}
 
@@ -54,7 +53,7 @@ pub fn print_workspaces(exec_path: &Path, workspaces: &BTreeSet<u8>, focused: u8
 	println!("))");
 }
 
-pub fn main() -> io::Result<()> {
+pub fn main() -> std::io::Result<()> {
 	arg_handle();
 
 	let sock_dir = match env::var("HYPRLAND_INSTANCE_SIGNATURE") {
@@ -79,10 +78,9 @@ pub fn main() -> io::Result<()> {
 	loop {
 		let mut bytes = vec![0; 1024];
 
-		match reader.read(&mut bytes) {
-			Ok(0) | Err(_) => continue,
-			_ => (),
-		};
+		if let Ok(0) | Err(_) = reader.read(&mut bytes) {
+			continue;
+		}
 
 		let buffer = String::from_utf8_lossy(&bytes);
 
@@ -93,9 +91,10 @@ pub fn main() -> io::Result<()> {
 }
 
 pub fn init(sock_dir: &Path) -> Option<(BTreeSet<u8>, u8)> {
+	#[inline]
 	fn get_number(buf: &str) -> u8 {
 		let buf = buf[13 .. 15].trim_end();
-		buf.parse::<u8>().unwrap()
+		buf.parse::<u8>().expect("Failed to parse number.")
 	}
 
 	let mut workspaces: BTreeSet<u8> = BTreeSet::new();
@@ -132,7 +131,7 @@ pub fn init(sock_dir: &Path) -> Option<(BTreeSet<u8>, u8)> {
 pub fn update(buffer: &str, workspaces: &mut BTreeSet<u8>, focused: &mut u8) -> bool {
 	let mut changed = false;
 
-	let get_number = |buf: &str| buf.parse::<u8>().unwrap();
+	let get_number = |buf: &str| buf.parse::<u8>().expect("Failed to parse number.");
 
 	for line in buffer.lines() {
 		if let Some(num) = line.strip_prefix("workspace>>") {
@@ -152,8 +151,7 @@ pub fn update(buffer: &str, workspaces: &mut BTreeSet<u8>, focused: &mut u8) -> 
 		if let Some(num) = line.strip_prefix("destroyworkspace>>") {
 			let destroyed = get_number(num);
 
-			if workspaces.contains(&destroyed) {
-				workspaces.remove(&destroyed);
+			if workspaces.remove(&destroyed) {
 				changed = true;
 			}
 		}
@@ -163,24 +161,22 @@ pub fn update(buffer: &str, workspaces: &mut BTreeSet<u8>, focused: &mut u8) -> 
 }
 
 pub fn arg_handle() {
-	let args: Vec<String> = env::args().collect();
+	let mut arg_it = env::args().skip(1);
 
-	if args.len() == 1 {
-		return;
-	}
+	let Some(arg) = arg_it.next() else { return };
 
-	if args.len() != 2 {
-		panic!("Invalid argument.");
+	if arg_it.next().is_some() {
+		panic!("Too many arguments.");
 	}
 
 	let mut command = Command::new("hyprctl");
 	let mut args_command = vec!["dispatch", "workspace"];
 
-	match args[1].as_str() {
+	match arg.as_str() {
 		"up" => args_command.push("e-1"),
 		"down" => args_command.push("e+1"),
 
-		_ => panic!("Invalid argument."),
+		_ => panic!("Invalid argument: {}", arg),
 	};
 
 	if command.args(args_command).spawn().is_err() {
