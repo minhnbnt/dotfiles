@@ -61,7 +61,7 @@ pub fn main() -> std::io::Result<()> {
 		Err(msg) => panic!("{}", msg),
 	};
 
-	let (mut workspaces, mut focused_workspace) = init(&sock_dir).unwrap();
+	let (mut visible_workspaces, mut focused_workspace) = init(&sock_dir).unwrap();
 
 	let stream_path = format!("{}.socket2.sock", sock_dir.display());
 	println!("; Connecting to: {stream_path}...");
@@ -73,7 +73,7 @@ pub fn main() -> std::io::Result<()> {
 
 	println!("; Succeed!");
 
-	print_workspaces(&exec_path, &workspaces, focused_workspace);
+	print_workspaces(&exec_path, &visible_workspaces, focused_workspace);
 
 	loop {
 		let mut bytes = vec![0; 1024];
@@ -84,8 +84,8 @@ pub fn main() -> std::io::Result<()> {
 
 		let buffer = String::from_utf8_lossy(&bytes);
 
-		if update(&buffer, &mut workspaces, &mut focused_workspace) {
-			print_workspaces(&exec_path, &workspaces, focused_workspace);
+		if update(&buffer, &mut visible_workspaces, &mut focused_workspace) {
+			print_workspaces(&exec_path, &visible_workspaces, focused_workspace);
 		}
 	}
 }
@@ -93,11 +93,11 @@ pub fn main() -> std::io::Result<()> {
 pub fn init(sock_dir: &Path) -> Option<(BTreeSet<u8>, u8)> {
 	#[inline]
 	fn get_number(buf: &str) -> u8 {
-		let buf = buf[13 .. 15].trim_end();
-		buf.parse::<u8>().expect("Failed to parse number.")
+		buf[13 .. 15]
+			.trim_end()
+			.parse::<u8>()
+			.expect("Failed to parse number.")
 	}
-
-	let mut workspaces: BTreeSet<u8> = BTreeSet::new();
 
 	let stream_path = format!("{}.socket.sock", sock_dir.display());
 
@@ -116,16 +116,13 @@ pub fn init(sock_dir: &Path) -> Option<(BTreeSet<u8>, u8)> {
 	stream.write_all(b"workspaces").ok()?;
 	stream.read_to_string(&mut output).ok()?;
 
-	for line in output.lines() {
-		if !line.starts_with("workspace ID") {
-			continue;
-		}
+	let visible_workspaces: BTreeSet<u8> = output
+		.lines()
+		.filter(|line| line.starts_with("workspace ID"))
+		.map(get_number)
+		.collect();
 
-		let workspace_id = get_number(line);
-		workspaces.insert(workspace_id);
-	}
-
-	Some((workspaces, focused))
+	Some((visible_workspaces, focused))
 }
 
 pub fn update(buffer: &str, workspaces: &mut BTreeSet<u8>, focused: &mut u8) -> bool {
