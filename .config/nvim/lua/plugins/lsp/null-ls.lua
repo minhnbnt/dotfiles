@@ -4,11 +4,11 @@ local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 local config = {
 	clang_format = {
 		AccessModifierOffset = -4,
+		AlwaysBreakTemplateDeclarations = "Yes",
 		AllowShortBlocksOnASingleLine = "Empty",
 		AllowShortFunctionsOnASingleLine = "Empty",
 		AllowShortIfStatementsOnASingleLine = "AllIfsAndElse",
 		AllowShortLoopsOnASingleLine = true,
-		ColumnLimit = 100,
 		Cpp11BracedListStyle = false,
 		EmptyLineAfterAccessModifier = "Leave",
 		EmptyLineBeforeAccessModifier = "Leave",
@@ -33,7 +33,6 @@ local config = {
 	end,]]
 	rustfmt = function()
 		local config = {
-			max_width = 100,
 			hard_tabs = true,
 			tab_spaces = 4,
 			brace_style = "PreferSameLine",
@@ -60,11 +59,13 @@ null_ls.setup({
 	sources = {
 		code_actions.gitsigns,
 
+		diagnostics.typos,
+
 		formatting.beautysh.with({ extra_args = { "-t", "-i 4" } }),
 		formatting.clang_format.with({ extra_args = { "--style=" .. vim.fn.json_encode(config.clang_format) } }),
 		formatting.gofmt,
 		formatting.prettier.with({ extra_args = { "--use-tabs" } }),
-		formatting.rustfmt.with({ extra_args = { "--config=" .. config.rustfmt() } }),
+		formatting.rustfmt.with({ extra_args = { "--edition=2021", "--config=" .. config.rustfmt() } }),
 		formatting.stylua,
 		formatting.black,
 
@@ -72,6 +73,7 @@ null_ls.setup({
 
 		hover.dictionary,
 	},
+
 	on_attach = function(client, bufnr)
 		if not client.supports_method("textDocument/formatting") then
 			return
@@ -81,9 +83,6 @@ null_ls.setup({
 			group = augroup,
 			buffer = bufnr,
 			callback = function()
-				if not vim.bo.modified then
-					return
-				end
 				vim.lsp.buf.format({
 					filter = function(server)
 						return server.name == "null-ls"
