@@ -33,8 +33,9 @@ return {
 					"nasm -f elf64 $fileName && ld -o $fileNameWithoutExt $fileNameWithoutExt.o",
 					"./$fileNameWithoutExt"
 				),
-				c = get_command("clang $fileName -lm -o $fileNameWithoutExt", "./$fileNameWithoutExt"),
-				cpp = get_command("clang++ $fileName -o $fileNameWithoutExt", "./$fileNameWithoutExt"),
+				c = get_command("cc $fileName -lm -o $fileNameWithoutExt", "./$fileNameWithoutExt"),
+				cpp = get_command("c++ $fileName -o $fileNameWithoutExt", "./$fileNameWithoutExt"),
+				cs = get_command("mcs $fileName", "mono $fileNameWithoutExt.exe"),
 				go = get_command("go build $fileName", "./$fileNameWithoutExt"),
 				html = 'cd "$dir" && live-server --open=$fileName',
 				java = get_command("javac $fileName", "java $fileNameWithoutExt"),
@@ -46,6 +47,12 @@ return {
 				typescript = get_command("tsc $fileName", "node $fileNameWithoutExt.js"),
 			},
 		},
+	}),
+
+	Plug("rest-nvim/rest.nvim", {
+
+		dependencies = { "nvim-lua/plenary.nvim" },
+		opts = {},
 	}),
 
 	Plug("windwp/nvim-autopairs", {
@@ -65,11 +72,10 @@ return {
 
 	Plug("michaelb/sniprun", {
 
+		lazy = true,
 		build = "sh ./install.sh",
 
-		opts = {
-			display = { "NvimNotify" },
-		},
+		opts = { display = { "NvimNotify" } },
 	}),
 
 	Plug("lukas-reineke/indent-blankline.nvim", {
