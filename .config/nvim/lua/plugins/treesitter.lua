@@ -7,6 +7,12 @@ return {
 		main = "rainbow-delimiters.setup",
 
 		opts = {
+
+			query = {
+				javascript = "rainbow-parens",
+				tsx = "rainbow-parens",
+			},
+
 			highlight = {
 				"RainbowDelimiterYellow",
 				"RainbowDelimiterPink",
@@ -32,6 +38,8 @@ return {
 				"c",
 				"cpp",
 				"css",
+				"c_sharp",
+				"go",
 				"html",
 				"java",
 				"javascript",
