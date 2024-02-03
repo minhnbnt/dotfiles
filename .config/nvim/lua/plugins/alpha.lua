@@ -1,6 +1,6 @@
 local M = require("core.functions").create_plug("goolord/alpha-nvim")
 
-M.init = function()
+function M.init()
 	vim.cmd([[
 		augroup _alpha
 			autocmd!
@@ -9,7 +9,7 @@ M.init = function()
 	]])
 end
 
-M.opts = function()
+function M.opts()
 	local dashboard = require("alpha.themes.dashboard")
 	--     
 	dashboard.section.header.val = {
