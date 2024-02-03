@@ -13,6 +13,7 @@ return {
 		dependencies = {
 			"p00f/clangd_extensions.nvim",
 			"mfussenegger/nvim-jdtls",
+			"ranjithshegde/ccls.nvim",
 		},
 
 		config = load("config"),
@@ -20,7 +21,7 @@ return {
 
 	Plug("mrcjkb/rustaceanvim", {
 
-		version = "^3",
+		version = "*",
 		ft = { "rust" },
 	}),
 
@@ -55,8 +56,12 @@ return {
 		config = load("null-ls"),
 	}),
 
-	Plug("zbirenbaum/copilot-cmp", {
-		dependencies = { "zbirenbaum/copilot.lua" },
+	Plug("zbirenbaum/copilot.lua", {
+
+		cmd = "Copilot",
+		event = "InsertEnter",
+
+		dependencies = { "zbirenbaum/copilot-cmp" },
 		config = load("copilot"),
 	}),
 
