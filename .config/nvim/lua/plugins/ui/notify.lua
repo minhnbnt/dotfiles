@@ -8,11 +8,3 @@ require("notify").setup({
 		return math.floor(vim.o.columns * 0.75)
 	end,
 })
-
-function vim.notify(msg, ...)
-	if msg:match("warning: multiple different client offset_encodings") then
-		return
-	end
-
-	require("notify")(msg, ...)
-end
