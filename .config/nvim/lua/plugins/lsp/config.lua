@@ -1,6 +1,6 @@
 -- for servers that need custom setup function(opts)
 local init = {
-	-- ccls = require("ccls").setup,
+	ccls = require("ccls").setup,
 	clangd = function(opts)
 		require("lspconfig")["clangd"].setup(opts.server)
 		require("clangd_extensions").setup(opts.extensions)
@@ -22,39 +22,7 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.documentFormattingProvider = false
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
--- Mappings.
--- See `:help vim.diagnostic.*` for documentation on any of the below functions
-local opts = { noremap = true, silent = true }
-vim.keymap.set("n", "<space>e", vim.diagnostic.open_float, opts)
-vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
-vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
-vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist, opts)
--- Use an on_attach function to only map the following keys
--- after the language server attaches to the current buffer
-local function on_attach(client, bufnr)
-	-- Enable completion triggered by <c-x><c-o>
-	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
-	-- Mappings.
-	-- See `:help vim.lsp.*` for documentation on any of the below functions
-	local bufopts = { noremap = true, silent = true, buffer = bufnr }
-	vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
-	vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
-	vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
-	vim.keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts)
-	vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, bufopts)
-	vim.keymap.set("n", "<space>wa", vim.lsp.buf.add_workspace_folder, bufopts)
-	vim.keymap.set("n", "<space>wr", vim.lsp.buf.remove_workspace_folder, bufopts)
-	vim.keymap.set("n", "<space>wl", function()
-		print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-	end, bufopts)
-	vim.keymap.set("n", "<space>D", vim.lsp.buf.type_definition, bufopts)
-	vim.keymap.set("n", "<space>rn", vim.lsp.buf.rename, bufopts)
-	vim.keymap.set("n", "<space>ca", vim.lsp.buf.code_action, bufopts)
-	vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
-	vim.keymap.set("n", "<space>f", function()
-		vim.lsp.buf.format({ async = true })
-	end, bufopts)
-end
+vim.lsp.set_log_level("off")
 
 vim.api.nvim_create_autocmd("CursorHold", {
 	callback = function()
@@ -85,33 +53,29 @@ vim.diagnostic.config({
 			return first_line
 		end,
 	},
+
 	update_in_insert = false,
 	severity_sort = true,
-})
-
-vim.api.nvim_create_autocmd("ModeChanged", {
-	callback = function()
-		local mode = vim.api.nvim_get_mode()
-		if mode.mode:find("n") then
-			vim.diagnostic.show()
-		else
-			vim.diagnostic.hide()
-		end
-	end,
 })
 
 -- for servers that need custom config
 local config = {
 	ccls = {
-		init_options = { index = { threads = 0 } },
-		flags = { debounce_text_changes = 150 },
+		lsp = {
+			use_defaults = true,
+			server = {
+				init_options = {
+					index = { threads = 4 },
+					completion = { placeholder = false },
+				},
+				flags = { debounce_text_changes = 150 },
+			},
+		},
 	},
 	clangd = {
 		server = {
 			on_attach = function(client, bufnr)
 				local clang_inlay = require("clangd_extensions.inlay_hints")
-
-				on_attach(client, bufnr)
 
 				clang_inlay.setup_autocmd()
 				clang_inlay.set_inlay_hints()
@@ -130,7 +94,6 @@ local config = {
 	},
 	emmet_ls = {
 		cmd = { "emmet-ls", "--stdio" },
-		filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less" },
 		init_options = { html = { options = { ["bem.enabled"] = true } } },
 	},
 	emmet_language_server = {
@@ -151,10 +114,9 @@ local config = {
 			excludelanguages = {},
 		},
 	},
+	eslint = { settings = { quiet = true } },
 	jdtls = {
 		on_attach = function(client, bufnr)
-			on_attach(client, bufnr)
-
 			-- With `hotcodereplace = 'auto' the debug adapter will try to apply code changes
 			-- you make during a debug session immediately.
 			-- Remove the option if you do not want that.
@@ -185,11 +147,20 @@ local config = {
 			client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
 		end,
 	},
+	omnisharp = {
+		cmd = {
+			"mono",
+			"/home/minhnbnt/.local/bin/OmniSharp/OmniSharp.exe",
+			"--languageserver",
+			"--hostPID",
+			tostring(vim.fn.getpid()),
+		},
+		root_dir = require("lspconfig").util.root_pattern("*.sln", "*.csproj", "project.json", ".git"),
+	},
 	rust_analyzer = {
 		server = {
 			cmd = { "/usr/lib/rustup/bin/rust-analyzer" },
 			standalone = true,
-			on_attach = on_attach,
 			capabilities = capabilities,
 			settings = {
 				["rust-analyzer"] = {
@@ -225,7 +196,6 @@ for _, server in pairs(servers) do
 	if init[server] ~= nil then -- if server needs custom init options
 		init[server](config[server])
 	elseif not vim.tbl_contains(vscode_extracted, server) then
-		config[server].on_attach = on_attach
 		config[server].capabilities = capabilities
 
 		require("lspconfig")[server].setup(config[server])
@@ -237,7 +207,6 @@ for _, server in pairs(vscode_extracted) do
 	if vim.tbl_contains(servers, server) then
 		require("lspconfig")[server].setup({
 			capabilities = capabilities,
-			on_attach = on_attach,
 		})
 	end
 end

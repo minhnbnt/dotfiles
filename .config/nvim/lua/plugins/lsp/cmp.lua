@@ -78,7 +78,7 @@ cmp.setup({
 	completion = {
 		--autocomplete = true,
 		keyword_length = 1,
-		--completeopt = "menu,menuone,noinsert",
+		completeopt = "menu,menuone,noinsert",
 	},
 	matching = {
 		disallow_prefix_unmatching = true,
@@ -109,52 +109,30 @@ cmp.setup({
 			end
 		end, { "i", "s" }),
 		-- changed to select, not insert for safer use
-		["<Up>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
-		["<Down>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
+		["<Up>"] = cmp.mapping.select_prev_item({
+			behavior = cmp.SelectBehavior.Select,
+		}),
+		["<Down>"] = cmp.mapping.select_next_item({
+			behavior = cmp.SelectBehavior.Select,
+		}),
 		--["<Right>"] = cmp.mapping.confirm({ select = true }),
 	}),
 	sources = cmp.config.sources({
-		{ name = "nvim_lsp" },
-		{ name = "path" },
-		--{ name = "vsnip" }, -- For vsnip users.
-		{
-			name = "luasnip",
-			--keyword_length = 3,
-		}, -- For luasnip users.
-		--{ name = "ultisnips" }, -- For ultisnips users.
-		--{ name = "snippy" }, -- For snippy users.
-		--{ name = "omni" },
-		{ name = "tags" },
-		--{ name = "emoji", insert = true }, -- emoji completion
-		{ name = "buffer" },
-		--{ name = "calc" },
-		--{ name = "cmp_tabnine" },
-		{ name = "treesitter" },
-		{ name = "nvim_lua" },
 		{
 			name = "copilot",
-			-- keyword_length = 0,
 			max_item_count = 3,
+			priority = 100,
 		},
-		--{ name = "cmp_ai" },
-		--{ name = "nvim_lsp_signature_help" },
-		--[[{
-			name = "look",
-			keyword_length = 2,
-			option = {
-				convert_case = true,
-				loud = true,
-				--dict = '/usr/share/dict/words'
-			},
-		},]]
-		--[[{
-			name = "spell",
-			option = {
-				keep_all_entries = false,
-				enable_in_context = true,
-			},
-		},]]
+		{ name = "nvim_lsp" },
+		{ name = "luasnip" },
+	}, {
+		{ name = "path" },
+		{ name = "treesitter" },
+		{ name = "buffer" },
+		{ name = "tags" },
+		{ name = "nvim_lua" },
 	}),
+
 	formatting = {
 		fields = { "menu", "abbr", "kind" },
 		format = function(entry, vim_item)
@@ -196,6 +174,7 @@ cmp.setup.cmdline(":", {
 		["<CR>"] = cmp.mapping.confirm({ select = true }),
 		["<Up>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),
 		["<Down>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }),
+		["<Tab>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
 	}),
 	sources = cmp.config.sources({
 		{ name = "path" },

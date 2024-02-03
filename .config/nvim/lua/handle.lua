@@ -23,7 +23,7 @@ M.enabled_plugins = {
 	"mrcjkb/rustaceanvim",
 	"L3MON4D3/LuaSnip",
 	"nvimtools/none-ls.nvim",
-	"zbirenbaum/copilot.lua",
+	-- "zbirenbaum/copilot.lua",
 	"hrsh7th/nvim-cmp",
 
 	"nvim-telescope/telescope.nvim",
@@ -32,6 +32,7 @@ M.enabled_plugins = {
 	"HiPhish/rainbow-delimiters.nvim",
 	"nvim-treesitter/nvim-treesitter",
 
+	"rest-nvim/rest.nvim",
 	"folke/which-key.nvim",
 	"rcarriga/nvim-notify",
 	"folke/noice.nvim",
@@ -44,8 +45,8 @@ M.enabled_plugins = {
 M.lsp_servers = {
 
 	"bashls",
-	--"ccls",
-	"clangd",
+	"ccls",
+	--"clangd",
 	"cmake",
 	"cssls",
 	--"denols",
