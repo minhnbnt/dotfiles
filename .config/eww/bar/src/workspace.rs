@@ -1,79 +1,154 @@
 use std::collections::BTreeSet;
-use std::env;
-use std::io::{BufReader, Read, Write};
 use std::os::unix::net::UnixStream;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::process::{exit, Command};
+use std::{env, io};
 
-pub fn print_workspaces(exec_path: &Path, workspaces: &BTreeSet<u8>, focused: u8) {
-	const OTHER_ICON: &str = "";
-	const ICONS: [&str; 7] = ["", "", "", "", "", "", ""];
+use io::{BufReader, Read, Write};
 
-	print!("(eventbox :onscroll '{} {{}}' ", exec_path.display());
-	print!("(box :class 'works' :orientation 'v' :space-evenly false");
-
-	#[inline]
-	fn print_button(index: u8, class: &str, icon: &str) {
-		print!(" (button :tooltip 'Workspace {}' ", index);
-
-		print!(":onclick 'hyprctl dispatch workspace {}' ", index);
-		print!(":onrightclick 'hyprctl dispatch workspace {}' ", index);
-
-		print!(":class '{}' '{}')", class, icon);
-	}
-
-	let mut workspaces = workspaces.clone();
-
-	for (index, icon) in ICONS.iter().enumerate() {
-		let index = index as u8 + 1;
-
-		let mut class = "inactive";
-
-		if workspaces.remove(&index) {
-			class = "visible";
-		}
-
-		if index == focused {
-			class = "active";
-		}
-
-		print_button(index, class, icon);
-	}
-
-	for index in workspaces {
-		let mut class = "visible";
-
-		if index == focused {
-			class = "active";
-		}
-
-		print_button(index, class, OTHER_ICON);
-	}
-
-	println!("))");
+struct Widget {
+	exec_path: PathBuf,
+	active_workspace: u8,
+	visible_workspaces: BTreeSet<u8>,
 }
 
-pub fn main() -> std::io::Result<()> {
+impl Widget {
+	pub fn print(&self) {
+		const OTHER_ICON: &str = "";
+		const ICONS: [&str; 7] = ["", "", "", "", "", "", ""];
+
+		print!("(eventbox :onscroll '{} {{}}' ", self.exec_path.display());
+		print!("(box :class 'works' :orientation 'v' :space-evenly false");
+
+		#[inline]
+		fn print_button(index: u8, class: &str, icon: &str) {
+			print!(" (button :tooltip 'Workspace {}' ", index);
+
+			print!(":onclick 'hyprctl dispatch workspace {}' ", index);
+			print!(":onrightclick 'hyprctl dispatch workspace {}' ", index);
+
+			print!(":class '{}' '{}')", class, icon);
+		}
+
+		let mut visible = self.visible_workspaces.clone();
+
+		for (index, icon) in ICONS.iter().enumerate() {
+			let index = index as u8 + 1;
+
+			let mut class = "inactive";
+
+			if visible.remove(&index) {
+				class = "visible";
+			}
+
+			if index == self.active_workspace {
+				class = "active";
+			}
+
+			print_button(index, class, icon);
+		}
+
+		for index in visible {
+			let mut class = "visible";
+
+			if index == self.active_workspace {
+				class = "active";
+			}
+
+			print_button(index, class, OTHER_ICON);
+		}
+
+		println!("))");
+	}
+
+	pub fn handle_event(&mut self, events: &str) -> Option<()> {
+		let mut changed = None;
+
+		let get_number = |buf: &str| buf.parse::<u8>().ok();
+
+		for line in events.lines() {
+			if let Some(num) = line.strip_prefix("workspace>>") {
+				self.active_workspace = get_number(num)?;
+				changed = Some(());
+
+				continue;
+			}
+
+			if let Some(num) = line.strip_prefix("createworkspace>>") {
+				self.visible_workspaces.insert(get_number(num)?);
+				changed = Some(());
+
+				continue;
+			}
+
+			if let Some(num) = line.strip_prefix("destroyworkspace>>") {
+				let destroyed = get_number(num)?;
+
+				if self.visible_workspaces.remove(&destroyed) {
+					changed = Some(());
+				}
+			}
+		}
+
+		changed
+	}
+
+	pub fn new(sock_dir: &str) -> io::Result<Self> {
+		#[inline]
+		fn get_number(buf: &str) -> io::Result<u8> {
+			buf[13 .. 15]
+				.trim_end()
+				.parse::<u8>()
+				.map_err(|_| io::Error::other("Failed to parse int"))
+		}
+
+		let stream_path = format!("{}.socket.sock", sock_dir);
+
+		let mut stream = UnixStream::connect(&stream_path)?;
+
+		let mut output = String::new();
+		stream.write_all(b"activeworkspace")?;
+		stream.read_to_string(&mut output)?;
+
+		let focused = get_number(&output)?;
+
+		stream = UnixStream::connect(stream_path)?;
+
+		output.clear();
+		stream.write_all(b"workspaces")?;
+		stream.read_to_string(&mut output)?;
+
+		let visible_workspaces = output
+			.lines()
+			.filter(|line| line.starts_with("workspace ID"))
+			.filter_map(|line| get_number(line).ok())
+			.collect::<BTreeSet<u8>>();
+
+		Ok(Self {
+			visible_workspaces,
+			active_workspace: focused,
+			exec_path: env::current_exe()?,
+		})
+	}
+}
+
+pub fn main() -> io::Result<()> {
 	arg_handle();
 
 	let sock_dir = match env::var("HYPRLAND_INSTANCE_SIGNATURE") {
-		Ok(sig) => PathBuf::from(format!("/tmp/hypr/{}/", sig)),
+		Ok(sig) => format!("/tmp/hypr/{}/", sig),
 		Err(msg) => panic!("{}", msg),
 	};
 
-	let (mut visible_workspaces, mut focused_workspace) = init(&sock_dir).unwrap();
+	let mut widget = Widget::new(&sock_dir).unwrap();
 
-	let stream_path = format!("{}.socket2.sock", sock_dir.display());
-	println!("; Connecting to: {stream_path}...");
+	let stream_path = format!("{}.socket2.sock", sock_dir);
 
 	let stream = UnixStream::connect(stream_path)?;
 	let mut reader = BufReader::new(stream);
 
-	let exec_path: PathBuf = env::current_exe()?;
-
 	println!("; Succeed!");
-
-	print_workspaces(&exec_path, &visible_workspaces, focused_workspace);
+	widget.print();
 
 	loop {
 		let mut bytes = vec![0; 1024];
@@ -84,77 +159,10 @@ pub fn main() -> std::io::Result<()> {
 
 		let buffer = String::from_utf8_lossy(&bytes);
 
-		if update(&buffer, &mut visible_workspaces, &mut focused_workspace) {
-			print_workspaces(&exec_path, &visible_workspaces, focused_workspace);
+		if widget.handle_event(&buffer).is_some() {
+			widget.print();
 		}
 	}
-}
-
-pub fn init(sock_dir: &Path) -> Option<(BTreeSet<u8>, u8)> {
-	#[inline]
-	fn get_number(buf: &str) -> u8 {
-		buf[13 .. 15]
-			.trim_end()
-			.parse::<u8>()
-			.expect("Failed to parse number.")
-	}
-
-	let stream_path = format!("{}.socket.sock", sock_dir.display());
-
-	println!("; Connecting to: {}...", stream_path);
-	let mut stream = UnixStream::connect(&stream_path).ok()?;
-
-	let mut output = String::new();
-	stream.write_all(b"activeworkspace").ok()?;
-	stream.read_to_string(&mut output).ok()?;
-
-	let focused = get_number(&output);
-
-	stream = UnixStream::connect(stream_path).ok()?;
-
-	output.clear();
-	stream.write_all(b"workspaces").ok()?;
-	stream.read_to_string(&mut output).ok()?;
-
-	let visible_workspaces: BTreeSet<u8> = output
-		.lines()
-		.filter(|line| line.starts_with("workspace ID"))
-		.map(get_number)
-		.collect();
-
-	Some((visible_workspaces, focused))
-}
-
-pub fn update(buffer: &str, workspaces: &mut BTreeSet<u8>, focused: &mut u8) -> bool {
-	let mut changed = false;
-
-	let get_number = |buf: &str| buf.parse::<u8>().expect("Failed to parse number.");
-
-	for line in buffer.lines() {
-		if let Some(num) = line.strip_prefix("workspace>>") {
-			*focused = get_number(num);
-			changed = true;
-
-			continue;
-		}
-
-		if let Some(num) = line.strip_prefix("createworkspace>>") {
-			workspaces.insert(get_number(num));
-			changed = true;
-
-			continue;
-		}
-
-		if let Some(num) = line.strip_prefix("destroyworkspace>>") {
-			let destroyed = get_number(num);
-
-			if workspaces.remove(&destroyed) {
-				changed = true;
-			}
-		}
-	}
-
-	changed
 }
 
 pub fn arg_handle() {
