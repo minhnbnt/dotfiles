@@ -1,0 +1,9 @@
+*
+!.config
+!.fonts
+!.termux
+
+!.bashrc
+!.gitignore
+!.xinitrc
+!.zshrc
