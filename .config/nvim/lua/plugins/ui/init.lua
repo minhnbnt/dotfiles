@@ -1,5 +1,3 @@
-local Plug = require("core.functions").plugin
-
 local function load(module)
 	return function()
 		require("plugins.ui." .. module)
@@ -10,21 +8,22 @@ return {
 
 	{ "nvim-tree/nvim-web-devicons" },
 
-	Plug("lewis6991/gitsigns.nvim", {
-
+	{
+		"lewis6991/gitsigns.nvim",
 		opts = {
 			signs = { untracked = { text = "╏" } },
 			preview_config = { border = "rounded" },
 		},
-	}),
+	},
 
-	Plug("rcarriga/nvim-notify", { config = load("notify") }),
+	{ "rcarriga/nvim-notify", config = load("notify") },
 
-	Plug("nvim-lualine/lualine.nvim", { config = load("lualine") }),
+	{ "nvim-lualine/lualine.nvim", config = load("lualine") },
 
-	Plug("luukvbaal/statuscol.nvim", { config = load("statuscol") }),
+	{ "luukvbaal/statuscol.nvim", config = load("statuscol") },
 
-	Plug("folke/noice.nvim", {
+	{
+		"folke/noice.nvim",
 
 		version = "*",
 		event = "VeryLazy",
@@ -35,11 +34,12 @@ return {
 		},
 
 		config = load("noice"),
-	}),
+	},
 
-	Plug("akinsho/bufferline.nvim", {
+	{
+		"akinsho/bufferline.nvim",
 
 		version = "*",
 		config = load("bufferline"),
-	}),
+	},
 }

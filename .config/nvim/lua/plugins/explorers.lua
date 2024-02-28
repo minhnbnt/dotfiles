@@ -31,7 +31,8 @@ end
 
 return {
 
-	Plug("nvim-tree/nvim-tree.lua", {
+	{
+		"nvim-tree/nvim-tree.lua",
 
 		version = "*",
 		lazy = false,
@@ -63,9 +64,10 @@ return {
 				callback = require("nvim-tree.api").tree.close,
 			})
 		end,
-	}),
+	},
 
-	Plug("nvim-telescope/telescope.nvim", {
+	{
+		"nvim-telescope/telescope.nvim",
 
 		branch = "0.1.x",
 
@@ -101,5 +103,5 @@ return {
 				-- borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
 			},
 		},
-	}),
+	},
 }

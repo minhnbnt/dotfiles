@@ -3,13 +3,13 @@ local enabled = require("handle").enabled_plugins
 local M = {}
 
 function M.create_plug(plugin)
-	local rtn = { plugin }
+	local result = { plugin }
 
 	if not vim.tbl_contains(enabled, plugin) then
-		rtn.enabled = false
+		result.enabled = false
 	end
 
-	return rtn
+	return result
 end
 
 function M.plugin(plugin, config)

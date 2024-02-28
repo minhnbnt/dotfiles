@@ -18,11 +18,11 @@ end
 if vim.g.input_method == "fcitx5" and io.open("/usr/bin/fcitx5", "r") ~= nil then
 	IMOff = function()
 		vim.g.im_prev_engine = io.popen("fcitx5-remote -n", "r"):read("*all")
-		os.execute("fcitx5-remote -g keyboard-us")
+		os.execute("fcitx5-remote -s keyboard-us")
 	end
 
 	IMOn = function()
-		os.execute("fcitx5-remote -g " .. vim.g.im_prev_engine)
+		os.execute("fcitx5-remote -s " .. vim.g.im_prev_engine)
 		local current_engine = io.popen("fcitx5-remote -n", "r"):read("*all")
 		if current_engine ~= "keyboard-us" then
 			vim.g.im_prev_engine = current_engine
@@ -39,6 +39,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "WinResized" }, {
 
 		if vim.fn.winwidth(0) < 100 or vim.tbl_contains(ft, vim.bo.filetype) then
 			vim.cmd("se tabstop=2 shiftwidth=2 softtabstop=2")
+			return
 		end
 
 		if vim.tbl_contains(excluded_ft, vim.bo.filetype) then
@@ -46,7 +47,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "WinResized" }, {
 		end
 	end,
 })
-
+--[[
 vim.api.nvim_create_autocmd("CmdlineEnter", {
 	pattern = { "/", "?" },
 	callback = IMOn,
@@ -55,9 +56,7 @@ vim.api.nvim_create_autocmd("CmdlineLeave", {
 	pattern = { "/", "?" },
 	callback = IMOff,
 })
-vim.api.nvim_create_autocmd({ "InsertEnter", "VimLeave" }, {
-	callback = IMOn,
-})
-vim.api.nvim_create_autocmd({ "InsertLeave", "VimEnter" }, {
-	callback = IMOff,
-})
+]]
+
+vim.api.nvim_create_autocmd({ "InsertEnter", "VimLeave" }, { callback = IMOn })
+vim.api.nvim_create_autocmd({ "InsertLeave", "VimEnter" }, { callback = IMOff })

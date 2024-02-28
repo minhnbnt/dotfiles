@@ -1,7 +1,7 @@
 require("bufferline").setup({
 	options = {
 		mode = "Buffers", -- set to "tabs" to only show tabpages instead
-		themable = true, -- allows highlight groups to be overriden i.e. sets highlights as default
+		themable = true, -- allows highlight groups to be overridden i.e. sets highlights as default
 		numbers = "none",
 		indicator = {
 			icon = "┃", -- this should be omitted if indicator style is not 'icon'

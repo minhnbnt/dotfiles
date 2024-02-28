@@ -32,7 +32,7 @@ M.enabled_plugins = {
 	"HiPhish/rainbow-delimiters.nvim",
 	"nvim-treesitter/nvim-treesitter",
 
-	"rest-nvim/rest.nvim",
+	--"rest-nvim/rest.nvim",
 	"folke/which-key.nvim",
 	"rcarriga/nvim-notify",
 	"folke/noice.nvim",
@@ -45,8 +45,8 @@ M.enabled_plugins = {
 M.lsp_servers = {
 
 	"bashls",
-	"ccls",
-	--"clangd",
+	--"ccls",
+	"clangd",
 	"cmake",
 	"cssls",
 	--"denols",
@@ -59,7 +59,7 @@ M.lsp_servers = {
 	"jsonls",
 	"omnisharp",
 	"rust_analyzer",
-	"tailwindcss",
+	--"tailwindcss",
 	"tsserver",
 	"pyright",
 	"lua_ls",

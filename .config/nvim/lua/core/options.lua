@@ -1,10 +1,4 @@
-vim.g.loaded = 1
-vim.g.loaded_netrwPlugin = 1
 vim.g.input_method = ""
---vim.g.input_method = "fcitx5"
-
--- Disable copilot ghost text
-vim.g.copilot_enabled = false
 
 local neovide = {
 	neovide_transparency = 0.85,
@@ -25,9 +19,7 @@ local options = {
 	autoindent = true,
 	tabstop = 2,
 	shiftwidth = 2,
-	smarttab = true,
 	softtabstop = 2,
-	expandtab = false,
 	mouse = "a",
 	title = true,
 	undofile = true,

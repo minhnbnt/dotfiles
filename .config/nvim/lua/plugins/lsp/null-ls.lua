@@ -64,7 +64,7 @@ null_ls.setup({
 		formatting.beautysh.with({ extra_args = { "-t", "-i 4" } }),
 		formatting.clang_format.with({ extra_args = { "--style=" .. vim.fn.json_encode(config.clang_format) } }),
 		formatting.gofmt,
-		formatting.prettier.with({ extra_args = { "--use-tabs" } }),
+		formatting.prettier,
 		formatting.rustfmt.with({ extra_args = { "--edition=2021", "--config=" .. config.rustfmt() } }),
 		formatting.stylua,
 		formatting.black,

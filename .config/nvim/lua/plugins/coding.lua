@@ -1,26 +1,47 @@
 local Plug = require("core.functions").plugin
 
 local function get_command(compile, run)
-	if compile == nil or compile == "" then
-		compile = ""
-	else
-		compile = compile .. " && "
+	return function()
+		local file_dir = vim.fn.expand("%:p:h")
+
+		local input_path = file_dir .. "/input.txt"
+		local run_with_input
+
+		if vim.fn.filereadable(input_path) == 1 then
+			local user_answer = vim.fn.input("Run with " .. input_path .. "? [Y/n]: ", "y")
+
+			while not vim.tbl_contains({ "y", "n" }, user_answer) do
+				user_answer = vim.fn.input("Invalid input [y/n]: ", "y")
+			end
+
+			run_with_input = user_answer == "y"
+		end
+
+		local command
+		if compile == nil then
+			command = run
+		else
+			command = compile .. " && " .. run
+		end
+
+		if run_with_input then
+			command = command .. " < '" .. input_path .. "'"
+		end
+
+		command = "cd $dir && " .. command
+
+		return command
 	end
-
-	return {
-
-		"ulimit -d 524288;", -- limit memory to 512MB
-		'cd "$dir" && ' .. compile .. "if [[ -f input.txt ]];", -- check if input.txt exists
-		'then cat input.txt && printf "Run with input.txt? [Y/n]: "; read answer;', -- ask if user wants to run with input.txt
-		'while [[ $answer != [yYnN] ]]; do printf "Invalid option: "; read answer; done;', -- check if answer is valid
-		"clear; if [[ $answer == [yY] ]]; then " .. run .. " < input.txt;", -- run with input.txt
-		"else " .. run .. "; fi; else " .. run .. "; fi", -- run without input.txt
-	}
 end
 
 return {
 
-	Plug("CRAG666/code_runner.nvim", {
+	{
+		"CRAG666/code_runner.nvim",
+
+		keys = {
+			{ "<leader>cr", "<cmd>RunCode<cr>", desc = "Run Code" },
+		},
 
 		opts = {
 			startinsert = false,
@@ -39,15 +60,35 @@ return {
 				go = get_command("go build $fileName", "./$fileNameWithoutExt"),
 				html = 'cd "$dir" && live-server --open=$fileName',
 				java = get_command("javac $fileName", "java $fileNameWithoutExt"),
-				javascript = get_command(nil, "node $fileName"),
+				javascript = function()
+					local root_dir =
+						require("lspconfig").util.root_pattern("tsconfig.json", "package.json", "jsconfig.json")(
+							vim.loop.cwd()
+						)
+
+					if root_dir == nil then
+						return get_command(nil, "node $fileName")()
+					end
+
+					return "cd " .. root_dir .. " && bun run $end"
+				end,
 				lua = get_command(nil, "lua $fileName"),
 				python = get_command(nil, "python3 -u $fileName"),
-				rust = get_command("rustc $fileName", "./$fileNameWithoutExt"),
+				rust = function()
+					local root_dir =
+						require("lspconfig").util.root_pattern("Cargo.toml", "rust-project.json")(vim.loop.cwd())
+
+					if root_dir == nil then
+						return get_command("rustc $fileName", "./$fileNameWithoutExt")()
+					end
+
+					return "cd " .. root_dir .. " && cargo run $end"
+				end,
 				sh = get_command(nil, "bash $fileName"),
 				typescript = get_command("tsc $fileName", "node $fileNameWithoutExt.js"),
 			},
 		},
-	}),
+	},
 
 	Plug("rest-nvim/rest.nvim", {
 
@@ -68,26 +109,35 @@ return {
 		end,
 	},
 
-	Plug("numToStr/Comment.nvim", { opts = {}, lazy = false }),
+	{ "numToStr/Comment.nvim", opts = {}, lazy = false },
 
-	Plug("michaelb/sniprun", {
+	{
+		"michaelb/sniprun",
 
 		lazy = true,
 		build = "sh ./install.sh",
 
 		opts = { display = { "NvimNotify" } },
-	}),
+	},
 
-	Plug("lukas-reineke/indent-blankline.nvim", {
+	{
+		"folke/zen-mode.nvim",
+		keys = {
+			{ "<leader>z", "<cmd>ZenMode<cr>", desc = "Toggle zen-mode" },
+		},
+		opts = {},
+	},
 
+	{
+		"lukas-reineke/indent-blankline.nvim",
 		main = "ibl",
 
 		opts = function()
 			vim.api.nvim_set_hl(0, "CurrScope", { fg = "#787f96" })
 
-			--[[ local hooks = require("ibl.hooks")
+			local hooks = require("ibl.hooks")
 			hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_tab_indent_level)
-			hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level) ]]
+			hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
 
 			return {
 
@@ -100,5 +150,5 @@ return {
 				},
 			}
 		end,
-	}),
+	},
 }

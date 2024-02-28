@@ -1,10 +1,11 @@
-local Plug = require("core.functions").plugin
-
 return {
 
-	Plug("catppuccin/nvim", {
+	{
+		"catppuccin/nvim",
 
+		enabled = false,
 		main = "catppuccin",
+
 		lazy = false,
 		priority = 1000,
 
@@ -15,9 +16,10 @@ return {
 		opts = {
 			transparent_background = true,
 		},
-	}),
+	},
 
-	Plug("Mofiqul/vscode.nvim", {
+	{
+		"Mofiqul/vscode.nvim",
 
 		init = function()
 			require("vscode").load("dark")
@@ -122,5 +124,5 @@ return {
 				-- use colors from this colorscheme by requiring vscode.colors!
 			},
 		},
-	}),
+	},
 }

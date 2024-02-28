@@ -170,6 +170,10 @@ cmp.setup.cmdline({ "/", "?" }, {
 
 -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline(":", {
+	preselect = "none",
+	completion = {
+		completeopt = "menu,preview,menuone,noselect",
+	},
 	mapping = cmp.mapping.preset.cmdline({
 		["<CR>"] = cmp.mapping.confirm({ select = true }),
 		["<Up>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),

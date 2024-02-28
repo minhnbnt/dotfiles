@@ -1,9 +1,7 @@
-local Plug = require("core.functions").plugin
-
 return {
 
-	Plug("HiPhish/rainbow-delimiters.nvim", {
-
+	{
+		"HiPhish/rainbow-delimiters.nvim",
 		main = "rainbow-delimiters.setup",
 
 		opts = {
@@ -19,9 +17,10 @@ return {
 				"RainbowDelimiterBlue",
 			},
 		},
-	}),
+	},
 
-	Plug("nvim-treesitter/nvim-treesitter", {
+	{
+		"nvim-treesitter/nvim-treesitter",
 
 		build = ":TSUpdate",
 		dependencies = {
@@ -83,5 +82,5 @@ return {
 				},
 			},
 		},
-	}),
+	},
 }
