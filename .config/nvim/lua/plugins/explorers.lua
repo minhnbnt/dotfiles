@@ -1,5 +1,3 @@
-local Plug = require("core.functions").plugin
-
 local function open_file_browser()
 	local ok, telescope = pcall(require, "telescope")
 
@@ -33,6 +31,10 @@ return {
 
 	{
 		"nvim-tree/nvim-tree.lua",
+
+		keys = {
+			{ "<leader>ft", "<cmd>NvimTreeToggle<cr>", desc = "Nvim Tree" },
+		},
 
 		version = "*",
 		lazy = false,
@@ -68,6 +70,11 @@ return {
 
 	{
 		"nvim-telescope/telescope.nvim",
+
+		keys = {
+			{ "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find file" },
+			{ "<leader>fb", "<cmd>Telescope file_browser<cr>", desc = "File Browser" },
+		},
 
 		branch = "0.1.x",
 

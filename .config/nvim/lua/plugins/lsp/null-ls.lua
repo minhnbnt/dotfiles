@@ -1,6 +1,8 @@
 local null_ls = require("null-ls")
 local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
+vim.g.nonels_supress_issue58 = true
+
 local config = {
 	clang_format = {
 		AccessModifierOffset = -4,
@@ -59,7 +61,7 @@ null_ls.setup({
 	sources = {
 		code_actions.gitsigns,
 
-		diagnostics.typos,
+		--diagnostics.typos,
 
 		formatting.beautysh.with({ extra_args = { "-t", "-i 4" } }),
 		formatting.clang_format.with({ extra_args = { "--style=" .. vim.fn.json_encode(config.clang_format) } }),

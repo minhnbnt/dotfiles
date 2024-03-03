@@ -16,6 +16,10 @@ return {
 	{
 		"rcarriga/nvim-dap-ui",
 
+		keys = {
+			{ "<leader>cd", "<cmd>DapUi toggle<cr>", desc = "Open Debugger" },
+		},
+
 		config = function()
 			load("dapui")
 		end,

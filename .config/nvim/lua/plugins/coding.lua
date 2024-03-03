@@ -1,5 +1,3 @@
-local Plug = require("core.functions").plugin
-
 local function get_command(compile, run)
 	return function()
 		local file_dir = vim.fn.expand("%:p:h")
@@ -57,7 +55,15 @@ return {
 				c = get_command("cc $fileName -lm -o $fileNameWithoutExt", "./$fileNameWithoutExt"),
 				cpp = get_command("c++ $fileName -o $fileNameWithoutExt", "./$fileNameWithoutExt"),
 				cs = get_command("mcs $fileName", "mono $fileNameWithoutExt.exe"),
-				go = get_command("go build $fileName", "./$fileNameWithoutExt"),
+				go = function()
+					local root_dir = require("lspconfig").util.root_pattern("go.mod")(vim.loop.cwd())
+
+					if root_dir == nil then
+						return get_command("go build $fileName", "./$fileNameWithoutExt")()
+					end
+
+					return "cd " .. root_dir .. " && go run . $end"
+				end,
 				html = 'cd "$dir" && live-server --open=$fileName',
 				java = get_command("javac $fileName", "java $fileNameWithoutExt"),
 				javascript = function()
@@ -90,16 +96,18 @@ return {
 		},
 	},
 
-	Plug("rest-nvim/rest.nvim", {
-
+	{
+		"rest-nvim/rest.nvim",
+		enabled = false,
 		dependencies = { "nvim-lua/plenary.nvim" },
 		opts = {},
-	}),
+	},
 
-	Plug("windwp/nvim-autopairs", {
+	{
+		"windwp/nvim-autopairs",
 		event = "InsertEnter",
 		opts = {},
-	}),
+	},
 
 	{
 		"antoinemadec/FixCursorHold.nvim",
