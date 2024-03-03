@@ -3,8 +3,8 @@ palette = 'arch'
 command_timeout = 2000
 
 format = """
-[┌─(\\[$username$hostname\\])](line)$directory \
-[(\n[┆](line) $all)$cmd_duration](bright-white)\
+[(\\[$username$hostname\\])](line)$directory \
+[(\n[┆](line) $all)$cmd_duration]()\
 $line_break[└╼](line) $character\
 """
 
@@ -29,9 +29,8 @@ truncation_length = 7
 truncation_symbol = '.../'
 
 [git_branch]
-symbol = ''
-style = "#f05033"
-format = '[$symbol]($style) $branch(:$remote_branch) '
+symbol = '[ ](#f05033)'
+style = ""
 
 [git_status]
 deleted	= '-'

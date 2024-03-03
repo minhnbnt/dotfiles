@@ -69,6 +69,7 @@ function command_not_found_handler {
 	return 127
 }
 
+bindkey -e
 bindkey "^[[3~" delete-char
 
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
@@ -136,7 +137,50 @@ block_pwd=$col_line'['$col_pwd'%~'$col_line']'
 
 eval "$(starship init zsh)"
 
-#PROMPT=$col_line'┌─'$block_cmd_num${PROMPT}'%f%b'
+zle-line-init() {
+	emulate -L zsh
+
+	if [[ $CONTEXT != start ]]; then 
+		return 0
+	fi
+
+	while true; do
+		zle .recursive-edit
+		local -i ret=$?
+
+		if [[ $ret != 0 || $KEYS != $'\4' ]] then
+			break
+		fi
+
+		if [[ ! -o ignore_eof ]]; then
+			exit 0
+		fi
+	done
+
+	local saved_prompt=$PROMPT
+	local saved_rprompt=$RPROMPT
+
+	PROMPT="$bold$col_sh$sh_char$reset "
+	RPROMPT=''
+	zle .reset-prompt
+
+	PROMPT=$saved_prompt
+	RPROMPT=$saved_rprompt
+
+	if (( ret )); then
+		zle .send-break
+	else
+		zle .accept-line
+	fi
+
+	return ret
+}
+
+zle -N zle-line-init
+
+eval "$(zoxide init zsh --cmd cd)"
+
+PROMPT=$col_line'┌─'$block_cmd_num${PROMPT}'%f%b'
 #PS1+=$block_cmd_num$block_err'─'$block_user'─'
 #PS1+=$block_pwd'$vcs_info_msg_0_'
 
@@ -173,7 +217,7 @@ setopt HIST_BEEP                 # Beep when accessing nonexistent history.
 
 # Some of my custom command
 
-neofetch() {/usr/bin/neofetch --stdout --config ~/.config/neofetch/configzsh.conf | sed '/^$/d'}
+fetch() {/usr/bin/fastfetch}
 ls(){/usr/bin/ls -Ahv --color --group-directories-first "$@"}
 matrix(){/usr/bin/neo-matrix -D "$@"}
 
@@ -182,8 +226,10 @@ deadcells(){(sh /mnt/d/Dead\ Cells\ Linux/start.sh "$@" > /dev/null 2>&1 &)}
 undertale(){(sh /mnt/d/Undertale/start.sh "$@" > /dev/null 2>&1 &)}
 gungeon(){(sh /mnt/d/Enter\ the\ Gungeon/start.sh "$@" > /dev/null 2>&1 &)}
 
+brave(){(/usr/bin/brave "$@" > /dev/null 2>&1 &)}
 chrome(){(/usr/bin/google-chrome-stable "$@" > /dev/null 2>&1 &)}
 chromium(){(/usr/bin/chromium %U "$@" > /dev/null 2>&1 &)}
+firefox(){(/usr/bin/firefox "$@" > /dev/null 2>&1 &)}
 
 #vscode(){(/usr/bin/code --no-sandbox --new-window "$@" > /dev/null 2>&1 &)}
 mysql-workbench(){(/usr/bin/mysql-workbench "$@" > /dev/null 2>&1 &)}
@@ -245,5 +291,4 @@ power(){
 	done
 }
 
-neofetch # I use Arch btw
-
+fetch # I use Arch btw
