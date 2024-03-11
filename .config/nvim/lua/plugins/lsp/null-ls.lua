@@ -61,9 +61,9 @@ null_ls.setup({
 	sources = {
 		code_actions.gitsigns,
 
-		--diagnostics.typos,
+		diagnostics.typos,
 
-		formatting.beautysh.with({ extra_args = { "-t", "-i 4" } }),
+		formatting.shfmt,
 		formatting.clang_format.with({ extra_args = { "--style=" .. vim.fn.json_encode(config.clang_format) } }),
 		formatting.gofmt,
 		formatting.prettier,

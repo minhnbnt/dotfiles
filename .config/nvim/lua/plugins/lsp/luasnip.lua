@@ -53,4 +53,21 @@ local cpp = {
 	}),
 }
 
-ls.add_snippets(nil, { cpp = cpp })
+local go = {
+
+	snip({
+		trig = "iferr",
+		namr = "if error",
+		dscr = "Early return error.",
+	}, {
+		text("if err != nil {"),
+		text({ "", "\treturn " }),
+		insert(0, "err"),
+		text({ "", "}" }),
+	}),
+}
+
+ls.add_snippets(nil, {
+	cpp = cpp,
+	go = go,
+})

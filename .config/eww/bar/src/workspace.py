@@ -25,12 +25,12 @@ def print_widget(visible_workspaces, active_workspace):
 
         button_class = "inactive"
 
-        if id in visible_workspaces:
-            button_class = "visible"
-            visible_workspaces.remove(id)
-
         if id == active_workspace:
             button_class = "active"
+        elif id in visible_workspaces:
+            button_class = "visible"
+
+        visible_workspaces.discard(id)
 
         print_button(id, button_class, icon)
 

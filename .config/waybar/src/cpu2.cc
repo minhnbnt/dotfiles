@@ -1,47 +1,37 @@
-// containers
+#include <chrono>
+#include <cstdio>
+#include <fstream>
 #include <string>
+#include <thread>
 #include <vector>
 
-// sleep
-#include <chrono>
-#include <thread>
-
-// i can't use format in <iostream>
-#include <cstdio>
-
-// file streams
-#include <fstream>
-
-// define thermal zone here
 #define ZONE "thermal_zone1"
 
-/* forward declarations
- * these are defined at the bottom of the file */
 float cpu_temp(void);
 float cpu_clock(void);
 float cpu_usage(void);
 
-// return class based on usage percentage
 const char *module_class(float usage) {
 	if (usage < 33) {
 		return "low";
-	} else if (usage < 66) {
+	}
+	if (usage < 66) {
 		return "medium";
-	} else return "high";
+	}
+	return "high";
 }
 
-void json_output(void) {
-	// avoid calling cpu_usage() twice
-	float usage = cpu_usage();
+inline void json_output(void) {
 
-	// JSON format for waybar
+	const float usage = cpu_usage();
+
 	printf("{ \"class\": \"%s\", \"percentage\": %.0f,"
 	       " \"text\": \"%.2fGHz %.3g°C\" }\n",
 	       module_class(usage), usage, cpu_clock(), cpu_temp());
 }
 
-void text_output(void) {
-	printf("%.3g%% %.2fGHz %.0f°C\n", // just print the values
+inline void text_output(void) {
+	printf("%.3g%% %.2fGHz %.0f°C\n", //
 	       cpu_usage(), cpu_clock(), cpu_temp());
 }
 
@@ -52,17 +42,17 @@ int main(int argc, char *argv[]) {
 
 	while (true) {
 
-		// get current time when we start
-		static auto time = std::chrono::system_clock::now();
+		using namespace std::chrono;
+		using namespace std::chrono_literals;
 
-		// increment time by 5 second
-		time += std::chrono::seconds(5);
+		static auto time = system_clock::now();
 
-		json_output(); // print output
+		time += 5s;
 
-		fflush(stdout); // flush stdout to ensure output is print
+		json_output();
 
-		// make sure we sleep until the next 5 second mark
+		fflush(stdout);
+
 		std::this_thread::sleep_until(time);
 	}
 
@@ -71,78 +61,62 @@ int main(int argc, char *argv[]) {
 
 float cpu_clock(void) {
 
-	// temp variables
 	std::string line;
-
-	// read cpuinfo from /proc/cpuinfo
 	std::ifstream ifs("/proc/cpuinfo");
 
-	// calculate average clock speed
-	float sum = 0;      // sum of clock speeds
-	unsigned cores = 0; // number of cores
+	float sum = 0;
+	unsigned cores = 0;
 
-	while (std::getline(ifs, line)) { // read all lines
-		// find line containing "cpu MHz"
-		std::size_t pos = line.find("cpu MHz");
+	while (std::getline(ifs, line)) {
 
-		if (pos != std::string::npos) { // if found
+		const size_t pos = line.find("cpu MHz");
 
-			// add clock speed to sum
-			sum += std::stof(line.substr(pos + 10));
-
-			++cores; // increment core count
+		if (pos == std::string::npos) {
+			continue;
 		}
+
+		sum += std::stof(line.substr(pos + 10));
+
+		++cores;
 	}
 
-	// div by 1000 to convert from MHz to GHz
 	return sum / cores / 1000.0;
 }
 
 float cpu_temp(void) {
 
-	float temp; // store temp here
-
-	// read temp from /sys/class/thermal/<ZONE>/temp
 	std::ifstream ifs("/sys/class/thermal/" ZONE "/temp");
 
-	ifs >> temp; // read temp
+	float temp;
+	ifs >> temp;
 
-	// convert from millidegrees to degrees
 	return temp / 1000.0;
 }
 
 float cpu_usage(void) {
 
-	std::vector<unsigned long long> vals(10);
+	using u128 = __uint128_t;
+	using u64 = unsigned long long;
 
-	/* this variable is static so it retains its value between calls
-	 * looks better than global variables or references, right? :p */
-	static __uint128_t prev_total = 0, prev_idle = 0;
-	// so first time this will not give correct value :0
+	static u128 prev_total = 0, prev_idle = 0;
 
-	// read values from /proc/stat
 	std::ifstream ifs("/proc/stat");
-
-	// ignore cpu_ words
 	ifs.ignore(8, ' ');
 
-	/* read values into array
-	 * and calculate total and idle */
-	__uint128_t total = 0, idle;
+	unsigned long vals[10];
+
+	u128 total = 0, idle;
 	for (int i = 0; i < 10; i++) {
 		ifs >> vals[i];
 		total += vals[i];
 	}
-	// idle = idle + iowait
+
 	idle = vals[3] + vals[4];
 
-	// calculate usage
-	unsigned long idled = idle - prev_idle;
-	unsigned long totald = total - prev_total;
+	const u64 idled = idle - prev_idle;
+	const u64 totald = total - prev_total;
 
-	// update prev values for next call
 	prev_total = total, prev_idle = idle;
 
-	// return usage percentage
 	return 100.0 * (totald - idled) / totald;
 }

@@ -10,14 +10,16 @@ float get_volume(char *mute_status) {
 	FILE *cmd = popen("wpctl get-volume " ID, "r");
 	fscanf(cmd, "Volume: %f %s", &vol, mute_status);
 
+	pclose(cmd);
+
 	return 100 * vol;
 }
 
 const char *get_icon(float vol) {
 	if (vol == 0) return "";
-	else if (vol < 33) return "";
-	else if (vol < 66) return "";
-	else return "";
+	if (vol < 33) return "";
+	if (vol < 66) return "";
+	return "";
 }
 
 int main(int argc, char *argv[]) {

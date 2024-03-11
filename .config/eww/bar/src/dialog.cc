@@ -6,22 +6,22 @@
 #include <gtkmm/main.h>
 #include <gtkmm/messagedialog.h>
 
-class ConfirmDialog : Gtk::MessageDialog {
+class ConfirmDialog : private Gtk::MessageDialog {
 
-	std::string command;
+	const std::string command;
+
 public:
-	ConfirmDialog(const std::string &title, const std::string &message,
-	              const std::string &command)
 
-	    : Gtk::MessageDialog(title, 0, Gtk::MESSAGE_INFO, Gtk::BUTTONS_YES_NO),
+	ConfirmDialog(const std::string &title, const std::string &message, const std::string &command)
+	    : Gtk::MessageDialog(title, false, Gtk::MESSAGE_INFO, Gtk::BUTTONS_YES_NO),
 	      command(command) {
 
-		set_secondary_text(message);
+		this->set_secondary_text(message);
 	}
 
 	void wait_for_response(void) {
 
-		int response = run();
+		const int response = this->run();
 
 		if (response == Gtk::RESPONSE_YES) {
 			system(command.c_str());
@@ -46,7 +46,6 @@ int main(int argc, char *argv[]) {
 		}
 		if (arg == "-c") {
 			++i, command = argv[i];
-			continue;
 		}
 	}
 

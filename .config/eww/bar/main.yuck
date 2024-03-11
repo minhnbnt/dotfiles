@@ -86,7 +86,7 @@
 			        :tooltip { volume["tooltip"] }
 			        :class "vol-icon" { volume["icon"] }))))
 
-(defpoll cal :interval "1s" "~/.config/eww/bar/bin/calendar")
+(deflisten cal "~/.config/eww/bar/bin/calendar")
 (defwidget clock []
 	(box :class "clock"
 		 :orientation "v"

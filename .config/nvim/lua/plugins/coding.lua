@@ -122,7 +122,6 @@ return {
 	{
 		"michaelb/sniprun",
 
-		lazy = true,
 		build = "sh ./install.sh",
 
 		opts = { display = { "NvimNotify" } },

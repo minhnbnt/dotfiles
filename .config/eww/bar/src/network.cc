@@ -54,8 +54,7 @@ std::pair<std::string, bool> get_status(std::string iface) {
 
 		close(fd);
 
-		return { inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr),
-			     false };
+		return { inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr), false };
 	}
 
 	struct iwreq wreq;
@@ -79,16 +78,14 @@ std::pair<std::string, bool> get_status(std::string iface) {
 	int carrier;
 	ifs >> carrier;
 
-	return carrier ? std::make_pair("ethernet", false)
-	               : std::make_pair("disconnected", false);
+	return carrier ? std::make_pair("ethernet", false) : std::make_pair("disconnected", false);
 }
 
 int main(void) {
 
 	const auto interfaces = get_interfaces();
 
-	bool is_connected = false;
-	bool is_wireless = false;
+	bool is_connected = false, is_wireless = false;
 
 	printf("{ \"tooltip\": \"");
 
@@ -96,12 +93,12 @@ int main(void) {
 
 		const std::string &iface = interfaces[i];
 
-		if (i > 0) printf("\\n");
-
 		auto status = get_status(iface);
 		std::string ssid = status.first;
 
 		if (ssid.empty()) continue;
+		// luckily, first is lo
+		if (i > 0) printf("\\n");
 
 		printf("%s: %s", iface.c_str(), ssid.c_str());
 

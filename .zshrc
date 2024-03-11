@@ -72,10 +72,12 @@ function command_not_found_handler {
 bindkey -e
 bindkey "^[[3~" delete-char
 
-source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
-source /usr/share/zsh/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
-source /usr/share/zsh/plugins/zsh-autopair/autopair.zsh
+PLUGINS_DIR=/usr/share/zsh/plugins
+
+source $PLUGINS_DIR/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
+source $PLUGINS_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
+source $PLUGINS_DIR/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+source $PLUGINS_DIR/zsh-autopair/autopair.zsh
 
 ### prompt color ###
 
@@ -123,6 +125,8 @@ ZSH_HIGHLIGHT_STYLES[alias]=fg=13
 ZSH_HIGHLIGHT_STYLES[command]=fg=14
 ZSH_HIGHLIGHT_STYLES[single-hyphen-option]=fg=3
 ZSH_HIGHLIGHT_STYLES[double-hyphen-option]=fg=3
+
+STARSHIP_LOG="error"
 
 block_cmd_num=$col_line'['$col_cmdnum$bold'$cmdcount'$reset$col_line']'
 block_err='%(?,,'$col_line'['$col_err$bold'%?'$reset$col_line'])'

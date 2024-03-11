@@ -58,11 +58,6 @@ symbol="${reset}${bold}${cyan}$(if [[ ${EUID} == 0 ]]; then echo '#'; else echo 
 # Color of command number
 cmd_num="${white}${bold}"
 
-# disable if in console
-if [[ -z $DISPLAY ]] && [[ ! -f /data/data/com.termux/files/usr/bin/termux-info ]]; then
-	sleep 2
-	return
-fi
 # Setup the prompt/prefix for linux terminal
 PS1="${etc_color}┌─[${cmd_num}\#";
 PS1+="${etc_color}]";

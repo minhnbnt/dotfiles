@@ -140,7 +140,7 @@ pub fn main() -> io::Result<()> {
 		Err(msg) => panic!("{}", msg),
 	};
 
-	let mut widget = Widget::new(&sock_dir).unwrap();
+	let mut widget = Widget::new(&sock_dir)?;
 
 	let stream_path = format!("{}.socket2.sock", sock_dir);
 

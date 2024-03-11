@@ -181,9 +181,19 @@ local config = {
 		},
 		root_dir = require("lspconfig").util.root_pattern("*.sln", "*.csproj", "project.json", ".git"),
 	},
+	pylyzer = {
+		on_attach = function(client, bufnr)
+			client.server_capabilities.semanticTokensProvider = nil
+		end,
+		settings = {
+			python = {
+				checkOnType = true,
+				inlayHints = false,
+			},
+		},
+	},
 	rust_analyzer = {
 		server = {
-			cmd = { "/usr/lib/rustup/bin/rust-analyzer" },
 			standalone = true,
 			capabilities = capabilities,
 			settings = {
