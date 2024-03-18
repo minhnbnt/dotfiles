@@ -2,8 +2,8 @@ add_newline = false
 palette = 'arch'
 
 format = """
-[(\\[$username$hostname\\])](line)$directory \
-[(\n[┆](line) $all)$cmd_duration]()\
+[(\\[$username$hostname\\])](line)$directory\
+[(\n[┆](line) $all)]()\
 $line_break[└╼](line) $character\
 """
 
@@ -14,18 +14,15 @@ line = "cyan"
 success_symbol = '[\$](bold bright-cyan)'
 error_symbol = '[\$](bold bright-red)'
 
-[cmd_duration]
-min_time = 0
-
-[line_break]
-disabled = false
-
 [directory]
 style = "bright-purple"
 format = '[[─\[](line)$path[$read_only]($read_only_style)[\]](line)]($style)'
 read_only = " "
-truncation_length = 7
+truncation_length = 15
 truncation_symbol = '.../'
+
+[cmd_duration]
+min_time = 0
 
 [git_branch]
 symbol = '[ ](#f05033)'
@@ -48,7 +45,7 @@ format = '[$ssh_symbol](bold blue)[@](bold 8)[$hostname](bold 12)'
 ssh_only = false
 
 [status]
-format = '[$int]($style)[: $common_meaning$signal_name$maybe_int](#f0c6c6) '
+format = '[$int]($style)[[: ]()$common_meaning$signal_name$maybe_int](#f0c6c6) '
 style = 'bold bright-red'
 map_symbol = true
 disabled = false
