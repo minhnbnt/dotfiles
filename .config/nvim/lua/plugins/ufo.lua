@@ -47,7 +47,6 @@ return {
 	opts = {
 		open_fold_hl_timeout = 150,
 		fold_virt_text_handler = handler,
-		close_fold_kinds = { "imports", "comment" },
 		preview = {
 			win_config = {
 				border = { "", "─", "", "", "", "─", "", "" },

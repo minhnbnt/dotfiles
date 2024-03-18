@@ -294,5 +294,3 @@ power(){
 		esac
 	done
 }
-
-fetch # I use Arch btw
