@@ -16,6 +16,7 @@ local servers = {
 	"omnisharp",
 	"rust_analyzer",
 	--"tailwindcss",
+	"typos_lsp",
 	"tsserver",
 	"pyright",
 	"lua_ls",
@@ -203,6 +204,11 @@ local config = {
 					diagnostics = { experimental = true },
 				},
 			},
+		},
+	},
+	typos_lsp = {
+		init_options = {
+			diagnosticSeverity = "hint",
 		},
 	},
 }

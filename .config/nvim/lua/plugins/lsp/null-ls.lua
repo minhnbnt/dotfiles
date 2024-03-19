@@ -61,13 +61,11 @@ null_ls.setup({
 	sources = {
 		code_actions.gitsigns,
 
-		diagnostics.typos,
-
 		formatting.shfmt,
 		formatting.clang_format.with({ extra_args = { "--style=" .. vim.fn.json_encode(config.clang_format) } }),
 		formatting.gofmt,
 		formatting.prettier,
-		formatting.rustfmt.with({ extra_args = { "--edition=2021", "--config=" .. config.rustfmt() } }),
+		require("none-ls.formatting.rustfmt"),
 		formatting.stylua,
 		formatting.black,
 

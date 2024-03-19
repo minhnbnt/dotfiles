@@ -54,8 +54,9 @@ return {
 
 	{
 		"nvimtools/none-ls.nvim",
-		commit = "2236d2b",
-		dependencies = { "nvim-lua/plenary.nvim" },
+		dependencies = {
+			"nvimtools/none-ls-extras.nvim",
+		},
 		config = load("null-ls"),
 	},
 
