@@ -56,12 +56,11 @@ require("bufferline").setup({
 		show_close_icon = false,
 
 		custom_areas = {
-
 			right = function()
 				local always_visible = false
 
 				local symbols = { error = " ", warn = " ", info = " ", hint = " " }
-				local keys = { "error", "warn", "info" }
+				local keys = { "error", "warn", "info", "hint" }
 
 				local link = {
 					error = "DiagnosticError",

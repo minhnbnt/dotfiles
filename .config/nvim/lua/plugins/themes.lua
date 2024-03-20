@@ -102,6 +102,8 @@ return {
 				NormalFloat = { bg = "NONE" },
 				ModeMsg = { bg = "NONE", bold = true },
 
+				DiagnosticHint = { fg = "#A6D189" },
+
 				RainbowDelimiterYellow = { fg = "#dfcf1d" },
 				RainbowDelimiterPink = { fg = "#ea76cb" },
 				RainbowDelimiterBlue = { fg = "#5480f7" },
