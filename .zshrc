@@ -139,7 +139,9 @@ block_user+=$reset$col_line']'
 
 block_pwd=$col_line'['$col_pwd'%~'$col_line']'
 
+eval $(thefuck --alias)
 eval "$(starship init zsh)"
+eval "$(zoxide init zsh --cmd cd)"
 
 zle-line-init() {
 	emulate -L zsh
@@ -182,7 +184,6 @@ zle-line-init() {
 
 zle -N zle-line-init
 
-eval "$(zoxide init zsh --cmd cd)"
 
 PROMPT=$col_line'┌─'$block_cmd_num${PROMPT}'%f%b'
 #PS1+=$block_cmd_num$block_err'─'$block_user'─'
