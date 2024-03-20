@@ -4,21 +4,7 @@ local active_buffer = "#99d1db"
 
 require("bufferline").setup({
 	options = {
-		mode = "Buffers", -- set to "tabs" to only show tabpages instead
-		themable = true, -- allows highlight groups to be overridden i.e. sets highlights as default
 		numbers = "none",
-		indicator = {
-			icon = "┃", -- this should be omitted if indicator style is not 'icon'
-			style = "none",
-		},
-		modified_icon = "●",
-		max_name_length = 18,
-		max_prefix_length = 15, -- prefix used when a buffer is de-duplicated
-		truncate_names = true, -- whether or not tab names should be truncated
-		tab_size = 18,
-		diagnostics = "none",
-		diagnostics_update_in_insert = false,
-		-- The diagnostics indicator can be set to nil to keep the buffer name highlight but delete the highlighting
 		get_element_icon = function(opt)
 			-- element consists of { filetype: string, path: string, extension: string, directory: string }
 			-- This can be used to change how bufferline fetches the icon for an element e.g. a buffer or a tab.
@@ -64,7 +50,6 @@ require("bufferline").setup({
 			delay = 0,
 			reveal = { "close" },
 		},
-		color_icons = true, -- whether or not to add the filetype icon highlights
 		separator_style = "slant",
 		show_buffer_close_icons = true,
 		show_buffer_icons = true,
@@ -73,9 +58,9 @@ require("bufferline").setup({
 		custom_areas = {
 
 			right = function()
-				local symbols = { error = " ", warn = " ", info = " ", hint = " " }
 				local always_visible = false
 
+				local symbols = { error = " ", warn = " ", info = " ", hint = " " }
 				local keys = { "error", "warn", "info" }
 
 				local link = {
@@ -151,6 +136,10 @@ require("bufferline").setup({
 		pick = {
 			bg = inactive_bg,
 			italic = false,
+		},
+		trunc_marker = {
+			fg = "NONE",
+			bg = separator_color,
 		},
 	},
 })

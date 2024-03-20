@@ -23,18 +23,6 @@ return {
 
 		init = function()
 			require("vscode").load("dark")
-
-			vim.cmd([[
-
-				hi ModeMsg guibg=none gui=bold
-				hi DiagnosticSignHint guifg=#99d1db
-
-				highlight NormalFloat guibg=NONE
-			]])
-
-			vim.api.nvim_set_hl(0, "RainbowDelimiterYellow", { fg = "#dfcf1d" })
-			vim.api.nvim_set_hl(0, "RainbowDelimiterPink", { fg = "#ea76cb" })
-			vim.api.nvim_set_hl(0, "RainbowDelimiterBlue", { fg = "#5480f7" })
 		end,
 
 		opts = {
@@ -44,6 +32,7 @@ return {
 			disable_nvimtree_bg = true,
 
 			color_overrides = {
+
 				vscFront = "#DCE0E8",
 				vscBack = "#1E2030",
 				--
@@ -107,10 +96,15 @@ return {
 				vscBlue = "#7287FD",
 				vscDarkYellow = "#DF8E1D",
 			},
-			-- Override highlight groups (see ./lua/vscode/theme.lua)
+
 			group_overrides = {
-				-- this supports the same val table as vim.api.nvim_set_hl
-				-- use colors from this colorscheme by requiring vscode.colors!
+
+				NormalFloat = { bg = "NONE" },
+				ModeMsg = { bg = "NONE", bold = true },
+
+				RainbowDelimiterYellow = { fg = "#dfcf1d" },
+				RainbowDelimiterPink = { fg = "#ea76cb" },
+				RainbowDelimiterBlue = { fg = "#5480f7" },
 			},
 		},
 	},
