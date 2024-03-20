@@ -1,3 +1,7 @@
+local separator_color = "#565970"
+local inactive_bg = "#232634"
+local active_buffer = "#99d1db"
+
 require("bufferline").setup({
 	options = {
 		mode = "Buffers", -- set to "tabs" to only show tabpages instead
@@ -65,5 +69,88 @@ require("bufferline").setup({
 		show_buffer_close_icons = true,
 		show_buffer_icons = true,
 		show_close_icon = false,
+
+		custom_areas = {
+
+			right = function()
+				local symbols = { error = " ", warn = " ", info = " ", hint = " " }
+				local always_visible = false
+
+				local keys = { "error", "warn", "info" }
+
+				local link = {
+					error = "DiagnosticError",
+					warn = "DiagnosticWarn",
+					info = "DiagnosticInfo",
+					hint = "DiagnosticHint",
+				}
+
+				local result = {}
+				local item_inserted = 0
+				local severity = vim.diagnostic.severity
+
+				local stat = {
+					error = #vim.diagnostic.get(0, { severity = severity.ERROR }),
+					warn = #vim.diagnostic.get(0, { severity = severity.WARN }),
+					info = #vim.diagnostic.get(0, { severity = severity.INFO }),
+					hint = #vim.diagnostic.get(0, { severity = severity.HINT }),
+				}
+
+				for _, key in pairs(keys) do
+					local text = symbols[key] .. stat[key] .. " "
+					if always_visible or stat[key] > 0 then
+						item_inserted = item_inserted + 1
+					else
+						text = ""
+					end
+					table.insert(result, { text = text, link = link[key] })
+				end
+
+				if item_inserted > 0 then
+					table.insert(result, 1, { text = " ", link = "BufferLineSeparatorSelected" })
+				end
+
+				return result
+			end,
+		},
+	},
+
+	highlights = {
+		background = {
+			fg = "NONE",
+			bg = inactive_bg,
+		},
+		close_button = {
+			fg = "NONE",
+			bg = inactive_bg,
+		},
+		fill = {
+			fg = "NONE",
+			bg = separator_color,
+		},
+		buffer_selected = {
+			fg = active_buffer,
+			italic = false,
+		},
+		duplicate = {
+			bg = inactive_bg,
+		},
+		modified = {
+			bg = inactive_bg,
+		},
+		separator = {
+			fg = separator_color,
+			bg = inactive_bg,
+		},
+		separator_selected = {
+			fg = separator_color,
+		},
+		separator_visible = {
+			fg = separator_color,
+		},
+		pick = {
+			bg = inactive_bg,
+			italic = false,
+		},
 	},
 })

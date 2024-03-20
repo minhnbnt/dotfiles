@@ -32,6 +32,7 @@ local options = {
 	--showbreak = "⤹",
 	cmdheight = 0,
 
+	termguicolors = true,
 	guifont = "FiraCode Nerd Font Mono:h10.5",
 	confirm = true,
 	autochdir = true,

@@ -26,15 +26,6 @@ return {
 
 			vim.cmd([[
 
-				hi BufferLineSeparator guifg=#565970 guibg=#232634
-				hi BufferLineSeparatorSelected guifg=#565970
-				hi BufferLineSeparatorVisible guifg=#565970
-				hi BufferLineBackground guibg=#232634
-				hi BufferLineFill guibg=#565970
-				hi BufferLineBufferSelected guifg=#99d1db
-				hi BufferLineCloseButton guibg=#232634
-				hi BufferLineDuplicate guibg=#232634
-				hi BufferLineModified guibg=#232634
 				hi ModeMsg guibg=none gui=bold
 				hi DiagnosticSignHint guifg=#99d1db
 
@@ -47,13 +38,11 @@ return {
 		end,
 
 		opts = {
-			-- Enable transparent background
+
 			transparent = true,
-			-- Enable italic comment
 			italic_comments = false,
-			-- Disable nvim-tree background color
 			disable_nvimtree_bg = true,
-			-- Override colors (see ./lua/vscode/colors.lua)
+
 			color_overrides = {
 				vscFront = "#DCE0E8",
 				vscBack = "#1E2030",

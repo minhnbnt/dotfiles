@@ -1,6 +1,15 @@
 return {
+
 	"folke/which-key.nvim",
 	event = "VeryLazy",
+
+	keys = {
+
+		{ "<leader>bn", "<cmd>bnext<cr>", desc = "Next Buffer" },
+		{ "<leader>bb", "<cmd>bprevious<cr>", desc = "Backward Buffer" },
+
+		{ "<leader>bp", "<cmd>BufferLinePick<cr>", desc = "Buffer Picker" },
+	},
 
 	opts = {
 		window = { border = "rounded" },
@@ -13,8 +22,9 @@ return {
 
 	init = function()
 		require("which-key").register({
-			f = { name = "File" },
+			b = { name = "Buffer" },
 			c = { name = "Code" },
+			f = { name = "File" },
 		}, { prefix = "<leader>" })
 	end,
 }

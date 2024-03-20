@@ -311,6 +311,7 @@ ins.right({
 	cond = conditions.hide_in_width(2),
 })
 
+--[[
 ins.right({
 	"diagnostics",
 	sources = { "nvim_diagnostic" },
@@ -323,6 +324,7 @@ ins.right({
 	update_in_insert = false,
 	always_visible = false,
 })
+]]
 
 ins.right({
 	"branch",

@@ -74,6 +74,7 @@ return {
 		keys = {
 			{ "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find file" },
 			{ "<leader>fb", "<cmd>Telescope file_browser<cr>", desc = "File Browser" },
+			{ "<leader>fo", "<cmd>Telescope oldfiles<cr>", desc = "Old Files" },
 		},
 
 		branch = "0.1.x",
