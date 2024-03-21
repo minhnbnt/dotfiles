@@ -215,6 +215,7 @@ ins.left({
 ins.left({
 	filetype,
 	icon_only = true,
+	padding = { left = 1, right = 0 },
 })
 
 ins.left({

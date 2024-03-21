@@ -58,7 +58,7 @@ return {
 
 	{
 		"akinsho/bufferline.nvim",
-		lazy = false,
+		event = { "BufReadPost", "BufNewFile" },
 
 		keys = {
 			{ "<leader>bp", "<cmd>BufferLinePick<cr>", desc = "Buffer Picker" },
