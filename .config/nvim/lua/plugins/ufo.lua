@@ -33,7 +33,9 @@ local function handler(virtText, lnum, endLnum, width, truncate)
 end
 
 return {
+
 	"kevinhwang91/nvim-ufo",
+	event = { "BufReadPost", "BufNewFile" },
 
 	dependencies = { "kevinhwang91/promise-async" },
 

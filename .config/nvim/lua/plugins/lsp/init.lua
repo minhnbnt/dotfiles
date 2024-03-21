@@ -7,7 +7,26 @@ end
 return {
 
 	{
+		"nvimdev/lspsaga.nvim",
+		event = { "BufReadPost", "BufNewFile" },
+
+		keys = {
+
+			{ "<leader>gd", "<cmd>Lspsaga goto_definition<cr>", desc = "Goto Definition" },
+			{ "<leader>gt", "<cmd>Lspsaga goto_type_definition<cr>", desc = "Goto Type Definition" },
+
+			{ "<leader>lr", "<cmd>Lspsaga rename<cr>", desc = "LSP Rename" },
+		},
+
+		opts = {
+			symbol_in_winbar = { enable = false },
+			lightbulb = { enable = false },
+		},
+	},
+
+	{
 		"neovim/nvim-lspconfig",
+		event = { "BufReadPost", "BufNewFile" },
 
 		dependencies = {
 			"p00f/clangd_extensions.nvim",
@@ -26,6 +45,7 @@ return {
 
 	{
 		"ray-x/lsp_signature.nvim",
+		event = "InsertEnter",
 
 		enabled = true,
 
@@ -41,6 +61,7 @@ return {
 
 	{
 		"L3MON4D3/LuaSnip",
+		lazy = true,
 
 		dependencies = {
 			"rafamadriz/friendly-snippets",
@@ -54,9 +75,12 @@ return {
 
 	{
 		"nvimtools/none-ls.nvim",
+		event = { "BufReadPost", "BufNewFile" },
+
 		dependencies = {
 			"nvimtools/none-ls-extras.nvim",
 		},
+
 		config = load("null-ls"),
 	},
 
@@ -73,6 +97,7 @@ return {
 
 	{
 		"hrsh7th/nvim-cmp",
+		event = { "InsertEnter", "CmdlineEnter" },
 
 		config = load("cmp"),
 

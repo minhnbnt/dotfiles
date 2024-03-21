@@ -2,7 +2,9 @@ local separator_color = "#565970"
 local inactive_bg = "#232634"
 local active_buffer = "#99d1db"
 
-require("bufferline").setup({
+local bufferline = require("bufferline")
+
+bufferline.setup({
 	options = {
 		numbers = "none",
 		get_element_icon = function(opt)
@@ -54,6 +56,10 @@ require("bufferline").setup({
 		show_buffer_close_icons = true,
 		show_buffer_icons = true,
 		show_close_icon = false,
+
+		style_preset = {
+			bufferline.style_preset.no_italic,
+		},
 
 		custom_areas = {
 			right = function()

@@ -3,6 +3,7 @@ return {
 	{
 		"HiPhish/rainbow-delimiters.nvim",
 		main = "rainbow-delimiters.setup",
+		event = { "BufReadPost", "BufNewFile" },
 
 		opts = {
 
@@ -21,6 +22,7 @@ return {
 
 	{
 		"nvim-treesitter/nvim-treesitter",
+		event = { "BufReadPost", "BufNewFile", "VeryLazy" },
 
 		build = ":TSUpdate",
 		dependencies = {

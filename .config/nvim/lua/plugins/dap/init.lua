@@ -6,6 +6,7 @@ return {
 
 	{
 		"mfussenegger/nvim-dap",
+		lazy = true,
 
 		config = function()
 			load("lldb-vscode")
@@ -15,6 +16,8 @@ return {
 
 	{
 		"rcarriga/nvim-dap-ui",
+		dependencies = { "nvim-neotest/nvim-nio" },
+		cmd = "DapUi",
 
 		keys = {
 			{ "<leader>cd", "<cmd>DapUi toggle<cr>", desc = "Open Debugger" },

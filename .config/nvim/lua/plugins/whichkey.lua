@@ -7,8 +7,6 @@ return {
 
 		{ "<leader>bn", "<cmd>bnext<cr>", desc = "Next Buffer" },
 		{ "<leader>bb", "<cmd>bprevious<cr>", desc = "Backward Buffer" },
-
-		{ "<leader>bp", "<cmd>BufferLinePick<cr>", desc = "Buffer Picker" },
 	},
 
 	opts = {
@@ -25,6 +23,8 @@ return {
 			b = { name = "Buffer" },
 			c = { name = "Code" },
 			f = { name = "File" },
+			g = { name = "Goto" },
+			l = { name = "LSP" },
 		}, { prefix = "<leader>" })
 	end,
 }

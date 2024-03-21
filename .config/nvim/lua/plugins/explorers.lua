@@ -1,4 +1,11 @@
 local function open_file_browser()
+	local current_dir = vim.fn.expand("%:p")
+	local stat = vim.loop.fs_stat(current_dir)
+
+	if not stat or stat.type ~= "directory" then
+		return
+	end
+
 	local ok, telescope = pcall(require, "telescope")
 
 	if not ok then
@@ -8,13 +15,6 @@ local function open_file_browser()
 	local file_browser = telescope.extensions.file_browser
 
 	if not file_browser then
-		return
-	end
-
-	local current_dir = vim.fn.expand("%:p")
-	local stat = vim.loop.fs_stat(current_dir)
-
-	if not stat or stat.type ~= "directory" then
 		return
 	end
 
@@ -37,7 +37,6 @@ return {
 		},
 
 		version = "*",
-		lazy = false,
 
 		opts = {
 			sort_by = "case_sensitive",
@@ -70,11 +69,13 @@ return {
 
 	{
 		"nvim-telescope/telescope.nvim",
+		cmd = "Telescope",
 
 		keys = {
 			{ "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find file" },
 			{ "<leader>fb", "<cmd>Telescope file_browser<cr>", desc = "File Browser" },
 			{ "<leader>fo", "<cmd>Telescope oldfiles<cr>", desc = "Old Files" },
+			{ "<leader>fp", "<cmd>Telescope projects<cr>", desc = "Projects" },
 		},
 
 		branch = "0.1.x",
@@ -102,8 +103,6 @@ return {
 			vim.api.nvim_create_autocmd("VimEnter", {
 				callback = open_file_browser,
 			})
-
-			require("telescope").load_extension("file_browser", "fzy_native", "projects")
 		end,
 
 		opts = {

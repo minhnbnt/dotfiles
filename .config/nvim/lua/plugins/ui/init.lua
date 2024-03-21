@@ -6,21 +6,40 @@ end
 
 return {
 
-	{ "nvim-tree/nvim-web-devicons" },
+	{ "nvim-tree/nvim-web-devicons", lazy = true },
+
+	{
+		"stevearc/dressing.nvim",
+		event = "VeryLazy",
+		opts = {},
+	},
 
 	{
 		"lewis6991/gitsigns.nvim",
+		event = { "BufReadPost", "BufNewFile" },
+
 		opts = {
 			signs = { untracked = { text = "╏" } },
 			preview_config = { border = "rounded" },
 		},
 	},
 
-	{ "rcarriga/nvim-notify", config = load("notify") },
+	{
+		"rcarriga/nvim-notify",
+		lazy = true,
+		config = load("notify"),
+	},
 
-	{ "nvim-lualine/lualine.nvim", config = load("lualine") },
+	{
+		"nvim-lualine/lualine.nvim",
+		config = load("lualine"),
+	},
 
-	{ "luukvbaal/statuscol.nvim", config = load("statuscol") },
+	{
+		"luukvbaal/statuscol.nvim",
+		event = { "BufReadPost", "BufNewFile" },
+		config = load("statuscol"),
+	},
 
 	{
 		"folke/noice.nvim",
@@ -39,6 +58,11 @@ return {
 
 	{
 		"akinsho/bufferline.nvim",
+		lazy = false,
+
+		keys = {
+			{ "<leader>bp", "<cmd>BufferLinePick<cr>", desc = "Buffer Picker" },
+		},
 
 		version = "*",
 		config = load("bufferline"),

@@ -36,6 +36,7 @@ return {
 
 	{
 		"CRAG666/code_runner.nvim",
+		event = { "BufReadPost", "BufNewFile" },
 
 		keys = {
 			{ "<leader>cr", "<cmd>RunCode<cr>", desc = "Run Code" },
@@ -117,10 +118,15 @@ return {
 		end,
 	},
 
-	{ "numToStr/Comment.nvim", opts = {}, lazy = false },
+	{
+		"numToStr/Comment.nvim",
+		event = { "BufReadPost", "BufNewFile" },
+		opts = {},
+	},
 
 	{
 		"michaelb/sniprun",
+		event = { "BufReadPost", "BufNewFile" },
 
 		build = "sh ./install.sh",
 
@@ -129,14 +135,17 @@ return {
 
 	{
 		"folke/zen-mode.nvim",
+
 		keys = {
 			{ "<leader>z", "<cmd>ZenMode<cr>", desc = "Toggle zen-mode" },
 		},
+
 		opts = {},
 	},
 
 	{
 		"lukas-reineke/indent-blankline.nvim",
+		event = { "BufReadPost", "BufNewFile" },
 		main = "ibl",
 
 		opts = function()
