@@ -1,0 +1,13 @@
+AccessModifierOffset: 0
+AlwaysBreakTemplateDeclarations: Yes
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+AllowShortLoopsOnASingleLine: true
+Cpp11BracedListStyle: false
+EmptyLineAfterAccessModifier: Leave
+EmptyLineBeforeAccessModifier: Leave
+IncludeBlocks: Regroup
+IndentWidth: 4
+TabWidth: 4
+UseTab: AlignWithSpaces
