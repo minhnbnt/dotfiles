@@ -2,28 +2,36 @@
 
 This is my dotfiles for my Linux. Enjoy to use :)))
 
-## Neovim
+## Install
 
-You need to install [packer.nvim](https://github.com/wbthomason/packer.nvim) for plugins.
+We need git and stow for installation.
 
-```bash
-git clone --depth 1 https://github.com/wbthomason/packer.nvim\
- ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+```sh
+pacman -S git stow
 ```
 
-Open Neovim and enter folowing command.
+Clone my repository.
 
-```vim
-:PackerCompile
-:PackerSync
+```sh
+git clone git@github.com:minhnbnt/dotfiles.git ~/dotfiles
 ```
+
+Then use GNU stow to create symlinks.
+
+```sh
+cd ~/dotfiles
+stow --adopt .
+```
+
+The `stow --adopt` command will create symlinks without overwriting existing files.
+However, it's still recommended to have a backup in case of conflicts.
 
 ## Zsh
 
-If you are using Arch Linux, you can run this command to install plugins.
+You can run this command to install plugins.
 
-```bash
-yay -S zsh-autosuggestions zsh-syntax-highlighting zsh-autocomplete-git zsh-autopair-git
+```sh
+yay -S zsh-autosuggestions zsh-syntax-highlighting zsh-autocomplete zsh-autopair-git
 ```
 
-Or you need to edit plugins path, install manually or disable it.
+Or you need to edit plugins path, then install manually.
