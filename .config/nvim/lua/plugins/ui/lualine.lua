@@ -40,17 +40,17 @@ local function server_name()
 
 	table.sort(attached)
 
-	local str = table.concat(attached, ", ")
+	local result = table.concat(attached, ", ")
 
-	if str:len() > len then
-		str = str:sub(1, len - 3) .. "..."
+	if result:len() > len then
+		result = result:sub(1, len - 3) .. "..."
 	end
 
 	if #attached > 1 then
-		str = "[" .. str .. "]"
+		result = "[" .. result .. "]"
 	end
 
-	return str
+	return result
 end
 
 local filetype = require("lualine.components.filetype")
