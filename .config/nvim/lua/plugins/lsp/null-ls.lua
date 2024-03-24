@@ -59,7 +59,6 @@ local completion = null_ls.builtins.completion
 null_ls.setup({
 	debug = false,
 	sources = {
-		code_actions.gitsigns,
 
 		formatting.shfmt,
 		formatting.clang_format.with({ extra_args = { "--style=" .. vim.fn.json_encode(config.clang_format) } }),

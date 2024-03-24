@@ -50,6 +50,7 @@ capabilities.textDocument.completion.completionItem.snippetSupport = true
 vim.lsp.set_log_level("off")
 
 vim.api.nvim_create_autocmd("CursorHold", {
+	group = vim.api.nvim_create_augroup("float_diagnostic", { clear = true }),
 	callback = function()
 		vim.diagnostic.open_float(nil, { scope = "cursor" })
 	end,

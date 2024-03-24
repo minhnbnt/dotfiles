@@ -10,16 +10,13 @@ end
 require("statuscol").setup({
 	setopt = true,
 	relculright = true,
-	--[[ stylua: ignore
-	ft_ignore = { "dapui_watches", "dapui_stacks", "dapui_breakpoints", "dapui_scopes",
-	              "dapui_console", "dapui_watches", "dap-repl", "NvimTree", "" }, ]]
 
 	bt_ignore = { "nofile", "prompt", "terminal" },
 
 	segments = {
 		{
 			click = "v:lua.ScSa",
-			sign = { namespace = { "gitsigns_extmark_signs_" }, colwidth = 1 },
+			sign = { name = { "Diagnostic" }, colwidth = 1 },
 		},
 		{
 			click = "v:lua.ScLa",
@@ -32,7 +29,7 @@ require("statuscol").setup({
 		},
 		{
 			click = "v:lua.ScSa",
-			sign = { name = { "Diagnostic" }, colwidth = 1 },
+			sign = { namespace = { "gitsigns_extmark_signs_" }, colwidth = 1 },
 		},
 		{
 			text = { builtin.foldfunc },
