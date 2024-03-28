@@ -202,7 +202,12 @@ local config = {
 				["rust-analyzer"] = {
 					cargo = { allFeatures = true },
 					check = { command = "clippy" },
-					diagnostics = { experimental = true },
+					diagnostics = {
+						enable = true,
+						experimental = {
+							enable = true,
+						},
+					},
 				},
 			},
 		},

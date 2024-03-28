@@ -32,6 +32,16 @@ local function get_command(compile, run)
 	end
 end
 
+local function get_root(patterns)
+	local ok, lsp = pcall(require, "lspconfig")
+
+	if not ok then
+		return nil
+	end
+
+	return lsp.util.root_pattern(unpack(patterns))(vim.loop.cwd())
+end
+
 return {
 
 	{
@@ -57,7 +67,7 @@ return {
 				cpp = get_command("c++ $fileName -o $fileNameWithoutExt", "./$fileNameWithoutExt"),
 				cs = get_command("mcs $fileName", "mono $fileNameWithoutExt.exe"),
 				go = function()
-					local root_dir = require("lspconfig").util.root_pattern("go.mod")(vim.loop.cwd())
+					local root_dir = get_root({ "go.mod" })
 
 					if root_dir == nil then
 						return get_command("go build $fileName", "./$fileNameWithoutExt")()
@@ -68,10 +78,7 @@ return {
 				html = 'cd "$dir" && live-server --open=$fileName',
 				java = get_command("javac $fileName", "java $fileNameWithoutExt"),
 				javascript = function()
-					local root_dir =
-						require("lspconfig").util.root_pattern("tsconfig.json", "package.json", "jsconfig.json")(
-							vim.loop.cwd()
-						)
+					local root_dir = get_root({ "tsconfig.json", "package.json", "jsconfig.json" })
 
 					if root_dir == nil then
 						return get_command(nil, "node $fileName")()
@@ -82,8 +89,7 @@ return {
 				lua = get_command(nil, "lua $fileName"),
 				python = get_command(nil, "python3 -u $fileName"),
 				rust = function()
-					local root_dir =
-						require("lspconfig").util.root_pattern("Cargo.toml", "rust-project.json")(vim.loop.cwd())
+					local root_dir = get_root({ "Cargo.toml", "rust-project.json" })
 
 					if root_dir == nil then
 						return get_command("rustc $fileName", "./$fileNameWithoutExt")()
