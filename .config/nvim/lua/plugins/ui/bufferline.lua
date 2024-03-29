@@ -75,28 +75,33 @@ bufferline.setup({
 					hint = "DiagnosticHint",
 				}
 
-				local result = {}
-				local item_inserted = 0
-				local severity = vim.diagnostic.severity
+				local diagnostics = vim.diagnostic.get(0)
 
-				local stat = {
-					error = #vim.diagnostic.get(0, { severity = severity.ERROR }),
-					warn = #vim.diagnostic.get(0, { severity = severity.WARN }),
-					info = #vim.diagnostic.get(0, { severity = severity.INFO }),
-					hint = #vim.diagnostic.get(0, { severity = severity.HINT }),
-				}
-
-				for _, key in pairs(keys) do
-					local text = symbols[key] .. stat[key] .. " "
-					if always_visible or stat[key] > 0 then
-						item_inserted = item_inserted + 1
-					else
-						text = ""
+				local count = { 0, 0, 0, 0 }
+				for _, diagnostic in ipairs(diagnostics) do
+					local namespace = vim.diagnostic.get_namespace(diagnostic.namespace)
+					if vim.startswith(namespace.name, "vim.lsp") then
+						count[diagnostic.severity] = count[diagnostic.severity] + 1
 					end
-					table.insert(result, { text = text, link = link[key] })
 				end
 
-				if item_inserted > 0 then
+				local stat = {
+					error = count[vim.diagnostic.severity.ERROR],
+					warn = count[vim.diagnostic.severity.WARN],
+					info = count[vim.diagnostic.severity.INFO],
+					hint = count[vim.diagnostic.severity.HINT],
+				}
+
+				local result = {}
+
+				for _, key in pairs(keys) do
+					if always_visible or stat[key] > 0 then
+						local text = string.format("%s%d ", symbols[key], stat[key])
+						table.insert(result, { text = text, link = link[key] })
+					end
+				end
+
+				if vim.tbl_count(result) > 0 then
 					table.insert(result, 1, { text = " ", link = "BufferLineSeparatorSelected" })
 				end
 
