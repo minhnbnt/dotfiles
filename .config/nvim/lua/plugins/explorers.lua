@@ -72,8 +72,9 @@ return {
 		cmd = "Telescope",
 
 		keys = {
-			{ "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find file" },
 			{ "<leader>fb", "<cmd>Telescope file_browser<cr>", desc = "File Browser" },
+			{ "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find file" },
+			{ "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live grep" },
 			{ "<leader>fo", "<cmd>Telescope oldfiles<cr>", desc = "Old Files" },
 			{ "<leader>fp", "<cmd>Telescope projects<cr>", desc = "Projects" },
 		},
