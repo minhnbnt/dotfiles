@@ -1,8 +1,6 @@
 local null_ls = require("null-ls")
 local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
-vim.g.nonels_supress_issue58 = true
-
 local config = {
 	clang_format = {
 		AccessModifierOffset = -4,
@@ -67,6 +65,7 @@ null_ls.setup({
 		require("none-ls.formatting.rustfmt"),
 		formatting.stylua,
 		formatting.black,
+		formatting.isort,
 
 		completion.spell,
 

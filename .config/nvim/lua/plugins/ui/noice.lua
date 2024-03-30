@@ -29,6 +29,10 @@ require("noice").setup({
 			filter = { find = "offset_encodings" },
 			opts = { skip = true },
 		},
+		{
+			filter = { find = "}" },
+			opts = { skip = true },
+		},
 	},
 	views = {
 		cmdline_popup = {

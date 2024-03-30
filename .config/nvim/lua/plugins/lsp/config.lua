@@ -1,6 +1,5 @@
 local servers = {
-
-	"bashls",
+	--"bashls",
 	--"ccls",
 	"clangd",
 	"cmake",
@@ -14,6 +13,7 @@ local servers = {
 	"jdtls",
 	"jsonls",
 	"omnisharp",
+	"ruff_lsp",
 	"rust_analyzer",
 	--"tailwindcss",
 	"typos_lsp",
@@ -80,7 +80,7 @@ vim.diagnostic.config({
 		end,
 	},
 
-	update_in_insert = false,
+	update_on_insert = false,
 	severity_sort = true,
 })
 
@@ -192,6 +192,11 @@ local config = {
 				checkOnType = true,
 				inlayHints = false,
 			},
+		},
+	},
+	pyright = {
+		settings = {
+			python = { analysis = { ignore = { "*" } } },
 		},
 	},
 	rust_analyzer = {
