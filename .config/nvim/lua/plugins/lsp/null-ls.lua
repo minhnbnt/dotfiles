@@ -1,5 +1,12 @@
-local null_ls = require("null-ls")
-local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+local M = {
+
+	"nvimtools/none-ls.nvim",
+	event = { "BufReadPost", "BufNewFile" },
+
+	dependencies = {
+		"nvimtools/none-ls-extras.nvim",
+	},
+}
 
 local config = {
 	clang_format = {
@@ -18,19 +25,6 @@ local config = {
 		TabWidth = 4,
 		UseTab = "ForIndentation",
 	},
-	--[[yapf = function()
-		local config = {
-			based_on_style = "pep8",
-			column_limit = 100,
-			indent_width = 4,
-			use_tabs = true,
-		}
-		local rtn = {}
-		for k, v in pairs(config) do
-			table.insert(rtn, string.format("%s: %s", k, v))
-		end
-		return "{ " .. table.concat(rtn, ", ") .. " }"
-	end,]]
 	rustfmt = function()
 		local config = {
 			hard_tabs = true,
@@ -47,48 +41,58 @@ local config = {
 	end,
 }
 
--- sources
-local code_actions = null_ls.builtins.code_actions
-local diagnostics = null_ls.builtins.diagnostics
-local formatting = null_ls.builtins.formatting
-local hover = null_ls.builtins.hover
-local completion = null_ls.builtins.completion
+M.opts = function()
+	local null_ls = require("null-ls")
+	local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
-null_ls.setup({
-	debug = false,
-	sources = {
+	local code_actions = null_ls.builtins.code_actions
+	local diagnostics = null_ls.builtins.diagnostics
+	local formatting = null_ls.builtins.formatting
+	local hover = null_ls.builtins.hover
+	local completion = null_ls.builtins.completion
 
-		formatting.shfmt,
-		formatting.clang_format.with({ extra_args = { "--style=" .. vim.fn.json_encode(config.clang_format) } }),
-		formatting.gofmt,
-		formatting.prettier,
-		require("none-ls.formatting.rustfmt"),
-		formatting.stylua,
-		formatting.black,
-		formatting.isort,
+	return {
+		debug = false,
+		sources = {
 
-		completion.spell,
+			formatting.shfmt,
+			formatting.clang_format.with({
+				extra_args = {
+					"--style=" .. vim.fn.json_encode(config.clang_format),
+				},
+			}),
+			formatting.gofmt,
+			formatting.prettier,
+			require("none-ls.formatting.rustfmt"),
+			formatting.stylua,
+			formatting.black,
+			formatting.isort,
 
-		hover.dictionary,
-	},
+			completion.spell,
 
-	on_attach = function(client, bufnr)
-		if not client.supports_method("textDocument/formatting") then
-			return
-		end
-		vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-		vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-			group = augroup,
-			buffer = bufnr,
-			callback = function()
-				vim.lsp.buf.format({
-					filter = function(server)
-						return server.name == "null-ls"
-					end,
-					timeout_ms = 5000,
-					bufnr = bufnr,
-				})
-			end,
-		})
-	end,
-})
+			hover.dictionary,
+		},
+
+		on_attach = function(client, bufnr)
+			if not client.supports_method("textDocument/formatting") then
+				return
+			end
+			vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+			vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+				group = augroup,
+				buffer = bufnr,
+				callback = function()
+					vim.lsp.buf.format({
+						filter = function(server)
+							return server.name == "null-ls"
+						end,
+						timeout_ms = 5000,
+						bufnr = bufnr,
+					})
+				end,
+			})
+		end,
+	}
+end
+
+return M

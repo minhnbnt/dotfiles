@@ -122,24 +122,6 @@ local config = {
 		cmd = { "emmet-ls", "--stdio" },
 		init_options = { html = { options = { ["bem.enabled"] = true } } },
 	},
-	emmet_language_server = {
-		init_options = {
-			--- @type table<string, any> https://docs.emmet.io/customization/preferences/
-			preferences = {},
-			--- @type "always" | "never" defaults to `"always"`
-			showexpandedabbreviation = "always",
-			--- @type boolean defaults to `true`
-			showabbreviationsuggestions = true,
-			--- @type boolean defaults to `false`
-			showsuggestionsassnippets = true,
-			--- @type table<string, any> https://docs.emmet.io/customization/syntax-profiles/
-			syntaxprofiles = {},
-			--- @type table<string, string> https://docs.emmet.io/customization/snippets/#variables
-			variables = {},
-			--- @type string[]
-			excludelanguages = {},
-		},
-	},
 	eslint = { settings = { quiet = true } },
 	jdtls = {
 		on_attach = function(client, bufnr)
@@ -176,7 +158,7 @@ local config = {
 	omnisharp = {
 		cmd = {
 			"mono",
-			"/home/minhnbnt/.local/bin/OmniSharp/OmniSharp.exe",
+			"$HOME/.local/bin/OmniSharp/OmniSharp.exe",
 			"--languageserver",
 			"--hostPID",
 			tostring(vim.fn.getpid()),

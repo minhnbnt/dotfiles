@@ -1,3 +1,5 @@
+local M = { "nvim-lualine/lualine.nvim" }
+
 local function server_name()
 	local len = 25 -- more than max length of server name
 
@@ -53,21 +55,6 @@ local function server_name()
 	return result
 end
 
-local filetype = require("lualine.components.filetype")
-function filetype.update_status()
-	local modules = require("lualine_require").lazy_require({
-		highlight = "lualine.highlight",
-		utils = "lualine.utils.utils",
-	})
-
-	local ft = vim.fn.expand("%:e")
-	if string.len(ft) == 0 then
-		ft = vim.bo.filetype or ""
-	end
-
-	return modules.utils.stl_escape(ft)
-end
-
 local ident_level = {
 
 	function()
@@ -116,7 +103,7 @@ local cursor_pos = {
 	padding = { left = 1, right = 2 },
 }
 
-local config = {
+M.opts = {
 	sections = {
 		lualine_a = {},
 		lualine_b = { ident_level },
@@ -136,11 +123,11 @@ local config = {
 local ins, conditions = {}, {}
 
 function ins.left(component)
-	table.insert(config.sections.lualine_c, component)
+	table.insert(M.opts.sections.lualine_c, component)
 end
 
 function ins.right(component)
-	table.insert(config.sections.lualine_x, component)
+	table.insert(M.opts.sections.lualine_x, component)
 end
 
 function conditions.buffer_not_empty()
@@ -181,13 +168,7 @@ local function noice_command()
 end
 
 ins.left({
-	function() --[[
-		local ft = { "html", "xhtml", "xml", "typescriptreact", "javascriptreact" }
-		if vim.fn.winwidth(0) < 115 or vim.tbl_contains(ft, vim.bo.filetype) then
-			vim.cmd("se tabstop=2 shiftwidth=2 softtabstop=2")
-		else
-			vim.cmd("se tabstop=4 shiftwidth=4 softtabstop=4")
-		end ]]
+	function()
 		return " "
 	end,
 	padding = 0,
@@ -213,7 +194,7 @@ ins.left({
 })
 
 ins.left({
-	filetype,
+	"filetype",
 	icon_only = true,
 	padding = { left = 1, right = 0 },
 })
@@ -365,7 +346,7 @@ ins.right({
 	padding = 0,
 })
 
-config.options = {
+M.opts.options = {
 	-- disable sections and component separators
 	component_separators = "",
 	section_separators = "",
@@ -404,4 +385,4 @@ config.options = {
 	},
 }
 
-require("lualine").setup(config)
+return M

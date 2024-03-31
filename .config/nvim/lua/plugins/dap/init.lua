@@ -1,7 +1,3 @@
-local function load(module)
-	require("plugins.dap." .. module)
-end
-
 return {
 
 	{
@@ -17,14 +13,19 @@ return {
 		end,
 
 		config = function()
-			load("lldb-vscode")
-			load("debugpy")
+			require("plugins.dap.debugpy")
+			require("plugins.dap.lldb-vscode")
 		end,
 	},
 
 	{
 		"rcarriga/nvim-dap-ui",
-		dependencies = { "nvim-neotest/nvim-nio" },
+
+		dependencies = {
+			"nvim-neotest/nvim-nio",
+			{ "mfussenegger/nvim-dap", lazy = true },
+		},
+
 		cmd = "DapUi",
 
 		keys = {
@@ -32,7 +33,31 @@ return {
 		},
 
 		config = function()
-			load("dapui")
+			local dap, dapui = require("dap"), require("dapui")
+
+			dap.listeners.after.event_initialized["dapui_config"] = function()
+				dapui.open()
+			end
+
+			dap.set_log_level("ERROR")
+
+			vim.api.nvim_create_user_command("DapUi", function(opts)
+				dapui[opts.args]()
+			end, {
+
+				nargs = 1,
+				complete = function()
+					return { "toggle", "open", "close" }
+				end,
+			})
+
+			dapui.setup({
+				icons = {
+					collapsed = "",
+					current_frame = "",
+					expanded = "",
+				},
+			})
 		end,
 	},
 }

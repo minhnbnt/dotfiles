@@ -1,16 +1,17 @@
-local function load(module)
-	return function()
-		require("plugins.ui." .. module)
-	end
-end
-
 return {
+
+	{ import = "plugins.ui.bufferline" },
+	{ import = "plugins.ui.lualine" },
+	{ import = "plugins.ui.noice" },
+	{ import = "plugins.ui.notify" },
+	{ import = "plugins.ui.statuscol" },
 
 	{ "nvim-tree/nvim-web-devicons", lazy = true },
 
 	{
 		"stevearc/dressing.nvim",
 		event = "VeryLazy",
+		enabled = false,
 		opts = {},
 	},
 
@@ -22,49 +23,5 @@ return {
 			signs = { untracked = { text = "╏" } },
 			preview_config = { border = "rounded" },
 		},
-	},
-
-	{
-		"rcarriga/nvim-notify",
-		lazy = true,
-		config = load("notify"),
-	},
-
-	{
-		"nvim-lualine/lualine.nvim",
-		config = load("lualine"),
-	},
-
-	{
-		"luukvbaal/statuscol.nvim",
-		event = { "BufReadPost", "BufNewFile" },
-		config = load("statuscol"),
-	},
-
-	{
-		"folke/noice.nvim",
-
-		enabled = true,
-		version = "*",
-		event = "VeryLazy",
-
-		dependencies = {
-			"MunifTanjim/nui.nvim",
-			"rcarriga/nvim-notify",
-		},
-
-		config = load("noice"),
-	},
-
-	{
-		"akinsho/bufferline.nvim",
-		event = { "BufReadPost", "BufNewFile" },
-
-		keys = {
-			{ "<leader>bp", "<cmd>BufferLinePick<cr>", desc = "Buffer Picker" },
-		},
-
-		version = "*",
-		config = load("bufferline"),
 	},
 }

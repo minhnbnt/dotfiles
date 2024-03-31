@@ -1,4 +1,5 @@
 return {
+
 	"goolord/alpha-nvim",
 
 	init = function()
