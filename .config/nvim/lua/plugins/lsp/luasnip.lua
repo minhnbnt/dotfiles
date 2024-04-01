@@ -11,12 +11,10 @@ local M = {
 	build = "make install_jsregexp",
 }
 
-function M.init()
+function M.config()
 	require("luasnip.loaders.from_vscode").lazy_load()
 	require("luasnip.loaders.from_snipmate").lazy_load()
-end
 
-function M.config()
 	local ls = require("luasnip")
 	-- some shorthands...
 	local snip = ls.snippet

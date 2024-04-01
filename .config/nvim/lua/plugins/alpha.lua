@@ -48,7 +48,7 @@ return {
 			dashboard.button("n", "  New file", ":ene <CR>"),
 			dashboard.button("o", "  Open file", ":Telescope file_browser hidden=true grouped=true <CR>"),
 			dashboard.button("f", "  Find file", ":Telescope find_files hidden=true <CR>"),
-			dashboard.button("p", "  Find project", ":lua require('telescope').extensions.projects.projects() <CR>"),
+			dashboard.button("p", "  Find project", ":Telescope projects <CR>"),
 			dashboard.button("r", "  Recently used files", ":Telescope oldfiles <CR>"),
 			dashboard.button(
 				"c",

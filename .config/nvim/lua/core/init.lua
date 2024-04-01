@@ -4,7 +4,7 @@ local function Lazy_init()
 	-- stylua: ignore
 	if not vim.loop.fs_stat(lazypath) then
 		vim.fn.system({	"git", "clone", "--branch=stable", "--filter=blob:none",
-						"git@github.com:folke/lazy.nvim.git", lazypath })
+		                "git@github.com:folke/lazy.nvim.git", lazypath })
 	end
 
 	vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
