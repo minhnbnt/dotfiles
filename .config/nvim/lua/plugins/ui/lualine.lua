@@ -293,21 +293,6 @@ ins.right({
 	cond = conditions.hide_in_width(2),
 })
 
---[[
-ins.right({
-	"diagnostics",
-	sources = { "nvim_diagnostic" },
-	sections = { "error", "warn", "info", "hint" },
-	symbols = { error = " ", warn = " ", info = " ", hint = " " },
-	-- sections = { "error", "warn", "info" },
-	-- symbols = { error = " ", warn = " ", info = " " },
-	cond = conditions.hide_in_width(7),
-	colored = true,
-	update_in_insert = false,
-	always_visible = false,
-})
-]]
-
 ins.right({
 	"branch",
 	icons_enabled = true,

@@ -2,36 +2,18 @@ local M = {
 	"hrsh7th/nvim-cmp",
 	event = { "InsertEnter", "CmdlineEnter" },
 
-	config = load("cmp"),
-
 	dependencies = {
-		--"onsails/lspkind.nvim",
 		"hrsh7th/cmp-buffer",
 		"hrsh7th/cmp-nvim-lsp",
 		"hrsh7th/cmp-nvim-lua",
 		"octaltree/cmp-look",
 		"hrsh7th/cmp-path",
 		"hrsh7th/cmp-cmdline",
-		--"hrsh7th/cmp-calc",
-		--"f3fora/cmp-spell",
-		--"hrsh7th/cmp-emoji",
 		"saadparwaiz1/cmp_luasnip",
 		"quangnguyen30192/cmp-nvim-tags",
 		"ray-x/cmp-treesitter",
 		"f3fora/cmp-spell",
 		"hrsh7th/cmp-nvim-lsp-document-symbol",
-		--"hrsh7th/cmp-omni",
-		--"hrsh7th/cmp-nvim-lsp-signature-help",
-		--"hrsh7th/cmp-copilot",
-		--"tzachar/cmp-ai",
-		--[[ {
-				"tzachar/cmp-tabnine",
-				build = "./install.sh",
-			}, ]]
-		--"SirVer/ultisnips",
-		--"quangnguyen30192/cmp-nvim-ultisnips",
-		--"dcampos/nvim-snippy",
-		--"dcampos/cmp-snippy",
 	},
 }
 
@@ -92,34 +74,14 @@ end
 function M.config()
 	local cmp, luasnip = require("cmp"), require("luasnip")
 
-	local bordered = cmp.config.window.bordered()
-	bordered.max_height = 25
-
 	cmp.setup({
 		preselect = cmp.PreselectMode.None,
-		sorting = {
-			--[[ comparators = {
-			cmp.config.compare.recently_used,
-			require("clangd_extensions.cmp_scores"),
-			cmp.config.compare.kind,
-			cmp.config.compare.offset,
-			cmp.config.compare.exact,
-			cmp.config.compare.sort_text,
-			cmp.config.compare.length,
-			cmp.config.compare.order,
-		}, ]]
-		},
 		snippet = {
-			-- REQUIRED - you must specify a snippet engine
 			expand = function(args)
-				--vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-				luasnip.lsp_expand(args.body) -- For `luasnip` users.
-				--require("snippy").expand_snippet(args.body) -- For `snippy` users.
-				--vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+				luasnip.lsp_expand(args.body)
 			end,
 		},
 		completion = {
-			--autocomplete = true,
 			keyword_length = 1,
 			completeopt = "menu,menuone,noinsert",
 		},
@@ -128,8 +90,9 @@ function M.config()
 		},
 		window = {
 			completion = cmp.config.window.bordered(),
-			documentation = bordered,
-			-- documentation = { max_height = 30 },
+			documentation = cmp.config.window.bordered({
+				max_height = 25,
+			}),
 		},
 		confirm_opts = {
 			behavior = cmp.ConfirmBehavior.Replace,
@@ -147,6 +110,8 @@ function M.config()
 					cmp.confirm({ select = true })
 				elseif luasnip.expand_or_jumpable() then
 					luasnip.expand_or_jump()
+				elseif luasnip.jumpable(1) then
+					luasnip.jump(1)
 				else
 					fallback()
 				end
@@ -158,7 +123,6 @@ function M.config()
 			["<Down>"] = cmp.mapping.select_next_item({
 				behavior = cmp.SelectBehavior.Select,
 			}),
-			--["<Right>"] = cmp.mapping.confirm({ select = true }),
 		}),
 		sources = cmp.config.sources({
 			{
@@ -168,7 +132,6 @@ function M.config()
 			},
 			{ name = "nvim_lsp" },
 			{ name = "luasnip" },
-		}, {
 			{ name = "path" },
 			{ name = "treesitter" },
 			{ name = "buffer" },

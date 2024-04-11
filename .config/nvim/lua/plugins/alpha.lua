@@ -62,13 +62,7 @@ return {
 		}
 
 		dashboard.section.footer.val = function()
-			--local handle = io.popen("fortune")
-			--if handle == nil then
-			return "It will create a miracle."
-			--end
-			--local fortune = handle:read("*a")
-			--handle:close()
-			--return fortune
+			return { "It will create a miracle." }
 		end
 
 		dashboard.section.footer.opts.hl = "Type"
