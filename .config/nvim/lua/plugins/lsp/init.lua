@@ -4,6 +4,7 @@ return {
 	{ import = "plugins.lsp.copilot" },
 	{ import = "plugins.lsp.null-ls" },
 	{ import = "plugins.lsp.luasnip" },
+	{ import = "plugins.lsp.config" },
 
 	{
 		"nvimdev/lspsaga.nvim",
@@ -25,21 +26,6 @@ return {
 				keys = { quit = "<esc>" },
 			},
 		},
-	},
-
-	{
-		"neovim/nvim-lspconfig",
-		event = { "BufReadPost", "BufNewFile" },
-
-		dependencies = {
-			"p00f/clangd_extensions.nvim",
-			"mfussenegger/nvim-jdtls",
-			"ranjithshegde/ccls.nvim",
-		},
-
-		config = function()
-			require("plugins.lsp.config")
-		end,
 	},
 
 	{
