@@ -11,7 +11,7 @@ local servers = {
 	"jdtls",
 	"jsonls",
 	"omnisharp",
-	"ruff_lsp",
+	--"ruff_lsp",
 	"rust_analyzer",
 	--"tailwindcss",
 	"typos_lsp",
