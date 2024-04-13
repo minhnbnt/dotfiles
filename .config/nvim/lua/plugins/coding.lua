@@ -8,8 +8,8 @@ local function get_command(compile, run)
 		if vim.fn.filereadable(input_path) == 1 then
 			local user_answer = vim.fn.input("Run with " .. input_path .. "? [Y/n]: ", "y")
 
-			while not vim.tbl_contains({ "y", "n" }, user_answer) do
-				user_answer = vim.fn.input("Invalid input [y/n]: ", "y")
+			if not vim.tbl_contains({ "y", "n" }, user_answer) then
+				return nil
 			end
 
 			run_with_input = user_answer == "y"
