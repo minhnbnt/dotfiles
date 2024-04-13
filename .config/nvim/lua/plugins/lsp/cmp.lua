@@ -1,4 +1,5 @@
 local M = {
+
 	"hrsh7th/nvim-cmp",
 	event = { "InsertEnter", "CmdlineEnter" },
 
@@ -6,14 +7,10 @@ local M = {
 		"hrsh7th/cmp-buffer",
 		"hrsh7th/cmp-nvim-lsp",
 		"hrsh7th/cmp-nvim-lua",
-		"octaltree/cmp-look",
 		"hrsh7th/cmp-path",
 		"hrsh7th/cmp-cmdline",
 		"saadparwaiz1/cmp_luasnip",
-		"quangnguyen30192/cmp-nvim-tags",
 		"ray-x/cmp-treesitter",
-		"f3fora/cmp-spell",
-		"hrsh7th/cmp-nvim-lsp-document-symbol",
 	},
 }
 
@@ -135,7 +132,6 @@ function M.config()
 			{ name = "path" },
 			{ name = "treesitter" },
 			{ name = "buffer" },
-			{ name = "tags" },
 			{ name = "nvim_lua" },
 		}),
 

@@ -9,6 +9,9 @@ return {
 
 	keys = {
 		{ "<leader>bp", "<cmd>BufferLinePick<cr>", desc = "Buffer Picker" },
+
+		{ "<leader>bn", "<cmd>bnext<cr>", desc = "Next Buffer" },
+		{ "<leader>bb", "<cmd>bprevious<cr>", desc = "Backward Buffer" },
 	},
 
 	opts = {

@@ -2,15 +2,6 @@ return {
 
 	"goolord/alpha-nvim",
 
-	init = function()
-		vim.cmd([[
-			augroup _alpha
-				autocmd!
-				autocmd User AlphaReady set showtabline=0 | autocmd BufUnload <buffer> set showtabline=2
-			augroup end
-		]])
-	end,
-
 	opts = function()
 		local dashboard = require("alpha.themes.dashboard")
 		--     

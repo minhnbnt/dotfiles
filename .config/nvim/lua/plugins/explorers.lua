@@ -31,6 +31,7 @@ return {
 
 	{
 		"nvim-tree/nvim-tree.lua",
+		cmd = { "NvimTreeOpen", "NvimTreeToggle" },
 
 		keys = {
 			{ "<leader>ft", "<cmd>NvimTreeToggle<cr>", desc = "Nvim Tree" },
@@ -60,10 +61,6 @@ return {
 		init = function()
 			vim.g.loaded_netrw = 1
 			vim.g.loaded_netrwPlugin = 1
-
-			vim.api.nvim_create_autocmd({ "QuitPre" }, {
-				callback = require("nvim-tree.api").tree.close,
-			})
 		end,
 	},
 

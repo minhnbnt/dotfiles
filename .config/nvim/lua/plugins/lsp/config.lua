@@ -34,110 +34,6 @@ end
 return {
 
 	{
-		"neovim/nvim-lspconfig",
-		event = { "BufReadPost", "BufNewFile" },
-
-		dependencies = {},
-
-		config = function(_, opts)
-			local capabilities = opts.capabilities()
-
-			vim.diagnostic.config(opts.diagnostic)
-			vim.lsp.set_log_level(opts.log_level)
-
-			for type, icon in pairs(opts.signs) do -- set signs
-				local hl = "DiagnosticSign" .. type
-				vim.fn.sign_define(hl, { text = icon, texthl = hl })
-			end
-
-			local vscode_extracted = { "html", "cssls", "eslint", "jsonls" }
-
-			-- require all servers
-			for _, server in pairs(servers) do
-				local server_config = get_server_config(server)
-
-				if
-					not vim.tbl_contains(opts.custom_init, server) --
-					and not vim.tbl_contains(vscode_extracted, server)
-				then
-					server_config.capabilities = capabilities
-					require("lspconfig")[server].setup(server_config)
-				end
-			end
-
-			-- for some reason vscode_extracted servers need to be setup after all others
-			for _, server in pairs(vscode_extracted) do
-				if vim.tbl_contains(servers, server) then
-					require("lspconfig")[server].setup({
-						capabilities = capabilities,
-					})
-				end
-			end
-		end,
-
-		opts = {
-
-			log_level = "off",
-
-			signs = {
-				Error = "",
-				Warn = "",
-				Hint = "",
-				Info = "",
-			},
-
-			custom_init = {
-				"ccls",
-				"clangd",
-				"jdtls",
-				"rust_analyzer",
-			},
-
-			diagnostic = {
-
-				float = {
-					focusable = false,
-					close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
-					border = "rounded",
-					source = "always",
-					prefix = " ",
-				},
-
-				virtual_text = {
-					format = function(diagnostic)
-						local max_len = 50
-
-						local first_line = diagnostic.message:match("[^\n]+")
-
-						if first_line:len() > max_len then
-							return first_line:sub(1, max_len - 3) .. "..."
-						end
-
-						return first_line
-					end,
-				},
-
-				underline = true,
-				update_on_insert = false,
-				severity_sort = true,
-			},
-
-			capabilities = function()
-				local capabilities = vim.lsp.protocol.make_client_capabilities()
-				capabilities.textDocument.documentFormattingProvider = false
-				capabilities.textDocument.completion.completionItem.snippetSupport = true
-
-				return capabilities
-			end,
-
-			format = {
-				formatting_options = nil,
-				timeout_ms = nil,
-			},
-		},
-	},
-
-	{
 		"p00f/clangd_extensions.nvim",
 		ft = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
 
@@ -184,6 +80,116 @@ return {
 
 		opts = function()
 			return get_server_config("ccls")
+		end,
+	},
+
+	{
+		"neovim/nvim-lspconfig",
+		event = { "BufReadPost", "BufNewFile" },
+
+		dependencies = {},
+
+		opts = {
+
+			log_level = "off",
+
+			signs = {
+				Error = "",
+				Warn = "",
+				Hint = "",
+				Info = "",
+			},
+
+			custom_init = {
+				"ccls",
+				"clangd",
+				"jdtls",
+				"rust_analyzer",
+			},
+
+			diagnostic = {
+
+				float = {
+					focusable = false,
+					close_events = {
+						"BufLeave",
+						"CursorMoved",
+						"InsertEnter",
+						"FocusLost",
+					},
+					border = "rounded",
+					source = "always",
+					prefix = " ",
+				},
+
+				virtual_text = {
+					format = function(diagnostic)
+						local max_len = 50
+
+						local first_line = diagnostic.message:match("[^\n]+")
+
+						if first_line:len() > max_len then
+							return first_line:sub(1, max_len - 3) .. "..."
+						end
+
+						return first_line
+					end,
+				},
+
+				underline = true,
+				update_on_insert = false,
+				severity_sort = true,
+			},
+
+			capabilities = function()
+				local capabilities = vim.lsp.protocol.make_client_capabilities()
+				capabilities.textDocument.documentFormattingProvider = false
+				capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+				return capabilities
+			end,
+
+			format = {
+				formatting_options = nil,
+				timeout_ms = nil,
+			},
+		},
+
+		config = function(_, opts)
+			local lspconfig = require("lspconfig")
+			local capabilities = opts.capabilities()
+
+			vim.diagnostic.config(opts.diagnostic)
+			vim.lsp.set_log_level(opts.log_level)
+
+			for type, icon in pairs(opts.signs) do -- set signs
+				local hl = "DiagnosticSign" .. type
+				vim.fn.sign_define(hl, { text = icon, texthl = hl })
+			end
+
+			local vscode_extracted = { "html", "cssls", "eslint", "jsonls" }
+
+			-- require all servers
+			for _, server in pairs(servers) do
+				local server_config = get_server_config(server)
+
+				if
+					not vim.tbl_contains(opts.custom_init, server) --
+					and not vim.tbl_contains(vscode_extracted, server)
+				then
+					server_config.capabilities = capabilities
+					lspconfig[server].setup(server_config)
+				end
+			end
+
+			-- for some reason vscode_extracted servers need to be setup after all others
+			for _, server in pairs(vscode_extracted) do
+				if vim.tbl_contains(servers, server) then
+					lspconfig[server].setup({
+						capabilities = capabilities,
+					})
+				end
+			end
 		end,
 	},
 }

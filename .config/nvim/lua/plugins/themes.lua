@@ -1,24 +1,6 @@
 return {
 
 	{
-		"catppuccin/nvim",
-
-		enabled = false,
-		main = "catppuccin",
-
-		lazy = false,
-		priority = 1000,
-
-		init = function()
-			vim.cmd.colorscheme("catppuccin-mocha")
-		end,
-
-		opts = {
-			transparent_background = true,
-		},
-	},
-
-	{
 		"Mofiqul/vscode.nvim",
 
 		init = function()
