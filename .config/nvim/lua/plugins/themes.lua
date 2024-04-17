@@ -86,6 +86,8 @@ return {
 
 				DiagnosticHint = { fg = "#A6D189" },
 
+				CurrScope = { fg = "#787f96" },
+
 				RainbowDelimiterYellow = { fg = "#dfcf1d" },
 				RainbowDelimiterPink = { fg = "#ea76cb" },
 				RainbowDelimiterBlue = { fg = "#5480f7" },

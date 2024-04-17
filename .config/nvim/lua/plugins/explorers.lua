@@ -69,6 +69,7 @@ return {
 		cmd = "Telescope",
 
 		keys = {
+			{ "<leader>bp", "<cmd>Telescope buffers<cr>", desc = "Buffer Picker" },
 			{ "<leader>fb", "<cmd>Telescope file_browser<cr>", desc = "File Browser" },
 			{ "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find file" },
 			{ "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live grep" },
@@ -110,12 +111,13 @@ return {
 				vimgrep_arguments = {
 					"rg",
 					"--color=never",
-					"--no-heading",
-					"--with-filename",
-					"--line-number",
 					"--column",
-					"--smart-case",
+					"--hidden",
+					"--line-number",
+					"--no-heading",
 					"--no-ignore",
+					"--smart-case",
+					"--with-filename",
 				},
 			},
 		},
