@@ -3,6 +3,17 @@ local keymap = vim.api.nvim_set_keymap
 local opts = { noremap = true, silent = true }
 local term_opts = { silent = true }
 
+-- Remap space as leader key
+keymap("", "<Space>", "<Nop>", opts)
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+
+keymap("v", "<leader>y", '"+ygv', {
+	noremap = true,
+	silent = true,
+	desc = "Yank to clipboard",
+})
+
 keymap("v", "<BS>", "<Del>", opts)
 keymap("v", "<C-S-c>", '"+ygv', { noremap = true })
 keymap("t", "<esc>", "<C-\\><C-n>", term_opts)
@@ -13,11 +24,6 @@ keymap("", "<C-y>", "<cmd>:redo<CR>", opts)
 
 -- Save
 keymap("", "<C-s>", "<cmd>:w<CR>", opts)
-
--- Remap space as leader key
-keymap("", "<Space>", "<Nop>", opts)
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
 
 -- Better window navigation
 keymap("n", "<C-h>", "<C-w>h", opts)

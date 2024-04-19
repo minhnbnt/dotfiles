@@ -65,6 +65,31 @@ return {
 	},
 
 	{
+		"nvim-neo-tree/neo-tree.nvim",
+		branch = "v3.x",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-tree/nvim-web-devicons",
+			"MunifTanjim/nui.nvim",
+			"3rd/image.nvim",
+		},
+
+		opts = {
+			sources = { "filesystem", "buffers", "git_status", "document_symbols" },
+			source_selector = {
+				winbar = true,
+				sources = {
+					{ source = "filesystem", display_name = " 󰉓 File " },
+					{ source = "git_status", display_name = " 󰊢 Git " },
+					{ source = "buffers", display_name = " 󰓩 Buf " },
+					{ source = "document_symbols", display_name = "  Sym " },
+				},
+				content_layout = "center",
+			},
+		},
+	},
+
+	{
 		"nvim-telescope/telescope.nvim",
 		cmd = "Telescope",
 
