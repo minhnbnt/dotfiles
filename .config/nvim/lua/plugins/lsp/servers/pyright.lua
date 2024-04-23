@@ -1,5 +1,7 @@
 return {
 	settings = {
-		pyright = { disableOrganizeImports = true },
+		pyright = {
+			disableOrganizeImports = true,
+		},
 	},
 }

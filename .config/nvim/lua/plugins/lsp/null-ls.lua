@@ -57,15 +57,13 @@ M.opts = function()
 
 			formatting.shfmt,
 			formatting.clang_format.with({
-				extra_args = {
-					"--style=" .. vim.fn.json_encode(config.clang_format),
-				},
+				extra_args = { "--style=" .. vim.fn.json_encode(config.clang_format) },
 			}),
 			formatting.gofmt,
 			formatting.prettier,
 			require("none-ls.formatting.rustfmt"),
 			formatting.stylua,
-			formatting.black,
+			require("none-ls.formatting.ruff_format"),
 			formatting.isort,
 
 			completion.spell,
