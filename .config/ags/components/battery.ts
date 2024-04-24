@@ -10,52 +10,52 @@ const HALF_ICON = '\uf242';
 const QUARTER_ICON = '\uf243';
 
 function getIcon() {
-    if (!battery.available) {
-        return SLASH_ICON;
-    }
+	if (!battery.available) {
+		return SLASH_ICON;
+	}
 
-    if (battery.charged) {
-        return PLUGGED_ICON;
-    }
+	if (battery.charged) {
+		return PLUGGED_ICON;
+	}
 
-    if (battery.charging) {
-        return CHARGING_ICON;
-    }
+	if (battery.charging) {
+		return CHARGING_ICON;
+	}
 
-    if (battery.percent > 75) {
-        return FULL_ICON;
-    }
+	if (battery.percent > 75) {
+		return FULL_ICON;
+	}
 
-    if (battery.percent > 50) {
-        return THREE_QUARTER_ICON;
-    }
+	if (battery.percent > 50) {
+		return THREE_QUARTER_ICON;
+	}
 
-    if (battery.percent > 25) {
-        return HALF_ICON;
-    }
+	if (battery.percent > 25) {
+		return HALF_ICON;
+	}
 
-    return QUARTER_ICON;
+	return QUARTER_ICON;
 }
 
 function getTooltip() {
-    let result = 'Battery: ';
+	let result = 'Battery: ';
 
-    if (battery.charging) {
-        result += 'Charging, ';
-    }
+	if (battery.charging) {
+		result += 'Charging, ';
+	}
 
-    if (battery.charged) {
-        result += 'Full, ';
-    }
+	if (battery.charged) {
+		result += 'Full, ';
+	}
 
-    result += `${battery.percent}%`;
+	result += `${battery.percent}%`;
 
-    return result;
+	return result;
 }
 
 export default function Battery() {
-    return Widget.Label().hook(battery, (self) => {
-        self.label = getIcon();
-        self.tooltip_text = getTooltip();
-    });
+	return Widget.Label().hook(battery, (self) => {
+		self.label = getIcon();
+		self.tooltip_text = getTooltip();
+	});
 }
