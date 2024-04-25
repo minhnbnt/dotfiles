@@ -104,7 +104,6 @@
 			   :max 101
 			   :orientation "v"
 			   :active { onchange != "" }
-			   :flipped true
 			   :value value
 			   :onchange onchange)))
 

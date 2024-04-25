@@ -14,7 +14,7 @@ local servers = {
 	--"ruff_lsp",
 	"rust_analyzer",
 	--"tailwindcss",
-	"typos_lsp",
+	--"typos_lsp",
 	"tsserver",
 	"pyright",
 	"lua_ls",

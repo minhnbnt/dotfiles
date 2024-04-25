@@ -5,7 +5,7 @@ local active_buffer = "#99d1db"
 return {
 
 	"akinsho/bufferline.nvim",
-	event = { "BufReadPost", "BufNewFile" },
+	event = { "VeryLazy" },
 
 	keys = {
 		{ "<leader>bn", "<cmd>bnext<cr>", desc = "Next Buffer" },

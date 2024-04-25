@@ -60,3 +60,9 @@ vim.api.nvim_create_autocmd("CmdlineLeave", {
 
 vim.api.nvim_create_autocmd({ "InsertEnter", "VimLeave" }, { callback = IMOn })
 vim.api.nvim_create_autocmd({ "InsertLeave", "VimEnter" }, { callback = IMOff })
+
+vim.api.nvim_create_autocmd("CursorHold", {
+	callback = function()
+		vim.diagnostic.open_float(nil, { scope = "cursor" })
+	end,
+})

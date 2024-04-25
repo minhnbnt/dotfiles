@@ -1,10 +1,11 @@
 local M = {
 
 	"nvimtools/none-ls.nvim",
+	commit = "2236d2b",
 	event = { "BufReadPost", "BufNewFile" },
 
 	dependencies = {
-		"nvimtools/none-ls-extras.nvim",
+		-- "nvimtools/none-ls-extras.nvim",
 	},
 }
 
@@ -41,6 +42,10 @@ local config = {
 	end,
 }
 
+function M.init()
+	vim.g.nonels_suppress_issue58 = true
+end
+
 M.opts = function()
 	local null_ls = require("null-ls")
 	local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
@@ -55,15 +60,18 @@ M.opts = function()
 		debug = false,
 		sources = {
 
+			diagnostics.codespell,
+			diagnostics.typos,
+
 			formatting.shfmt,
 			formatting.clang_format.with({
 				extra_args = { "--style=" .. vim.fn.json_encode(config.clang_format) },
 			}),
 			formatting.gofmt,
 			formatting.prettier,
-			require("none-ls.formatting.rustfmt"),
+			formatting.rustfmt,
 			formatting.stylua,
-			require("none-ls.formatting.ruff_format"),
+			formatting.ruff_format,
 			formatting.isort,
 
 			completion.spell,
