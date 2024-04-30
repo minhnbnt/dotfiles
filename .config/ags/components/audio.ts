@@ -3,15 +3,19 @@ const audio = await Service.import('audio');
 const revealSlider = Variable(false);
 
 export default function Audio(type = 'speaker') {
+	const target = audio[type];
 	const slider = Widget.Slider({
+		inverted: true,
 		orientation: 1,
 		drawValue: false,
-		onChange: ({ value }) => (audio[type].volume = value),
-		value: audio[type].bind('volume'),
+		onChange: ({ value }) => (target.volume = value),
+		value: target.bind('volume'),
 	});
 
 	return Widget.EventBox({
-		onHover: () => revealSlider.setValue(true),
+		onHover: () => {
+			revealSlider.setValue(true);
+		},
 
 		setup: (self) =>
 			self.on('leave-notify-event', () => {
@@ -26,10 +30,10 @@ export default function Audio(type = 'speaker') {
 					child: slider,
 				}),
 				Widget.Button({
-					onClicked: () =>
-						Utils.exec(
-							'wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle',
-						),
+					onClicked: () => {
+						target.isMuted = !target.isMuted;
+						revealSlider.value = !target.isMuted;
+					},
 				}),
 			],
 		}),

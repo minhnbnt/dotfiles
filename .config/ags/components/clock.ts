@@ -22,18 +22,15 @@ export default function Clock() {
 		orientation: 1,
 		tooltip_text: record.bind().as((record) => record.tooltip),
 		children: [
-			Widget.Label().hook(
-				record,
-				(self) => (self.label = record.value.hour),
-			),
-			Widget.Label().hook(
-				record,
-				(self) => (self.label = record.value.minute),
-			),
-			Widget.Label().hook(
-				record,
-				(self) => (self.label = record.value.second),
-			),
+			Widget.Label({
+				label: record.bind().as((record) => record.hour),
+			}),
+			Widget.Label({
+				label: record.bind().as((record) => record.minute),
+			}),
+			Widget.Label({
+				label: record.bind().as((record) => record.second),
+			}),
 		],
 	});
 }
