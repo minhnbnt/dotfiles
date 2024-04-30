@@ -109,10 +109,6 @@ M.opts = {
 		lualine_b = { ident_level },
 		lualine_y = {},
 		lualine_z = { position },
-
-		-- These will be filled later
-		lualine_c = {},
-		lualine_x = {},
 	},
 	inactive_sections = {
 		lualine_c = { file_status },
@@ -200,7 +196,6 @@ M.opts.sections.lualine_c = {
 		cond = conditions.hide_in_width(7),
 	},
 	{
-
 		function()
 			if vim.bo.modified then
 				return "●" -- file modified
@@ -222,17 +217,16 @@ M.opts.sections.lualine_c = {
 	{ "%=", padding = 0 },
 	{
 		"mode",
-
 		fmt = function(str)
-		-- stylua: ignore
-		local map = {
-			["O-PENDING"] = "OPERATOR PENDING",
-			["V-BLOCK"]   = "VISUAL BLOCK",
-			["V-LINE"]    = "VISUAL LINE",
-			["V-REPLACE"] = "VISUAL REPLACE",
-			["S-BLOCK"]   = "SELECT BLOCK",
-			["S-LINE"]    = "SELECT LINE",
-		}
+			-- stylua: ignore
+			local map = {
+				["O-PENDING"] = "OPERATOR PENDING",
+				["V-BLOCK"]   = "VISUAL BLOCK",
+				["V-LINE"]    = "VISUAL LINE",
+				["V-REPLACE"] = "VISUAL REPLACE",
+				["S-BLOCK"]   = "SELECT BLOCK",
+				["S-LINE"]    = "SELECT LINE",
+			}
 			local mode = map[str] or str
 			if mode == "NORMAL" then
 				return ""
@@ -271,19 +265,7 @@ M.opts.sections.lualine_x = {
 		"searchcount",
 		cond = conditions.hide_in_width(10),
 	},
-	{
-		function()
-			local line = vim.fn.line(".")
-			local col = vim.fn.virtcol(".")
-			return string.format("%d:%-1d", line, col)
-		end,
-	},
-	{
-		function()
-			return " "
-		end,
-		padding = 0,
-	},
+	cursor_pos,
 }
 
 M.opts.options = {
