@@ -60,7 +60,7 @@ M.opts = function()
 		debug = false,
 		sources = {
 
-			diagnostics.codespell,
+			--diagnostics.codespell,
 			diagnostics.typos,
 
 			formatting.shfmt,

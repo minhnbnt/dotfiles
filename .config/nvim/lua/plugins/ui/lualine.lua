@@ -120,15 +120,7 @@ M.opts = {
 	},
 }
 
-local ins, conditions = {}, {}
-
-function ins.left(component)
-	table.insert(M.opts.sections.lualine_c, component)
-end
-
-function ins.right(component)
-	table.insert(M.opts.sections.lualine_x, component)
-end
+local conditions = {}
 
 function conditions.buffer_not_empty()
 	return vim.fn.empty(vim.fn.expand("%:t")) ~= 1
@@ -148,124 +140,90 @@ function conditions.hide_in_width(index)
 	end
 end
 
-local function noice_command()
-	local ok, noice = pcall(require, "noice")
-
-	if not ok then
-		return
-	end
-
-	return {
-
-		noice.api.status.command.get,
-
-		cond = function() -- combine 2 conditions
-			local has_command = noice.api.status.command.has
-			local hide_in_width = conditions.hide_in_width(10)
-			return hide_in_width() and has_command()
+-- left components
+M.opts.sections.lualine_c = {
+	{
+		function()
+			return " "
 		end,
-	}
-end
+		padding = 0,
+	},
+	{
+		"fileformat",
+		cond = conditions.hide_in_width(6),
+	},
+	{
+		function()
+			if vim.b.copilot_active then
+				return ""
+			end
+			return ""
+		end,
 
-ins.left({
-	function()
-		return " "
-	end,
-	padding = 0,
-})
+		color = { fg = "#04A5E5" },
+		cond = conditions.hide_in_width(1),
+		padding = { left = 1, right = 0 },
+	},
+	{
+		"filetype",
+		icon_only = true,
+		padding = { left = 1, right = 0 },
+	},
+	{
+		"bo:filetype",
+		cond = conditions.hide_in_width(2),
 
-ins.left({
-	"fileformat",
-	cond = conditions.hide_in_width(6),
-})
+		color = function()
+			local buf = vim.api.nvim_get_current_buf()
+			local ts = vim.treesitter.highlighter.active[buf]
 
-ins.left({
+			if ts and not vim.tbl_isempty(ts) then
+				return { fg = "#85edb5" }
+			end
 
-	function()
-		if vim.b.copilot_active then
-			return ""
-		end
-		return ""
-	end,
+			return {}
+		end,
 
-	color = { fg = "#04A5E5" },
-	cond = conditions.hide_in_width(1),
-	padding = { left = 1, right = 0 },
-})
+		fmt = function(str)
+			return str:gsub("^%l", string.upper)
+		end,
 
-ins.left({
-	"filetype",
-	icon_only = true,
-	padding = { left = 1, right = 0 },
-})
+		padding = { left = 0, right = 1 },
+	},
+	{
+		"encoding",
+		fmt = string.upper,
+		cond = conditions.hide_in_width(5),
+	},
+	{
+		"filesize",
+		cond = conditions.hide_in_width(7),
+	},
+	{
 
-ins.left({
+		function()
+			if vim.bo.modified then
+				return "●" -- file modified
+			elseif vim.bo.modifiable == false then
+				return "" -- read-only
+			end
+			return "" -- normal
+		end,
 
-	"bo:filetype",
-	cond = conditions.hide_in_width(2),
+		color = { fg = "#ce9178" },
+		padding = { left = 1, right = 0 },
+	},
+	{
+		"filename",
+		file_status = false,
+		path = 0,
+	},
 
-	color = function()
-		local buf = vim.api.nvim_get_current_buf()
-		local ts = vim.treesitter.highlighter.active[buf]
+	{ "%=", padding = 0 },
+	{
+		"mode",
 
-		if ts and not vim.tbl_isempty(ts) then
-			return { fg = "#85edb5" }
-		end
-
-		return {}
-	end,
-
-	fmt = function(str)
-		return str:gsub("^%l", string.upper)
-	end,
-
-	padding = { left = 0, right = 1 },
-})
-
-ins.left({
-
-	"encoding",
-
-	fmt = string.upper,
-	cond = conditions.hide_in_width(5),
-})
-
-ins.left({
-	"filesize",
-	cond = conditions.hide_in_width(7),
-})
-
-ins.left({
-
-	function()
-		if vim.bo.modified then
-			return "●" -- file modified
-		elseif vim.bo.modifiable == false then
-			return "" -- read-only
-		end
-		return "" -- normal
-	end,
-
-	color = { fg = "#ce9178" },
-	padding = { left = 1, right = 0 },
-})
-
-ins.left({
-	"filename",
-	file_status = false,
-	path = 0,
-})
-
-ins.left({
-	"%=",
-	padding = 0,
-})
-
-ins.left({
-
-	"mode",
-
-	fmt = function(str)
+		fmt = function(str)
 		-- stylua: ignore
 		local map = {
 			["O-PENDING"] = "OPERATOR PENDING",
@@ -275,61 +233,58 @@ ins.left({
 			["S-BLOCK"]   = "SELECT BLOCK",
 			["S-LINE"]    = "SELECT LINE",
 		}
-		local mode = map[str] or str
-		if mode == "NORMAL" then
-			return ""
-		end
-		return "-- " .. mode .. " --"
-	end,
+			local mode = map[str] or str
+			if mode == "NORMAL" then
+				return ""
+			end
+			return "-- " .. mode .. " --"
+		end,
 
-	color = { gui = "bold" },
-	cond = conditions.hide_in_width(1),
-})
+		color = { gui = "bold" },
+		cond = conditions.hide_in_width(1),
+	},
+}
 
-ins.right({
-	server_name,
-	icon = "",
-	color = { fg = "#5be3c8" },
-	cond = conditions.hide_in_width(2),
-})
-
-ins.right({
-	"branch",
-	icons_enabled = true,
-	icon = "",
-	cond = conditions.hide_in_width(3),
-	color = { fg = "#FE640B" },
-})
-
-ins.right({
-	"diff",
-	colored = true,
-	symbols = { added = "+ ", modified = "~ ", removed = "- " },
-	source = nil,
-	cond = conditions.hide_in_width(8),
-})
-
-ins.right({
-	"searchcount",
-	cond = conditions.hide_in_width(10),
-})
-
-ins.right(noice_command())
-
-ins.right({
-	function()
-		local line = vim.fn.line(".")
-		local col = vim.fn.virtcol(".")
-		return string.format("%d:%-1d", line, col)
-	end,
-})
-
-ins.right({
-	function()
-		return " "
-	end,
-	padding = 0,
-})
+-- right components
+M.opts.sections.lualine_x = {
+	{
+		server_name,
+		icon = "",
+		color = { fg = "#5be3c8" },
+		cond = conditions.hide_in_width(2),
+	},
+	{
+		"branch",
+		icons_enabled = true,
+		icon = "",
+		cond = conditions.hide_in_width(3),
+		color = { fg = "#FE640B" },
+	},
+	{
+		"diff",
+		colored = true,
+		symbols = { added = "+ ", modified = "~ ", removed = "- " },
+		source = nil,
+		cond = conditions.hide_in_width(8),
+	},
+	{
+		"searchcount",
+		cond = conditions.hide_in_width(10),
+	},
+	{
+		function()
+			local line = vim.fn.line(".")
+			local col = vim.fn.virtcol(".")
+			return string.format("%d:%-1d", line, col)
+		end,
+	},
+	{
+		function()
+			return " "
+		end,
+		padding = 0,
+	},
+}
 
 M.opts.options = {
 	-- disable sections and component separators
