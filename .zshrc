@@ -139,7 +139,7 @@ block_user+=$reset$col_line']'
 
 block_pwd=$col_line'['$col_pwd'%~'$col_line']'
 
-eval $(thefuck --alias)
+#eval $(thefuck --alias)
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh --cmd cd)"
 
@@ -295,3 +295,5 @@ power(){
 		esac
 	done
 }
+
+fetch
