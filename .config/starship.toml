@@ -4,15 +4,14 @@ palette = 'arch'
 format = """
 [(\\[$username$hostname\\])](line)$directory\
 [(\n[┆](line) $all)]()\
-$line_break[└╼](line) $character\
+$line_break[└╼](line) \
 """
 
 [palettes.arch]
 line = "cyan"
 
 [character]
-success_symbol = '[\$](bold bright-cyan)'
-error_symbol = '[\$](bold bright-red)'
+disabled = true
 
 [directory]
 style = "bright-purple"

@@ -102,18 +102,6 @@ col_pwd="%F{13}" # bright magenta
 
 col_git="%F{#f05033}" # orange
 
-# Git diff in prompt
-
-#precmd() { vcs_info }
-
-#zstyle ':vcs_info:git:*' formats \
-#	$col_line'['$col_git'%f %b'$col_line']'
-#zstyle ':vcs_info:*' formats " $col_line%c%u(%b)%f"
-#zstyle ':vcs_info:*' actionformats " $col_line%c%u(%b)%f %a"
-#zstyle ':vcs_info:*' stagedstr "%F{green}"
-#zstyle ':vcs_info:*' unstagedstr "%F{red}"
-#zstyle ':vcs_info:*' check-for-changes true
-
 # Command number
 
 [[ $cmdcount -ge 1 ]] || cmdcount=1
@@ -185,7 +173,7 @@ zle-line-init() {
 zle -N zle-line-init
 
 
-PROMPT=$col_line'┌─'$block_cmd_num${PROMPT}'%f%b'
+PROMPT=$col_line'┌─'$block_cmd_num${PROMPT}$col_sh$bold$sh_char$reset" "
 #PS1+=$block_cmd_num$block_err'─'$block_user'─'
 #PS1+=$block_pwd'$vcs_info_msg_0_'
 
