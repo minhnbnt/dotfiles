@@ -22,12 +22,13 @@ return {
 
 	{
 		"nvim-treesitter/nvim-treesitter-context",
+		event = { "BufReadPost", "BufNewFile" },
 		opts = { max_lines = 3 },
 	},
 
 	{
 		"nvim-treesitter/nvim-treesitter",
-		event = { "BufReadPost", "BufNewFile", "VeryLazy" },
+		event = { "BufReadPost", "BufNewFile" },
 
 		build = ":TSUpdate",
 		dependencies = {
@@ -58,7 +59,7 @@ return {
 				"yaml",
 			},
 			-- Install parsers synchronously (only applied to `ensure_installed`)
-			sync_install = false,
+			sync_install = true,
 			-- List of parsers to ignore installing (for "all")
 			ignore_install = { "" },
 			---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
