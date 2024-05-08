@@ -74,8 +74,6 @@ M.opts = function()
 			formatting.ruff_format,
 			formatting.isort,
 
-			completion.spell,
-
 			hover.dictionary,
 		},
 
