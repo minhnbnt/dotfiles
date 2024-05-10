@@ -69,7 +69,7 @@ M.opts = function()
 			}),
 			formatting.gofmt,
 			formatting.prettier,
-			formatting.rustfmt,
+			formatting.rustfmt.with({ extra_args = { "--config=" .. config.rustfmt() } }),
 			formatting.stylua,
 			formatting.ruff_format,
 			formatting.isort,

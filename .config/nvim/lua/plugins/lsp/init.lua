@@ -15,7 +15,7 @@ return {
 			{ "<leader>gd", "<cmd>Lspsaga goto_definition<cr>", desc = "Goto Definition" },
 			{ "<leader>gt", "<cmd>Lspsaga goto_type_definition<cr>", desc = "Goto Type Definition" },
 
-			{ "<leader>lr", "<cmd>Lspsaga rename<cr>", desc = "LSP Rename" },
+			{ "<leader>sr", "<cmd>Lspsaga rename<cr>", desc = "LSP Rename" },
 		},
 
 		opts = {

@@ -1,6 +1,11 @@
 return {
 
 	"goolord/alpha-nvim",
+	lazy = false,
+
+	keys = {
+		{ "<leader>a", "<cmd>Alpha<cr>", desc = "Alpha" },
+	},
 
 	opts = function()
 		local dashboard = require("alpha.themes.dashboard")

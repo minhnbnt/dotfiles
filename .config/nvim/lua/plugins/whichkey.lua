@@ -14,6 +14,7 @@ return {
 				f = { name = "File" },
 				g = { name = "Goto" },
 				l = { name = "LSP" },
+				s = { name = "Saga" },
 			},
 		},
 	},

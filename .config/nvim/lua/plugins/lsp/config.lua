@@ -87,6 +87,10 @@ return {
 		"neovim/nvim-lspconfig",
 		event = { "BufReadPost", "BufNewFile" },
 
+		keys = {
+			{ "<leader>lr", "<cmd>LspRestart<cr>", desc = "LSP Rename" },
+		},
+
 		dependencies = {},
 
 		opts = {
