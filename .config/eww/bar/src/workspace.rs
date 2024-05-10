@@ -135,10 +135,9 @@ impl Widget {
 pub fn main() -> io::Result<()> {
 	arg_handle();
 
-	let sock_dir = match env::var("HYPRLAND_INSTANCE_SIGNATURE") {
-		Ok(sig) => format!("/tmp/hypr/{}/", sig),
-		Err(msg) => panic!("{}", msg),
-	};
+	let xdg_runtime_dir = env!("XDG_RUNTIME_DIR");
+	let instance_signature = env!("HYPRLAND_INSTANCE_SIGNATURE");
+	let sock_dir = format!("{xdg_runtime_dir}/hypr/{instance_signature}/");
 
 	let mut widget = Widget::new(&sock_dir)?;
 
@@ -184,8 +183,8 @@ pub fn arg_handle() {
 		_ => panic!("Invalid argument: {}", arg),
 	};
 
-	if command.args(args_command).spawn().is_err() {
-		panic!("Failed to execute command.");
+	if let Err(e) = command.args(args_command).spawn() {
+		panic!("Failed to execute command: {}", e);
 	}
 
 	exit(0);
