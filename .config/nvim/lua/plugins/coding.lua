@@ -3,12 +3,14 @@ local function get_command(compile, run)
 		local file_dir = vim.fn.expand("%:p:h")
 
 		local input_path = file_dir .. "/input.txt"
-		local run_with_input
+		local run_with_input = false
 
 		if vim.fn.filereadable(input_path) == 1 then
 			local user_answer = vim.fn.input("Run with " .. input_path .. "? [Y/n]: ", "y")
 
-			if not vim.tbl_contains({ "y", "n" }, user_answer) then
+			if vim.iter({ "y", "n" }):all(function(ans)
+				return user_answer ~= ans
+			end) then
 				return nil
 			end
 

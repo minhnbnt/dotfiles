@@ -13,6 +13,7 @@ local servers = {
 	"omnisharp",
 	--"ruff_lsp",
 	"rust_analyzer",
+	"svelte",
 	--"tailwindcss",
 	--"typos_lsp",
 	"tsserver",

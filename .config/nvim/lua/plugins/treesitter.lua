@@ -8,7 +8,9 @@ return {
 		opts = {
 
 			query = {
+				html = "rainbow-parens",
 				javascript = "rainbow-parens",
+				svelte = "rainbow-parens",
 				tsx = "rainbow-parens",
 			},
 
@@ -51,8 +53,11 @@ return {
 				"java",
 				"javascript",
 				"lua",
+				"markdown",
+				"printf",
 				"python",
 				"rust",
+				"svelte",
 				"tsx",
 				"typescript",
 				"vim",

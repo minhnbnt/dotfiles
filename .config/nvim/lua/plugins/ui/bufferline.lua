@@ -7,6 +7,9 @@ return {
 	"akinsho/bufferline.nvim",
 	event = { "VeryLazy" },
 
+	version = "*",
+	enabled = false,
+
 	keys = {
 		{ "<leader>bn", "<cmd>bnext<cr>", desc = "Next Buffer" },
 		{ "<leader>bb", "<cmd>bprevious<cr>", desc = "Backward Buffer" },
@@ -159,6 +162,4 @@ return {
 			},
 		},
 	},
-
-	version = "*",
 }

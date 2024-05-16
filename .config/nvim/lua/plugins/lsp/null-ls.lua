@@ -68,7 +68,7 @@ M.opts = function()
 				extra_args = { "--style=" .. vim.fn.json_encode(config.clang_format) },
 			}),
 			formatting.gofmt,
-			formatting.prettier,
+			formatting.prettier.with({ extra_filetypes = { "svelte" } }),
 			formatting.rustfmt.with({ extra_args = { "--config=" .. config.rustfmt() } }),
 			formatting.stylua,
 			formatting.ruff_format,

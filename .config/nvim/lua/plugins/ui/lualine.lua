@@ -13,7 +13,9 @@ local function server_name()
 	local function get_attached_names(client)
 		local filetypes = client.config.filetypes or {}
 
-		if not vim.tbl_contains(filetypes, buf_ft) then
+		if vim.iter(filetypes):all(function(filetype)
+			return filetype ~= buf_ft
+		end) then
 			return {}
 		end
 
@@ -21,16 +23,16 @@ local function server_name()
 			return { client.name }
 		end
 
-		local attached_names = {}
 		local sources = require("null-ls").get_sources()
 
-		for _, source in ipairs(sources) do
-			if vim.tbl_get(source.filetypes, buf_ft) then
-				table.insert(attached_names, source.name)
-			end
-		end
-
-		return attached_names
+		return vim.iter(sources)
+			:filter(function(source)
+				return vim.tbl_get(source.filetypes, buf_ft) ~= nil
+			end)
+			:map(function(source)
+				return source.name
+			end)
+			:totable()
 	end
 
 	local attached = {} -- list of attached servers
