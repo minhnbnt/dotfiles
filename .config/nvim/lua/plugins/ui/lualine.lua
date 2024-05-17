@@ -10,37 +10,33 @@ local function server_name()
 		return ""
 	end
 
-	local function get_attached_names(client)
-		local filetypes = client.config.filetypes or {}
+	local attached = vim.iter(clients)
+		:map(function(client)
+			local filetypes = client.config.filetypes or {}
 
-		if vim.iter(filetypes):all(function(filetype)
-			return filetype ~= buf_ft
-		end) then
-			return {}
-		end
+			if vim.iter(filetypes):all(function(filetype)
+				return filetype ~= buf_ft
+			end) then
+				return {}
+			end
 
-		if client.name ~= "null-ls" then
-			return { client.name }
-		end
+			if client.name ~= "null-ls" then
+				return { client.name }
+			end
 
-		local sources = require("null-ls").get_sources()
+			local sources = require("null-ls").get_sources()
 
-		return vim.iter(sources)
-			:filter(function(source)
-				return vim.tbl_get(source.filetypes, buf_ft) ~= nil
-			end)
-			:map(function(source)
-				return source.name
-			end)
-			:totable()
-	end
-
-	local attached = {} -- list of attached servers
-
-	for _, client in ipairs(clients) do
-		local attached_names = get_attached_names(client)
-		vim.list_extend(attached, attached_names)
-	end
+			return vim.iter(sources)
+				:filter(function(source)
+					return vim.tbl_get(source.filetypes, buf_ft)
+				end)
+				:map(function(source)
+					return source.name
+				end)
+				:totable()
+		end)
+		:flatten()
+		:totable()
 
 	table.sort(attached)
 
