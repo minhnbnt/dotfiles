@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 
-import json, os, socket, subprocess, sys
+import json
+import os
+import socket
+import subprocess
+import sys
 
 ICONS = ["", "", "", "", "", "", ""]
 OTHER_ICON = ""
@@ -20,9 +24,7 @@ def print_widget(visible_workspaces, active_workspace):
 
         print(f':class "{button_class}" "{icon}"', end=")")
 
-    for id, icon in enumerate(ICONS):
-        id += 1
-
+    for id, icon in enumerate(ICONS, start=1):
         button_class = "inactive"
 
         if id == active_workspace:
@@ -70,13 +72,14 @@ def args_handle(argv):
 
     command = ["hyprctl", "dispatch", "workspace"]
 
-    if argv[1] == "up":
-        command.append("e-1")
-    elif argv[1] == "down":
-        command.append("e+1")
+    match argv[1]:
+        case "up":
+            command.append("e-1")
+        case "down":
+            command.append("e+1")
 
-    else:
-        raise RuntimeError("Invalid argument.")
+        case _:
+            raise RuntimeError("Invalid argument.")
 
     subprocess.run(command)
     sys.exit(0)
@@ -109,8 +112,10 @@ def update_workspace(buf):
 with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
     args_handle(sys.argv)
 
+    xdgRunRimeDir = os.environ["XDG_RUNTIME_DIR"]
     signature = os.environ["HYPRLAND_INSTANCE_SIGNATURE"]
-    sock.connect(f"/tmp/hypr/{signature}/.socket2.sock")
+
+    sock.connect(f"{xdgRunRimeDir}/hypr/{signature}/.socket2.sock")
 
     visible_workspaces, active_workspace = init_widget()
     print_widget(visible_workspaces, active_workspace)

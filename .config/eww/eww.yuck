@@ -32,7 +32,7 @@
 	        :tooltip "App launcher"
 	        :onclick "wofi -f -S run" ""))
 
-(deflisten workspace "~/.config/eww/bar/bin/workspace")
+(deflisten workspace "python3 ~/.config/eww/bar/src/workspace.py")
 (defwidget workspaces [] (literal :content workspace))
 
 (defpoll network :interval "30s" "~/.config/eww/bar/bin/network")
