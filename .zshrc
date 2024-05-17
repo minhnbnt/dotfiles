@@ -196,7 +196,7 @@ SAVEHIST=1000000000
 
 # Some options
 
-ls(){/usr/bin/eza -A --icons --group-directories-first "$@"}
+ls(){/usr/bin/eza -A --icons --group-directories-first --color "$@"}
 matrix(){/usr/bin/neo-matrix -D "$@"}
 
 tlauncher(){(java -jar ~/.tlauncher/TLauncher-2.86.jar "$@" > /dev/null 2>&1 &)}
