@@ -5,7 +5,7 @@ local M = {
 	event = { "BufReadPost", "BufNewFile" },
 
 	dependencies = {
-		-- "nvimtools/none-ls-extras.nvim",
+		"nvimtools/none-ls-extras.nvim",
 	},
 }
 
@@ -60,18 +60,15 @@ M.opts = function()
 		debug = false,
 		sources = {
 
-			--diagnostics.codespell,
-			diagnostics.typos,
-
 			formatting.shfmt,
 			formatting.clang_format.with({
 				extra_args = { "--style=" .. vim.fn.json_encode(config.clang_format) },
 			}),
 			formatting.gofmt,
 			formatting.prettier.with({ extra_filetypes = { "svelte" } }),
-			formatting.rustfmt.with({ extra_args = { "--config=" .. config.rustfmt() } }),
+			require("none-ls.formatting.rustfmt").with({ extra_args = { "--config=" .. config.rustfmt() } }),
 			formatting.stylua,
-			formatting.ruff_format,
+			require("none-ls.formatting.ruff_format"),
 			formatting.isort,
 
 			hover.dictionary,

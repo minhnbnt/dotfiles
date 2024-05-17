@@ -15,7 +15,7 @@ local servers = {
 	"rust_analyzer",
 	"svelte",
 	--"tailwindcss",
-	--"typos_lsp",
+	"typos_lsp",
 	"tsserver",
 	"pyright",
 	"lua_ls",
