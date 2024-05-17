@@ -96,6 +96,7 @@ return {
 
 		opts = {
 
+			inlay_hint = true,
 			log_level = "off",
 
 			signs = {
@@ -166,6 +167,7 @@ return {
 
 			vim.diagnostic.config(opts.diagnostic)
 			vim.lsp.set_log_level(opts.log_level)
+			vim.lsp.inlay_hint.enable(opts.inlay_hint)
 
 			for type, icon in pairs(opts.signs) do -- set signs
 				local hl = "DiagnosticSign" .. type
