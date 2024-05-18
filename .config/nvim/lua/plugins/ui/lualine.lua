@@ -11,17 +11,13 @@ local function server_name()
 	end
 
 	local attached = vim.iter(clients)
-		:map(function(client)
+		:filter(function(client)
 			local filetypes = client.config.filetypes or {}
-
-			if vim.iter(filetypes):all(function(filetype)
-				return filetype ~= buf_ft
-			end) then
-				return {}
-			end
-
+			return vim.tbl_contains(filetypes, buf_ft)
+		end)
+		:map(function(client)
 			if client.name ~= "null-ls" then
-				return { client.name }
+				return { client }
 			end
 
 			local sources = require("null-ls").get_sources()
@@ -30,12 +26,12 @@ local function server_name()
 				:filter(function(source)
 					return vim.tbl_get(source.filetypes, buf_ft)
 				end)
-				:map(function(source)
-					return source.name
-				end)
 				:totable()
 		end)
 		:flatten()
+		:map(function(client)
+			return client.name
+		end)
 		:totable()
 
 	table.sort(attached)

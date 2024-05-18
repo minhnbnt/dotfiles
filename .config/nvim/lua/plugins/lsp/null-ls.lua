@@ -1,7 +1,6 @@
 local M = {
 
 	"nvimtools/none-ls.nvim",
-	commit = "2236d2b",
 	event = { "BufReadPost", "BufNewFile" },
 
 	dependencies = {
@@ -10,35 +9,40 @@ local M = {
 }
 
 local config = {
-	clang_format = {
-		AccessModifierOffset = -4,
-		AlwaysBreakTemplateDeclarations = "Yes",
-		AllowShortBlocksOnASingleLine = "Empty",
-		AllowShortFunctionsOnASingleLine = "Empty",
-		AllowShortIfStatementsOnASingleLine = "AllIfsAndElse",
-		AllowShortLoopsOnASingleLine = true,
-		Cpp11BracedListStyle = false,
-		EmptyLineAfterAccessModifier = "Leave",
-		EmptyLineBeforeAccessModifier = "Leave",
-		IncludeBlocks = "Regroup",
-		IndentAccessModifiers = false,
-		IndentWidth = 4,
-		TabWidth = 4,
-		UseTab = "ForIndentation",
-	},
+	clang_format = function()
+		local opts = {
+			AccessModifierOffset = -4,
+			AlwaysBreakTemplateDeclarations = "Yes",
+			AllowShortBlocksOnASingleLine = "Empty",
+			AllowShortFunctionsOnASingleLine = "Empty",
+			AllowShortIfStatementsOnASingleLine = "AllIfsAndElse",
+			AllowShortLoopsOnASingleLine = true,
+			Cpp11BracedListStyle = false,
+			EmptyLineAfterAccessModifier = "Leave",
+			EmptyLineBeforeAccessModifier = "Leave",
+			IncludeBlocks = "Regroup",
+			IndentAccessModifiers = false,
+			IndentWidth = 4,
+			TabWidth = 4,
+			UseTab = "ForIndentation",
+		}
+
+		return vim.fn.json_encode(opts)
+	end,
 	rustfmt = function()
-		local config = {
+		local opts = {
 			hard_tabs = true,
 			tab_spaces = 4,
 			brace_style = "PreferSameLine",
 			format_strings = true,
 			spaces_around_ranges = true,
 		}
-		local rtn = {}
-		for k, v in pairs(config) do
-			table.insert(rtn, string.format("%s=%s", k, v))
-		end
-		return table.concat(rtn, ",")
+
+		return vim.iter(opts)
+			:map(function(k, v)
+				return ("%s=%s"):format(k, v)
+			end)
+			:join(",")
 	end,
 }
 
@@ -61,9 +65,7 @@ M.opts = function()
 		sources = {
 
 			formatting.shfmt,
-			formatting.clang_format.with({
-				extra_args = { "--style=" .. vim.fn.json_encode(config.clang_format) },
-			}),
+			formatting.clang_format.with({ extra_args = { "--style=" .. config.clang_format() } }),
 			formatting.gofmt,
 			formatting.prettier.with({ extra_filetypes = { "svelte" } }),
 			require("none-ls.formatting.rustfmt").with({ extra_args = { "--config=" .. config.rustfmt() } }),

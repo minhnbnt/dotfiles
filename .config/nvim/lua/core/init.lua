@@ -11,11 +11,15 @@ local function Lazy_init()
 
 	require("lazy").setup({
 
-		concurrency = 10,
-
 		spec = { import = "plugins" },
 
-		git = { timeout = 300 },
+		concurrency = 10,
+
+		git = {
+			timeout = 500,
+			url_format = "git@github.com:%s.git",
+		},
+
 		ui = { border = "rounded" },
 
 		change_detection = { notify = false },

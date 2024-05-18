@@ -169,34 +169,36 @@ return {
 			vim.lsp.set_log_level(opts.log_level)
 			vim.lsp.inlay_hint.enable(opts.inlay_hint)
 
-			for type, icon in pairs(opts.signs) do -- set signs
+			for type, icon in vim.iter(opts.signs) do -- set signs
 				local hl = "DiagnosticSign" .. type
 				vim.fn.sign_define(hl, { text = icon, texthl = hl })
 			end
 
 			local vscode_extracted = { "html", "cssls", "eslint", "jsonls" }
 
-			-- require all servers
-			for _, server in pairs(servers) do
-				local server_config = get_server_config(server)
+			vim.iter(servers)
+				:filter(function(server)
+					return not vim.tbl_contains(opts.custom_init, server)
+						and not vim.tbl_contains(vscode_extracted, server)
+				end)
+				:map(function(server)
+					local config = get_server_config(server)
+					config.capabilities = capabilities
 
-				if
-					not vim.tbl_contains(opts.custom_init, server) --
-					and not vim.tbl_contains(vscode_extracted, server)
-				then
-					server_config.capabilities = capabilities
-					lspconfig[server].setup(server_config)
-				end
-			end
+					return server, config
+				end)
+				:each(function(server, config)
+					lspconfig[server].setup(config)
+				end)
 
 			-- for some reason vscode_extracted servers need to be setup after all others
-			for _, server in pairs(vscode_extracted) do
-				if vim.tbl_contains(servers, server) then
-					lspconfig[server].setup({
-						capabilities = capabilities,
-					})
-				end
-			end
+			vim.iter(vscode_extracted)
+				:filter(function(server)
+					return vim.tbl_contains(servers, server)
+				end)
+				:each(function(server)
+					lspconfig[server].setup({ capabilities = capabilities })
+				end)
 		end,
 	},
 }

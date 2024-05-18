@@ -51,7 +51,7 @@ local options = {
 
 vim.g.cursorhold_updatetime = 1000
 
-for k, v in pairs(options) do
+for k, v in vim.iter(options) do
 	vim.opt[k] = v
 end
 
