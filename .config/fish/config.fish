@@ -1,7 +1,7 @@
 if status is-interactive
     # Commands to run in interactive sessions can go here
     clear
-    neofetch --config /home/minhnbnt/.config/neofetch/configfish.conf | sed '/^$/d'
+	fastfetch
 end
 
 set fish_greeting
