@@ -1,10 +1,12 @@
-use std::collections::BTreeSet;
-use std::os::unix::net::UnixStream;
-use std::path::PathBuf;
-use std::process::{exit, Command};
-use std::{env, io};
-
-use io::{BufReader, Read, Write};
+use std::{
+	collections::BTreeSet,
+	env,
+	error::Error,
+	io::{self, BufReader, Read, Write},
+	os::unix::net::UnixStream,
+	path::PathBuf,
+	process::{exit, Command},
+};
 
 struct Widget {
 	exec_path: PathBuf,
@@ -132,21 +134,21 @@ impl Widget {
 	}
 }
 
-pub fn main() -> io::Result<()> {
+pub fn main() -> Result<(), Box<dyn Error>> {
 	arg_handle();
 
-	let xdg_runtime_dir = env!("XDG_RUNTIME_DIR");
-	let instance_signature = env!("HYPRLAND_INSTANCE_SIGNATURE");
+	let xdg_runtime_dir = env::var("XDG_RUNTIME_DIR")?;
+	let instance_signature = env::var("HYPRLAND_INSTANCE_SIGNATURE")?;
+
 	let sock_dir = format!("{xdg_runtime_dir}/hypr/{instance_signature}/");
+	println!("; Socket directory: {}", sock_dir);
 
 	let mut widget = Widget::new(&sock_dir)?;
 
 	let stream_path = format!("{}.socket2.sock", sock_dir);
-
 	let stream = UnixStream::connect(stream_path)?;
 	let mut reader = BufReader::new(stream);
 
-	println!("; Succeed!");
 	widget.print();
 
 	loop {

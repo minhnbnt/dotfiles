@@ -1,4 +1,3 @@
-// -o ../bin/eww_power_dialog $(pkg-config --cflags --libs gtkmm-3.0) dialog.cc
 
 #include <cstdlib>
 #include <string>
@@ -12,8 +11,10 @@ class ConfirmDialog : private Gtk::MessageDialog {
 
 public:
 
-	ConfirmDialog(const std::string &title, const std::string &message, const std::string &command)
-	    : Gtk::MessageDialog(title, false, Gtk::MESSAGE_INFO, Gtk::BUTTONS_YES_NO),
+	ConfirmDialog(const std::string &title, const std::string &message,
+	              const std::string &command)
+	    : Gtk::MessageDialog(title, false, Gtk::MESSAGE_INFO,
+	                         Gtk::BUTTONS_YES_NO),
 	      command(command) {
 
 		this->set_secondary_text(message);
