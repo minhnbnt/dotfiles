@@ -12,8 +12,13 @@ local M = {
 }
 
 function M.config()
-	require("luasnip.loaders.from_vscode").lazy_load()
-	require("luasnip.loaders.from_snipmate").lazy_load()
+	local exclude = { "html", "css", "tsx", "jsx", "tsx", "svelte" }
+	require("luasnip.loaders.from_vscode").lazy_load({
+		exclude = exclude,
+	})
+	require("luasnip.loaders.from_snipmate").lazy_load({
+		exclude = exclude,
+	})
 
 	local ls = require("luasnip")
 	-- some shorthands...
