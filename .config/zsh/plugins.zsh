@@ -1,21 +1,20 @@
-autoload -U compinit; compinit
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
-bindkey -e
-bindkey "^[[3~" delete-char
+if [ ! -d $ZINIT_HOME ]; then
+	mkdir -p "$(dirname $ZINIT_HOME)"
+fi
 
-PLUGINS_DIR=/usr/share/zsh/plugins
+if [ ! -d $ZINIT_HOME/.git ]; then
+	git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+fi
 
-source $PLUGINS_DIR/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
-source $PLUGINS_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
-source $PLUGINS_DIR/zsh-autocomplete/zsh-autocomplete.plugin.zsh
-source $PLUGINS_DIR/zsh-autopair/autopair.zsh
+source "${ZINIT_HOME}/zinit.zsh"
 
-ZSH_HIGHLIGHT_STYLES[precommand]=fg=11,underline
-ZSH_HIGHLIGHT_STYLES[function]=fg=14
-ZSH_HIGHLIGHT_STYLES[alias]=fg=13
-ZSH_HIGHLIGHT_STYLES[command]=fg=14
-ZSH_HIGHLIGHT_STYLES[single-hyphen-option]=fg=3
-ZSH_HIGHLIGHT_STYLES[double-hyphen-option]=fg=3
+zinit light marlonrichert/zsh-autocomplete
+zinit light hlissner/zsh-autopair
+zinit light zsh-users/zsh-autosuggestions
+zinit light zsh-users/zsh-syntax-highlighting
 
+eval "$(atuin init zsh)"
 eval "$(thefuck --alias)"
 eval "$(zoxide init zsh --cmd cd)"
