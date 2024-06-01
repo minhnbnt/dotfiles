@@ -8,5 +8,8 @@ zinit light zsh-users/zsh-syntax-highlighting
 zinit snippet OMZP::archlinux
 zinit snippet OMZP::git
 zinit snippet OMZP::sudo
-zinit snippet OMZP::starship
-zinit snippet OMZP::zoxide
+
+eval "$(atuin init zsh)"
+eval "$(thefuck --alias)"
+eval "$(starship init zsh)"
+eval "$(zoxide init zsh --cmd cd)"

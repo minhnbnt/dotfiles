@@ -17,3 +17,13 @@ bindkey -e
 bindkey "^[[3~" delete-char
 
 zstyle ':autocomplete:*' key-binding off
+
+# zsh-syntax-highlighting
+typeset -A ZSH_HIGHLIGHT_STYLES
+
+ZSH_HIGHLIGHT_STYLES[precommand]=fg=11,underline
+ZSH_HIGHLIGHT_STYLES[function]=fg=14
+ZSH_HIGHLIGHT_STYLES[alias]=fg=13
+ZSH_HIGHLIGHT_STYLES[command]=fg=14
+ZSH_HIGHLIGHT_STYLES[single-hyphen-option]=fg=3
+ZSH_HIGHLIGHT_STYLES[double-hyphen-option]=fg=3
