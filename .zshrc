@@ -19,8 +19,10 @@ fi
 
 source "${ZINIT_HOME}/zinit.zsh"
 
+# I use Arch, BTW
 fastfetch
 
+# Load configuration files in ~/.config/zsh/
 for conf in "$HOME/.config/zsh/"*.zsh; do
 	source "${conf}"
 done
