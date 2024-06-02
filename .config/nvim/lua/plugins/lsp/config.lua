@@ -14,7 +14,7 @@ local servers = {
 	--"ruff_lsp",
 	"rust_analyzer",
 	"svelte",
-	--"tailwindcss",
+	"tailwindcss",
 	"typos_lsp",
 	"tsserver",
 	"pyright",
@@ -89,14 +89,22 @@ return {
 		event = { "BufReadPost", "BufNewFile" },
 
 		keys = {
-			{ "<leader>lr", "<cmd>LspRestart<cr>", desc = "LSP Rename" },
+			{ "<leader>lr", "<cmd>LspRestart<cr>", desc = "LSP Restart" },
+			{
+				"<leader>li",
+				function()
+					local is_enabled = vim.lsp.inlay_hint.is_enabled()
+					vim.lsp.inlay_hint.enable(not is_enabled)
+				end,
+				desc = "LSP toggle inlay hints",
+			},
 		},
 
 		dependencies = {},
 
 		opts = {
 
-			inlay_hint = true,
+			inlay_hint = false,
 			log_level = "off",
 
 			signs = {
