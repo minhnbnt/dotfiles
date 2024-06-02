@@ -10,6 +10,9 @@ $line_break[└╼](line) \
 [palettes.arch]
 line = "cyan"
 
+[battery]
+disabled = true
+
 [character]
 disabled = true
 
