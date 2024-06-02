@@ -33,7 +33,7 @@ end
 vim.api.nvim_create_autocmd({ "BufEnter", "WinResized" }, {
 	callback = function()
 		local excluded_ft = { "python" }
-		local ft = { "html", "xhtml", "xml", "typescriptreact", "javascriptreact" }
+		local ft = { "html", "xhtml", "xml", "typescriptreact", "javascriptreact", "svelte" }
 
 		vim.cmd("se tabstop=4 shiftwidth=4 softtabstop=4")
 
@@ -47,6 +47,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "WinResized" }, {
 		end
 	end,
 })
+
 --[[
 vim.api.nvim_create_autocmd("CmdlineEnter", {
 	pattern = { "/", "?" },
