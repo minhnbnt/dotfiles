@@ -1,10 +1,6 @@
 return {
 
-	{ import = "plugins.ui.bufferline" },
-	{ import = "plugins.ui.lualine" },
-	{ import = "plugins.ui.noice" },
-	{ import = "plugins.ui.notify" },
-	{ import = "plugins.ui.statuscol" },
+	{ import = "plugins.ui" },
 
 	{ "nvim-tree/nvim-web-devicons", lazy = true },
 

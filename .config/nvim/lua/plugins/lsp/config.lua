@@ -85,6 +85,12 @@ return {
 	},
 
 	{
+		"mrcjkb/rustaceanvim",
+		version = "*",
+		ft = { "rust" },
+	},
+
+	{
 		"neovim/nvim-lspconfig",
 		event = { "BufReadPost", "BufNewFile" },
 

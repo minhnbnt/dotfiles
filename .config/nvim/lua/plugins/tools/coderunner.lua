@@ -33,7 +33,6 @@ local function get_command(compile, run)
 		return command
 	end
 end
-
 local function get_root(patterns)
 	local ok, lsp = pcall(require, "lspconfig")
 
@@ -103,91 +102,5 @@ return {
 				typescript = get_command("tsc $fileName", "node $fileNameWithoutExt.js"),
 			},
 		},
-	},
-
-	{
-		"rest-nvim/rest.nvim",
-		enabled = false,
-		dependencies = { "nvim-lua/plenary.nvim" },
-		opts = {},
-	},
-
-	{
-		"windwp/nvim-autopairs",
-		event = "InsertEnter",
-		opts = {},
-	},
-
-	{
-		"antoinemadec/FixCursorHold.nvim",
-		enabled = true,
-		init = function()
-			vim.g.cursorhold_updatetime = 1000
-		end,
-	},
-
-	{
-		"echasnovski/mini.comment",
-		version = "*",
-		event = { "BufReadPost", "BufNewFile" },
-
-		dependencies = {
-			{
-				"JoosepAlviste/nvim-ts-context-commentstring",
-				opts = { enable_autocmd = false },
-			},
-		},
-
-		opts = {
-			options = {
-				custom_commentstring = function()
-					return require("ts_context_commentstring.internal").calculate_commentstring()
-						or vim.bo.commentstring
-				end,
-			},
-		},
-	},
-
-	{
-		"michaelb/sniprun",
-		enabled = false,
-		event = { "BufReadPost", "BufNewFile" },
-
-		build = "sh ./install.sh",
-
-		opts = { display = { "NvimNotify" } },
-	},
-
-	{
-		"folke/zen-mode.nvim",
-
-		keys = {
-			{ "<leader>z", "<cmd>ZenMode<cr>", desc = "Toggle zen-mode" },
-		},
-
-		opts = {},
-	},
-
-	{
-		"lukas-reineke/indent-blankline.nvim",
-		event = { "BufReadPost", "BufNewFile" },
-		main = "ibl",
-
-		opts = function()
-			local hooks = require("ibl.hooks")
-			hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_tab_indent_level)
-			hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
-
-			return {
-
-				indent = { char = "│" },
-				scope = {
-					highlight = { "CurrScope" },
-					enabled = true,
-					show_start = false,
-					show_end = false,
-				},
-			}
-		end,
 	},
 }
