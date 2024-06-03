@@ -1,7 +1,8 @@
 ls() { /usr/bin/eza -A --icons --group-directories-first --color "$@" }
 matrix() { /usr/bin/neo-matrix -D "$@" }
 
-nohup() { (/usr/bin/nohup "$@" > /dev/null 2>&1 &) }
+compdef run=nohup
+run() { "$@" > /dev/null 2>&1 & disown }
 
 power() {
 	PS3="Enter the option: "

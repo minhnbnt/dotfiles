@@ -19,6 +19,11 @@ fi
 
 source "${ZINIT_HOME}/zinit.zsh"
 
+autoload -Uz compinit
+compinit
+
+zinit cdreplay -q
+
 # I use Arch, BTW
 fastfetch
 
@@ -29,7 +34,3 @@ done
 
 unset conf
 
-autoload -Uz compinit
-compinit
-
-zinit cdreplay -q
