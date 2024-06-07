@@ -1,7 +1,7 @@
 ls() { /usr/bin/eza -A --icons --group-directories-first --color "$@" }
 matrix() { /usr/bin/neo-matrix -D "$@" }
 
-compdef run=nohup
+compdef _precommand run
 run() { "$@" > /dev/null 2>&1 & disown }
 
 power() {
