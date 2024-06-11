@@ -13,5 +13,4 @@ zinit snippet OMZP::sudo
 
 eval "$(atuin init zsh)"
 eval "$(thefuck --alias)"
-eval "$(starship init zsh)"
 eval "$(zoxide init zsh --cmd cd)"
