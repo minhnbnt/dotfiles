@@ -6,10 +6,6 @@ local function server_name()
 	local buf_ft = vim.bo.filetype
 	local clients = vim.lsp.get_active_clients()
 
-	if next(clients) == nil then
-		return ""
-	end
-
 	local attached = vim.iter(clients)
 		:filter(function(client)
 			local filetypes = client.config.filetypes or {}
