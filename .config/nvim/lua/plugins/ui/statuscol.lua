@@ -2,7 +2,6 @@ return {
 
 	"luukvbaal/statuscol.nvim",
 	event = { "BufReadPost", "BufNewFile" },
-	config = load("statuscol"),
 
 	opts = function()
 		local builtin = require("statuscol.builtin")
@@ -24,7 +23,7 @@ return {
 			segments = {
 				{
 					click = "v:lua.ScSa",
-					sign = { name = { "Diagnostic" }, colwidth = 1 },
+					sign = { namespace = { "diagnostic/signs" }, colwidth = 1 },
 				},
 				{
 					click = "v:lua.ScLa",
