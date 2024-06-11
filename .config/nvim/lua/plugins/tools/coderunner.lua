@@ -8,9 +8,7 @@ local function get_command(compile, run)
 		if vim.fn.filereadable(input_path) == 1 then
 			local user_answer = vim.fn.input("Run with " .. input_path .. "? [Y/n]: ", "y")
 
-			if vim.iter({ "y", "n" }):all(function(ans)
-				return user_answer ~= ans
-			end) then
+			if not vim.tbl_contains({ "y", "n" }, user_answer) then
 				return nil
 			end
 
@@ -33,6 +31,7 @@ local function get_command(compile, run)
 		return command
 	end
 end
+
 local function get_root(patterns)
 	local ok, lsp = pcall(require, "lspconfig")
 
