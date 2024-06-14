@@ -5,13 +5,6 @@ return {
 
 	opts = function()
 		local builtin = require("statuscol.builtin")
-		function builtin.diagnostic_click(args)
-			if args.button == "l" then
-				vim.diagnostic.open_float()
-			elseif args.button == "r" then
-				vim.lsp.buf.code_action()
-			end
-		end
 
 		return {
 
@@ -36,7 +29,7 @@ return {
 				},
 				{
 					click = "v:lua.ScSa",
-					sign = { namespace = { "gitsigns_extmark_signs_" }, colwidth = 1 },
+					sign = { namespace = { "gitsigns" }, colwidth = 1 },
 				},
 				{
 					text = { builtin.foldfunc },

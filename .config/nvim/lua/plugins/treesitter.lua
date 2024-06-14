@@ -35,7 +35,7 @@ return {
 		build = ":TSUpdate",
 		dependencies = {
 			"nvim-treesitter/nvim-treesitter-refactor",
-			"windwp/nvim-ts-autotag",
+			{ "windwp/nvim-ts-autotag", opts = {} },
 		},
 
 		main = "nvim-treesitter.configs",
@@ -72,7 +72,6 @@ return {
 			-- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
 
 			autopairs = { enable = true },
-			autotag = { enable = true },
 			highlight = {
 				-- `false` will disable the whole extension
 				enable = true,
