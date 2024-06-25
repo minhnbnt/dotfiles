@@ -120,8 +120,6 @@ function M.config()
 					cmp.confirm({ select = true })
 				elseif luasnip.expand_or_jumpable() then
 					luasnip.expand_or_jump()
-				elseif luasnip.jumpable(1) then
-					luasnip.jump(1)
 				else
 					fallback()
 				end

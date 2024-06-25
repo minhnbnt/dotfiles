@@ -63,11 +63,12 @@ M.opts = function()
 	return {
 		debug = false,
 		sources = {
+			formatting.biome,
 
 			formatting.shfmt,
 			formatting.clang_format.with({ extra_args = { "--style=" .. config.clang_format() } }),
 			formatting.gofmt,
-			formatting.prettier.with({ extra_filetypes = { "svelte" } }),
+			--formatting.prettier.with({ extra_filetypes = { "svelte" } }),
 			require("none-ls.formatting.rustfmt").with({ extra_args = { "--config=" .. config.rustfmt() } }),
 			formatting.stylua,
 			require("none-ls.formatting.ruff_format"),

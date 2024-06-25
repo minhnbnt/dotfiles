@@ -52,8 +52,6 @@ return {
 			hijack_directories = {
 				enable = false,
 			},
-			respect_buf_cwd = true,
-			update_cwd = true,
 			hijack_cursor = false,
 			sync_root_with_cwd = true,
 		},

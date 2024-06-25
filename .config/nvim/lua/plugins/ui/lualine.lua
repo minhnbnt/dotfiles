@@ -189,7 +189,7 @@ M.opts.sections.lualine_c = {
 		function()
 			if vim.bo.modified then
 				return "●" -- file modified
-			elseif vim.bo.modifiable == false then
+			elseif not vim.bo.modifiable then
 				return "" -- read-only
 			end
 			return "" -- normal
