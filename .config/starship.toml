@@ -46,6 +46,11 @@ show_always = true
 format = '[$ssh_symbol](bold blue)[@](bold 8)[$hostname](bold 12)'
 ssh_only = false
 
+[nodejs]
+detect_extensions = []
+detect_files = ['package-lock.json', '.node-version']
+detect_folders = []
+
 [status]
 format = '[$int]($style)[[: ]()$common_meaning$signal_name$maybe_int](#f0c6c6) '
 style = 'bold bright-red'
