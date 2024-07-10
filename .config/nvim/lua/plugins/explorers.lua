@@ -1,4 +1,4 @@
-local function open_file_browser()
+local function open_find_file()
 	local current_dir = vim.fn.expand("%:p")
 	local stat = vim.loop.fs_stat(current_dir)
 
@@ -6,31 +6,21 @@ local function open_file_browser()
 		return
 	end
 
-	local ok, telescope = pcall(require, "telescope")
+	local ok, telescope = pcall(require, "telescope.builtin")
 
 	if not ok then
 		return
 	end
 
-	local file_browser = telescope.extensions.file_browser
-
-	if not file_browser then
-		return
-	end
-
 	vim.api.nvim_buf_delete(0, { force = true })
-
-	file_browser.file_browser({
-		path = current_dir,
-		grouped = true,
-		hidden = true,
-	})
+	telescope.find_files()
 end
 
 return {
 
 	{
 		"nvim-tree/nvim-tree.lua",
+		enabled = false,
 		cmd = { "NvimTreeOpen", "NvimTreeToggle" },
 
 		keys = {
@@ -65,7 +55,12 @@ return {
 	{
 		"nvim-neo-tree/neo-tree.nvim",
 		branch = "v3.x",
-		enabled = false,
+
+		cmd = { "Neotree" },
+		keys = {
+			{ "<leader>ft", "<cmd>Neotree<cr>", desc = "Nvim Tree" },
+		},
+
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"nvim-tree/nvim-web-devicons",
@@ -74,16 +69,23 @@ return {
 		},
 
 		opts = {
-			sources = { "filesystem", "buffers", "git_status", "document_symbols" },
+			close_if_last_window = true,
+			sort_case_insensitive = true,
+			sources = { "filesystem", "git_status", "document_symbols" },
 			source_selector = {
 				winbar = true,
 				sources = {
 					{ source = "filesystem", display_name = " 󰉓 File " },
 					{ source = "git_status", display_name = " 󰊢 Git " },
-					{ source = "buffers", display_name = " 󰓩 Buf " },
 					{ source = "document_symbols", display_name = "  Sym " },
 				},
 				content_layout = "center",
+			},
+			window = { width = 34 },
+			filesystem = {
+				filtered_items = {
+					hide_dotfiles = false,
+				},
 			},
 		},
 	},
@@ -124,11 +126,14 @@ return {
 
 		init = function()
 			vim.api.nvim_create_autocmd("VimEnter", {
-				callback = open_file_browser,
+				callback = open_find_file,
 			})
 		end,
 
 		opts = {
+			pickers = {
+				find_files = { hidden = true },
+			},
 			defaults = {
 				-- borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
 

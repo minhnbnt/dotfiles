@@ -51,6 +51,12 @@ return {
 					highlight = "PanelHeading",
 				},
 				{
+					filetype = "neo-tree",
+					text = "File Explorer",
+					separator = true,
+					highlight = "PanelHeading",
+				},
+				{
 					filetype = "packer",
 					text = "Packer",
 					highlight = "PanelHeading",
