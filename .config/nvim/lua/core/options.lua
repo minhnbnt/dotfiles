@@ -68,7 +68,7 @@ vim.cmd([[
 	vnoremap <RightMouse>                       <C-\><C-g>gv<cmd>:popup! PopUp<cr>
 
 	aunmenu PopUp
-	nnoremenu <silent> PopUp.NvimTree           :NvimTreeToggle <cr>
+	nnoremenu <silent> PopUp.NeoTree           :Neotree <cr>
 	nnoremenu <silent> PopUp.Open\ File         :Telescope file_browser hidden=true grouped=true<cr>
 	nnoremenu <silent> PopUp.Format\ code       :lua vim.lsp.buf.format()<cr>
 	nnoremenu <silent> PopUp.Find\ File         :Telescope find_files hidden=true<cr>

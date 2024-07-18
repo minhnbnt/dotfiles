@@ -61,6 +61,12 @@ return {
 			},
 		},
 		provider_selector = function(bufnr, filetype, buftype)
+			local bt_ignore = { "nofile", "prompt", "terminal" }
+
+			if vim.tbl_contains(bt_ignore, buftype) then
+				return ""
+			end
+
 			-- if you prefer treesitter provider rather than lsp,
 			--return ftMap[filetype] or { "treesitter", "indent" }
 			return ftMap[filetype] or { "treesitter", "indent" }
