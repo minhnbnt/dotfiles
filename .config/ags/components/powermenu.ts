@@ -60,6 +60,7 @@ function revealer() {
 function shutdown() {
 	return Widget.Button({
 		label: '',
+		class_name: 'button-pow-alt',
 		onClicked: () =>
 			runDialog({
 				title: 'Are you sure?',
@@ -71,6 +72,7 @@ function shutdown() {
 
 export default function PowerMenu() {
 	return Widget.EventBox({
+		class_name: 'container',
 		onHover: () => (revealChild.value = true),
 		setup: (self) =>
 			self.on('leave-notify-event', () => {

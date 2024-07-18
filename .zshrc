@@ -33,4 +33,3 @@ for conf in "$HOME/.config/zsh/"*.zsh; do
 done
 
 unset conf
-

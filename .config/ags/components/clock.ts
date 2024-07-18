@@ -19,6 +19,7 @@ Utils.subprocess(
 
 export default function Clock() {
 	return Widget.Box({
+		className: 'clock',
 		orientation: 1,
 		tooltip_text: record.bind().as((record) => record.tooltip),
 		children: [

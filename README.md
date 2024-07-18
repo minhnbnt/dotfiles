@@ -19,8 +19,7 @@ git clone git@github.com:minhnbnt/dotfiles.git ~/dotfiles
 Then use GNU stow to create symlinks.
 
 ```sh
-cd ~/dotfiles
-stow --adopt .
+stow -d ~/dotfiles -t ~/ --adopt
 ```
 
 The `stow --adopt` command will create symlinks without overwriting existing files.

@@ -25,7 +25,7 @@ function getWorkspaceButton(id: number) {
 
 export default function Workspaces() {
 	return Widget.Box({
-		vpack: 'fill',
+		class_name: 'container',
 		vertical: true,
 		children: Array.from({ length: 10 }, (_, i) => i + 1) //
 			.map((i) => getWorkspaceButton(i)),

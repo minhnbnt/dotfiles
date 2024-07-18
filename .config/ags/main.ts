@@ -18,12 +18,21 @@ function Bar(monitor: number) {
 			end_widget: Widget.Box({
 				vpack: 'end',
 				vertical: true,
-				children: [Network(), Battery(), Audio(), Clock(), PowerMenu()],
+				children: [
+					Widget.Box({
+						className: 'container',
+						orientation: 1,
+						children: [Network(), Battery(), Audio()],
+					}),
+					Clock(),
+					PowerMenu(),
+				],
 			}),
 		}),
 	});
 }
 
 App.config({
+	style: './style.css',
 	windows: [Bar(0)],
 });

@@ -30,10 +30,24 @@ export default function Audio(type = 'speaker') {
 					child: slider,
 				}),
 				Widget.Button({
+					class_name: 'vol-icon',
 					onClicked: () => {
 						target.isMuted = !target.isMuted;
 						revealSlider.value = !target.isMuted;
 					},
+					child: Widget.Icon({}).hook(audio.speaker, (self) => {
+						const vol = audio.speaker.volume * 100;
+						const icon = [
+							[101, 'overamplified'],
+							[67, 'high'],
+							[34, 'medium'],
+							[1, 'low'],
+							[0, 'muted'],
+						].find(([threshold]) => threshold <= vol)?.[1];
+
+						self.icon = `audio-volume-${icon}-symbolic`;
+						self.tooltip_text = `Volume ${Math.floor(vol)}%`;
+					}),
 				}),
 			],
 		}),
