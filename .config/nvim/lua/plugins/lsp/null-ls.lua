@@ -72,7 +72,6 @@ M.opts = function()
 			require("none-ls.formatting.rustfmt").with({ extra_args = { "--config=" .. config.rustfmt() } }),
 			formatting.stylua,
 			require("none-ls.formatting.ruff_format"),
-			formatting.isort,
 
 			hover.dictionary,
 		},

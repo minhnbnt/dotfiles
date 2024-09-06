@@ -5,6 +5,7 @@ local active_buffer = "#99d1db"
 return {
 
 	"akinsho/bufferline.nvim",
+	version = "*",
 	event = { "VeryLazy" },
 
 	enabled = true,

@@ -58,7 +58,7 @@ return {
 
 		cmd = { "Neotree" },
 		keys = {
-			{ "<leader>ft", "<cmd>Neotree<cr>", desc = "Nvim Tree" },
+			{ "<leader>ft", "<cmd>Neotree toggle<cr>", desc = "NeoTree toggle" },
 		},
 
 		dependencies = {
@@ -69,7 +69,9 @@ return {
 		},
 
 		opts = {
-			close_if_last_window = true,
+			enable_git_status = false,
+			enable_diagnostics = false,
+
 			sort_case_insensitive = true,
 			sources = { "filesystem", "git_status", "document_symbols" },
 			source_selector = {

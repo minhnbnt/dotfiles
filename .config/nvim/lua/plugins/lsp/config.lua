@@ -10,13 +10,14 @@ local servers = {
 	"html",
 	"jdtls",
 	"jsonls",
+	"kotlin_language_server",
 	"omnisharp",
 	--"ruff_lsp",
 	"rust_analyzer",
 	"svelte",
 	"tailwindcss",
 	"typos_lsp",
-	"tsserver",
+	"ts_ls",
 	"pyright",
 	"lua_ls",
 }
@@ -111,7 +112,7 @@ return {
 		opts = {
 
 			inlay_hint = false,
-			log_level = "off",
+			log_level = "info",
 
 			signs = {
 				Error = "",
