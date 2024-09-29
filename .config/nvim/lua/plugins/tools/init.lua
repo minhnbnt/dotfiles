@@ -47,7 +47,7 @@ return {
 		"razak17/tailwind-fold.nvim",
 		event = { "BufReadPost", "BufNewFile" },
 		dependencies = { "nvim-treesitter/nvim-treesitter" },
-		ft = { "html", "svelte", "astro", "vue", "typescriptreact", "php", "blade" },
+		ft = { "html", "svelte", "astro", "vue", "javascriptreact", "typescriptreact", "php", "blade" },
 
 		opts = { enabled = false },
 	},

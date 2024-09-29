@@ -12,7 +12,7 @@ local servers = {
 	"jsonls",
 	"kotlin_language_server",
 	"omnisharp",
-	--"ruff_lsp",
+	"ruff",
 	"rust_analyzer",
 	"svelte",
 	"tailwindcss",

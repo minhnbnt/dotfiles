@@ -9,14 +9,18 @@ import sys
 ICONS = ["", "", "", "", "", "", ""]
 OTHER_ICON = ""
 
+ACTIVE_CLASSNAME = "active"
+VISIBLE_CLASSNAME = "visible"
+EMPTY_CLASSNAME = "inactive"
 
-def print_widget(visible_workspaces, active_workspace):
+
+def print_widget(visible_workspaces: set[int], active_workspace: int):
     visible_workspaces = set(visible_workspaces)
 
-    print(f'(eventbox :onscroll "python3 {__file__!r}', '{}"', end=" ")
+    print(f'(eventbox :onscroll "python3 {__file__!r} {{}}"', end=" ")
     print('(box :class "works" :orientation "v" :space-evenly false', end="")
 
-    def print_button(id, button_class, icon):
+    def print_button(id: int, button_class: str, icon: str):
         print(f' (button :tooltip "Workspace {id}"', end=" ")
 
         print(f':onclick "hyprctl dispatch workspace {id}"', end=" ")
@@ -25,22 +29,22 @@ def print_widget(visible_workspaces, active_workspace):
         print(f':class "{button_class}" "{icon}"', end=")")
 
     for id, icon in enumerate(ICONS, start=1):
-        button_class = "inactive"
+        button_class = EMPTY_CLASSNAME
+
+        if id in visible_workspaces:
+            button_class = VISIBLE_CLASSNAME
+            visible_workspaces.remove(id)
 
         if id == active_workspace:
-            button_class = "active"
-        elif id in visible_workspaces:
-            button_class = "visible"
-
-        visible_workspaces.discard(id)
+            button_class = ACTIVE_CLASSNAME
 
         print_button(id, button_class, icon)
 
     for id in sorted(visible_workspaces):
-        button_class = "inactive"
+        button_class = EMPTY_CLASSNAME
 
         if id == active_workspace:
-            button_class = "active"
+            button_class = ACTIVE_CLASSNAME
 
         print_button(id, button_class, OTHER_ICON)
 
@@ -63,7 +67,7 @@ def init_widget():
     return visible_workspaces, active_workspace
 
 
-def args_handle(argv):
+def args_handle(argv: list[str]):
     if len(argv) == 1:
         return
 
@@ -85,7 +89,7 @@ def args_handle(argv):
     sys.exit(0)
 
 
-def update_workspace(buf):
+def update_workspace(buf: str):
     changed = False
 
     def get_number(line: str) -> int:
@@ -112,10 +116,14 @@ def update_workspace(buf):
 with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
     args_handle(sys.argv)
 
-    xdgRunRimeDir = os.environ["XDG_RUNTIME_DIR"]
-    signature = os.environ["HYPRLAND_INSTANCE_SIGNATURE"]
+    try:
+        xdgRuntimeDir = os.environ["XDG_RUNTIME_DIR"]
+        signature = os.environ["HYPRLAND_INSTANCE_SIGNATURE"]
 
-    sock.connect(f"{xdgRunRimeDir}/hypr/{signature}/.socket2.sock")
+        sock.connect(f"{xdgRuntimeDir}/hypr/{signature}/.socket2.sock")
+
+    except (KeyError, FileNotFoundError) as e:
+        raise ValueError(f"{e}. Is your hyprland running?.")
 
     visible_workspaces, active_workspace = init_widget()
     print_widget(visible_workspaces, active_workspace)
@@ -123,5 +131,5 @@ with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
     while True:
         buf = sock.recv(1024).decode()
 
-        if buf and update_workspace(buf):
+        if changed := update_workspace(buf):
             print_widget(visible_workspaces, active_workspace)

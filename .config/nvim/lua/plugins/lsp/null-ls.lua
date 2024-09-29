@@ -1,3 +1,5 @@
+local newFormatter = require("utils.formatOnSave")
+
 local M = {
 
 	"nvimtools/none-ls.nvim",
@@ -63,37 +65,20 @@ M.opts = function()
 	return {
 		debug = false,
 		sources = {
-			--formatting.biome,
+			formatting.biome,
 
 			formatting.shfmt,
 			formatting.clang_format.with({ extra_args = { "--style=" .. config.clang_format() } }),
 			formatting.gofmt,
-			formatting.prettier.with({ extra_filetypes = { "svelte" } }),
+			--formatting.prettier.with({ extra_filetypes = { "svelte" } }),
 			require("none-ls.formatting.rustfmt").with({ extra_args = { "--config=" .. config.rustfmt() } }),
 			formatting.stylua,
-			require("none-ls.formatting.ruff_format"),
 
 			hover.dictionary,
 		},
 
 		on_attach = function(client, bufnr)
-			if not client.supports_method("textDocument/formatting") then
-				return
-			end
-			vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-			vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-				group = augroup,
-				buffer = bufnr,
-				callback = function()
-					vim.lsp.buf.format({
-						filter = function(server)
-							return server.name == "null-ls"
-						end,
-						timeout_ms = 5000,
-						bufnr = bufnr,
-					})
-				end,
-			})
+			newFormatter(client, bufnr)
 		end,
 	}
 end

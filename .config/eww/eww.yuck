@@ -1,7 +1,6 @@
 (defwindow bar
 	:exclusive true
 	:monitor 0
-	:windowtype "dock"
 	:stacking "fg"
 	:focusable false
 	:geometry (geometry :x "5px"

@@ -17,7 +17,7 @@ struct Widget {
 impl Widget {
 	pub fn print(&self) {
 		const OTHER_ICON: &str = "";
-		const ICONS: [&str; 7] = ["", "", "", "", "", "", ""];
+		const ICONS: [&str; 7] = ["1", "2", "3", "4", "5", "6", "7"];
 
 		print!("(eventbox :onscroll '{} {{}}' ", self.exec_path.display());
 		print!("(box :class 'works' :orientation 'v' :space-evenly false");

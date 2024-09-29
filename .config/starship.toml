@@ -1,3 +1,5 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
 add_newline = false
 palette = 'arch'
 
@@ -56,3 +58,30 @@ format = '[$int]($style)[[: ]()$common_meaning$signal_name$maybe_int](#f0c6c6) '
 style = 'bold bright-red'
 map_symbol = true
 disabled = false
+
+[c]
+symbol = " "
+
+[golang]
+symbol = " "
+
+[gradle]
+symbol = " "
+
+[java]
+symbol = " "
+
+[kotlin]
+symbol = " "
+
+[lua]
+symbol = " "
+
+[meson]
+symbol = "󰔷 "
+
+[python]
+symbol = " "
+
+[rust]
+symbol = "󱘗 "

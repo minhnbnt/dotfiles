@@ -1,3 +1,11 @@
+local function diagnostic_click(args)
+	if args.button == "l" then
+		vim.diagnostic.open_float()
+	elseif args.button == "r" then
+		vim.cmd("Lspsaga code_action")
+	end
+end
+
 return {
 
 	"luukvbaal/statuscol.nvim",
@@ -37,6 +45,8 @@ return {
 					condition = { builtin.not_empty },
 				},
 			},
+
+			clickhandlers = { ["diagnostic/signs"] = diagnostic_click },
 		}
 	end,
 }
