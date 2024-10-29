@@ -8,49 +8,18 @@ return {
 	},
 
 	opts = function()
+		local stdpath = vim.fn.stdpath("config")
 		local dashboard = require("alpha.themes.dashboard")
-		--     
-		dashboard.section.header.val = {
 
-			--▟▙    █ ▟▀▀▀▀ ▟▀▀▀▙ █   █ █ ▟▙ ▟▙
-			--█▝▙   █ █     █   █ █   █ █ █▐▄▌█
-			--█ ▝▙  █ █▀▀▀▀ █   █ █   █ █ █ ▀ █
-			--█  ▝▙ █ █     █   █ ▜▖ ▗▛ █ █   █
-			--█   ▝▙▛ ▜▄▄▄▄ ▜▄▄▄▛  ▜▄▛  █ █   █
-
-			--	[[  ▗██▙        ██▖  ]],
-			--	[[ ▟█████▖      ███▙ ]],
-			--	[[▙▝▜█████▙     █████]],
-			--	[[██▖▀██████▖   █████]],
-			--	[[███▙▖▀█████▙  █████]],
-			--	[[█████ ▝▜█████▄▝▜███]],
-			--	[[█████   ▀██████▄▝██]],
-			--	[[█████     ▜█████▙▖▜]],
-			--	[[ ▜███      ▝█████▛ ]],
-			--	[[  ▝██        ▜██▘  ]],
-
-			[[  ▗██▙       ██▖                             ]],
-			[[ ▟█████▖     ███▙                            ]],
-			[[▙▝▜█████▙▖   █████ ▟▀▀▀▀ ▟▀▀▀▙ █  ▐▌▐▌▗█▖  ▟▙]],
-			[[██▖▀██████▙  █████ █     █   █ █  ▐▌▐▌▐▌▜▖▟▘█]],
-			[[███▙▖▀██████▄▝▜███ █▀▀▀▀ █   █ █  ▐▌▐▌▐▌ ▜▘ █]],
-			[[█████ ▝▜██████▄▝██ █     █   █ ▜▖ ▟▘▐▌▐▌    █]],
-			[[█████   ▝▜█████▙▖▜ ▜▄▄▄▄ ▜▄▄▄▛  ▜▟▘ ▐▌▐▌    █]],
-			[[ ▜███     ▝█████▛                            ]],
-			[[  ▝██       ▜██▘                             ]],
-		}
+		dashboard.section.header.val = vim.iter(io.lines(stdpath .. "/banner.txt")):totable()
 
 		dashboard.section.buttons.val = {
 			dashboard.button("n", "  New file", ":ene <CR>"),
-			dashboard.button("o", "  Open file", ":Telescope file_browser hidden=true grouped=true <CR>"),
-			dashboard.button("f", "  Find file", ":Telescope find_files hidden=true <CR>"),
+			dashboard.button("o", "  Open file", ":Telescope file_browser <CR>"),
+			dashboard.button("f", "  Find file", ":Telescope find_files <CR>"),
 			dashboard.button("p", "  Find project", ":Telescope projects <CR>"),
 			dashboard.button("r", "  Recently used files", ":Telescope oldfiles <CR>"),
-			dashboard.button(
-				"c",
-				"  Configuration",
-				":Telescope file_browser hidden=true grouped=true path=" .. vim.fn.stdpath("config") .. " <CR>"
-			),
+			dashboard.button("c", "  Configuration", ":Telescope file_browser path=" .. stdpath .. " <CR>"),
 			dashboard.button("g", "  Live grep", ":Telescope live_grep <CR>"),
 			dashboard.button("t", "  Tutor", ":Tutor <CR>"),
 			dashboard.button("h", "  Help", ":tab h <CR>"),
