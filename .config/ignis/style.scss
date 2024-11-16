@@ -1,0 +1,47 @@
+* {
+	all: unset;
+}
+
+@import "./styles/colors";
+
+@import "./styles/sliders";
+@import "./styles/tooltip";
+@import "./styles/workspaces";
+
+.bar {
+	padding: 1rem 0.6rem;
+	background-color: rgba($color: $bg, $alpha: 0.8);
+	color: $fg;
+}
+
+.tray-item {
+	all: unset;
+}
+
+.clock {
+	min-width: 32px;
+	padding: 0px;
+	color: #ca9ee6;
+	margin-bottom: 2px;
+}
+
+.power-button {
+	color: #8087a2;
+	transition: 0.5s;
+}
+
+.shutdown-alt {
+	color: #e78284;
+}
+
+.shutdown:hover {
+	color: #e64553;
+}
+
+.restart:hover {
+	color: #f5c43d;
+}
+
+.exit:hover {
+	color: #965be3;
+}

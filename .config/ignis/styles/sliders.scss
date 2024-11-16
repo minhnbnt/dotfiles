@@ -1,0 +1,49 @@
+@import "./colors";
+
+.slider trough {
+	margin: 10px 0px;
+	min-height: 100px;
+	background-color: gray;
+	border-radius: 1rem;
+
+	slider {
+		background-color: #fff;
+		min-height: 20px;
+		min-width: 20px;
+		margin: -8px;
+		border-radius: 1rem;
+	}
+}
+
+.slider-icon {
+	color: #fff;
+	margin: 2px;
+	min-width: 25px;
+	min-height: 25px;
+}
+
+.brightness-low {
+	margin: 4px 2px;
+	min-width: 21px;
+	min-height: 21px;
+}
+
+.clock {
+	color: #fff;
+	font-size: 22px;
+}
+
+.brightness-icon {
+	color: #f9e2af;
+}
+.brightness-slider highlight {
+	background-color: #f9e2af;
+}
+
+.volume-icon {
+	color: #a6e3a1;
+}
+
+.volume-slider highlight {
+	background-color: #a6e3a1;
+}
