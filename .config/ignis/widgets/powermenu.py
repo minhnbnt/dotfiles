@@ -80,10 +80,10 @@ def power_menu() -> Widget:
             pixel_size=22,
             tooltip_text="Shutdown",
         ),
-        on_click=lambda: open_dialog(
+        on_click=lambda _: open_dialog(
             title="Are you sure?",
-            message="Do you really want to restart?",
-            command="reboot",
+            message="Do you really want to shutdown?",
+            command="shutdown -P now",
         ),
     )
 
@@ -96,6 +96,7 @@ def power_menu() -> Widget:
 
     event_box = Widget.EventBox(
         child=[revealer, head],
+        css_classes=["power-menu"],
         spacing=is_hovered.bind("value", lambda hover: spacing if hover else 0),
         vertical=True,
     )

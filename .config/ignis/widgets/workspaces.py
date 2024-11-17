@@ -24,11 +24,18 @@ def get_buttons(workspaces: list[dict]) -> List[Widget]:
     visible_workspaces = {workspace["id"] for workspace in workspaces}
     active_workspace_id = hyprland.active_workspace["id"]  # type: ignore
 
-    buttons = []
+    before_active, after_active = [], []
+    active = None
+
+    def add_button(id: int, button: Widget.Button):
+        if id > active_workspace_id:
+            after_active.append(button)
+        elif id < active_workspace_id:
+            before_active.append(button)
 
     def get_button(id: int, label: str) -> Widget.Button:
         return Widget.Button(
-            css_classes=["workspace"],
+            css_classes=["workspace-button"],
             child=Widget.Label(label=label),
             on_click=lambda _: hyprland.switch_to_workspace(id),
         )
@@ -43,10 +50,12 @@ def get_buttons(workspaces: list[dict]) -> List[Widget]:
             class_name = "visible"
 
         if id == active_workspace_id:
-            class_name = "active"
+            button.add_css_class("active")
+            active = button
+            continue
 
         button.add_css_class(class_name)
-        buttons.append(button)
+        add_button(id, button)
 
     for id in sorted(visible_workspaces):
         label = str(id)
@@ -57,10 +66,38 @@ def get_buttons(workspaces: list[dict]) -> List[Widget]:
 
         if id == active_workspace_id:
             button.add_css_class("active")
+            active = button
+            continue
 
-        buttons.append(button)
+        add_button(id, button)
 
-    return buttons
+    assert active is not None
+
+    return [
+        Widget.Box(
+            vertical=True,
+            css_classes=("not-visible",),
+            child=(
+                Widget.Box(
+                    vertical=True,
+                    css_classes=("before-active",),
+                    child=before_active,
+                ),
+            ),
+        ),
+        active,
+        Widget.Box(
+            vertical=True,
+            css_classes=("not-visible",),
+            child=(
+                Widget.Box(
+                    vertical=True,
+                    css_classes=("after-active",),
+                    child=after_active,
+                ),
+            ),
+        ),
+    ]
 
 
 def workspaces() -> Widget.EventBox:
@@ -69,6 +106,5 @@ def workspaces() -> Widget.EventBox:
         on_scroll_down=lambda _: scroll_workspaces("down"),
         css_classes=("workspaces",),
         vertical=True,
-        spacing=5,
         child=hyprland.bind("workspaces", get_buttons),
     )

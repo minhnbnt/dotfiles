@@ -14,6 +14,7 @@ def transform(func: Callable[[datetime], str]):
 def clock_component() -> Widget.Box:
     return Widget.Box(
         vertical=True,
+        halign="center",
         css_classes=["clock"],
         child=(
             Widget.Label(label=transform(lambda t: f"{t.hour:02d}")),

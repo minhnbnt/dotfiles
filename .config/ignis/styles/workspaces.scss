@@ -1,23 +1,51 @@
 @import "./colors";
 
-.workspace {
+.workspace-button {
 	color: #fff;
 	font-size: 24px;
-	border-radius: 0.5rem;
-	padding: 0rem 0.5rem;
-	margin-left: 0.1rem;
+	padding: 0px 10px;
+	margin: 3px 6px;
+	margin-left: 7px;
 	transition: 0.3s;
+	border-radius: 1rem;
 }
 
-.workspace:hover {
-	background-color: rgba($color: lighten($bg, 30%), $alpha: 0.7);
+.workspace-button:hover {
+	background-color: rgba($color: lighten($bg, 10%), $alpha: 0.7);
 }
 
-.workspace.active {
-	background-color: $active;
+.workspace-button.active {
+	margin: 0;
+	margin-left: 7px;
+	padding: 1px 10px;
+	background-color: #c6d0f5;
+	padding-right: 16px;
 	color: $bg;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
 }
 
-.workspace.hidden {
-	color: darken($fg, 15%);
+.workspace-button.hidden {
+	color: darken($fg, 10%);
+}
+
+.before-active,
+.after-active {
+	background-color: $bg;
+}
+
+.not-visible {
+	background-color: #c6d0f5;
+}
+
+.before-active {
+	padding-bottom: 2px;
+	border-bottom-right-radius: 1rem;
+	padding-top: 1rem;
+}
+
+.after-active {
+	padding-top: 2px;
+	border-top-right-radius: 1rem;
+	padding-bottom: 1rem;
 }

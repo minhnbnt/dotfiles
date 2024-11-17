@@ -14,13 +14,12 @@ app.apply_css(Utils.get_current_dir() + "/style.scss")
 
 
 def left() -> Widget.Box:
-    return Widget.Box(child=[workspaces()], spacing=10)
+    return workspaces()
 
 
 def right() -> Widget.Box:
     return Widget.Box(
         vertical=True,
-        spacing=5,
         child=(
             speaker_volume(),
             brightness_slider(),

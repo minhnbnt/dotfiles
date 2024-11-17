@@ -16,8 +16,9 @@ def revealer_when_hover(
     )
 
     event_box = Widget.EventBox(
+        css_classes=["container"],
         child=(revealer, head),
-        spacing=0,
+        spacing=spacing,
         vertical=True,
     )
 

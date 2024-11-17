@@ -9,8 +9,9 @@
 @import "./styles/workspaces";
 
 .bar {
-	padding: 1rem 0.6rem;
-	background-color: rgba($color: $bg, $alpha: 0.8);
+	padding-top: 0px;
+	padding-bottom: 10px;
+	background-color: $bg;
 	color: $fg;
 }
 
@@ -18,11 +19,29 @@
 	all: unset;
 }
 
+.container,
+.power-menu,
+.clock {
+	margin: 1px 5px;
+	transition: 0.3s;
+}
+
+.power-menu:hover,
+.container:hover,
+.clock:hover {
+	border-radius: 1rem;
+	background-color: rgba($color: lighten($bg, 10%), $alpha: 0.7);
+}
+
 .clock {
 	min-width: 32px;
-	padding: 0px;
+	padding: 2px 3px;
 	color: #ca9ee6;
-	margin-bottom: 2px;
+}
+
+.power-menu {
+	padding-top: 7px;
+	min-width: 32px;
 }
 
 .power-button {
@@ -31,11 +50,16 @@
 }
 
 .shutdown-alt {
+	padding-bottom: 7px;
 	color: #e78284;
 }
 
-.shutdown:hover {
-	color: #e64553;
+.shutdown {
+	padding-bottom: 7px;
+
+	&:hover {
+		color: #e64553;
+	}
 }
 
 .restart:hover {
