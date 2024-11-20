@@ -4,7 +4,7 @@ from ignis.services.backlight import (
 )
 from ignis.widgets import Widget
 
-from components.revealer import revealer_when_hover
+from components.revealer import revealer
 
 
 def get_percent(device: BacklightDevice) -> int:
@@ -28,7 +28,7 @@ def brightness_slider() -> Widget:
     service = BacklightService.get_default()
     device: BacklightDevice = service.devices[0]  # type: ignore
 
-    component, _ = revealer_when_hover(
+    component, _ = revealer(
         head=Widget.Icon(
             image="display-brightness-symbolic",
             css_classes=("slider-icon", "brightness-icon"),

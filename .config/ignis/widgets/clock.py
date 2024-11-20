@@ -11,7 +11,7 @@ def transform(func: Callable[[datetime], str]):
     return _clock.bind("output", func)
 
 
-def clock_component() -> Widget.Box:
+def clock() -> Widget.Box:
     return Widget.Box(
         vertical=True,
         halign="center",

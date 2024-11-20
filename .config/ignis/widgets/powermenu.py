@@ -4,7 +4,7 @@ from typing import Callable, List, Tuple, Optional
 
 from ignis.widgets import Widget
 
-from components.revealer import revealer_when_hover
+from components.revealer import revealer
 
 DIALOG_PATH = os.environ["HOME"] + "/.config/eww/bar/bin/eww_power_dialog"
 
@@ -81,7 +81,7 @@ def power_menu() -> Widget:
         ),
     )
 
-    component, revealed_child = revealer_when_hover(
+    component, revealed_child = revealer(
         child, head, spacing, css_classes=["power-menu"]
     )
 

@@ -4,7 +4,7 @@ from ignis.variable import Variable
 from ignis.widgets import Widget
 
 
-def revealer_when_hover(
+def revealer(
     child: Widget,
     head: Widget,
     spacing: int = 0,

@@ -3,7 +3,7 @@ from ignis.utils import Utils
 from ignis.widgets import Widget
 
 from widgets.blacklight import brightness_slider
-from widgets.clock import clock_component
+from widgets.clock import clock
 from widgets.powermenu import power_menu
 from widgets.upower import battery
 from widgets.volume import speaker_volume
@@ -25,7 +25,7 @@ def right() -> Widget.Box:
             speaker_volume(),
             brightness_slider(),
             battery(),
-            clock_component(),
+            clock(),
             power_menu(),
         ),
     )
