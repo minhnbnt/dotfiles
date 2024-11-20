@@ -7,6 +7,7 @@
 @import "./styles/sliders";
 @import "./styles/tooltip";
 @import "./styles/workspaces";
+@import "./styles/powermenu";
 
 .bar {
 	padding-top: 0px;
@@ -21,51 +22,28 @@
 
 .container,
 .power-menu,
-.clock {
-	margin: 1px 5px;
+.clock,
+.battery {
+	margin: -0.5px 5px;
 	transition: 0.3s;
+	border-radius: 1rem;
 }
 
 .power-menu:hover,
 .container:hover,
-.clock:hover {
-	border-radius: 1rem;
+.clock:hover,
+.battery:hover {
 	background-color: rgba($color: lighten($bg, 10%), $alpha: 0.7);
+}
+
+.battery {
+	color: #cdd6f4;
+	min-width: 32px;
+	padding: 6px 3px;
 }
 
 .clock {
 	min-width: 32px;
 	padding: 2px 3px;
 	color: #ca9ee6;
-}
-
-.power-menu {
-	padding-top: 7px;
-	min-width: 32px;
-}
-
-.power-button {
-	color: #8087a2;
-	transition: 0.5s;
-}
-
-.shutdown-alt {
-	padding-bottom: 7px;
-	color: #e78284;
-}
-
-.shutdown {
-	padding-bottom: 7px;
-
-	&:hover {
-		color: #e64553;
-	}
-}
-
-.restart:hover {
-	color: #f5c43d;
-}
-
-.exit:hover {
-	color: #965be3;
 }

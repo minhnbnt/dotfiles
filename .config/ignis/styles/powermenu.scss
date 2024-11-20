@@ -1,0 +1,32 @@
+@import "./colors";
+
+.power-menu {
+	padding-top: 7px;
+	min-width: 32px;
+}
+
+.power-button {
+	color: #8087a2;
+	transition: 0.5s;
+}
+
+.shutdown-alt {
+	padding-bottom: 7px;
+	color: #e78284;
+}
+
+.shutdown {
+	padding-bottom: 7px;
+
+	&:hover {
+		color: #e64553;
+	}
+}
+
+.restart:hover {
+	color: #f5c43d;
+}
+
+.exit:hover {
+	color: #965be3;
+}
