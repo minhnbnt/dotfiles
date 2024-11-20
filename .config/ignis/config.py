@@ -4,9 +4,10 @@ from ignis.widgets import Widget
 
 from widgets.blacklight import brightness_slider
 from widgets.clock import clock_component
+from widgets.powermenu import power_menu
+from widgets.upower import battery
 from widgets.volume import speaker_volume
 from widgets.workspaces import workspaces
-from widgets.powermenu import power_menu
 
 app = IgnisApp.get_default()
 
@@ -23,6 +24,7 @@ def right() -> Widget.Box:
         child=(
             speaker_volume(),
             brightness_slider(),
+            battery(),
             clock_component(),
             power_menu(),
         ),
