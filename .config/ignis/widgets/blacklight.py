@@ -1,8 +1,8 @@
-from ignis.widgets import Widget
 from ignis.services.backlight import (
     BacklightService,
     BacklightDevice,
 )
+from ignis.widgets import Widget
 
 from components.revealer import revealer_when_hover
 
@@ -24,11 +24,11 @@ def get_tooltip(device: BacklightDevice) -> str:
     )
 
 
-def brightness_slider() -> Widget.Scale:
+def brightness_slider() -> Widget:
     service = BacklightService.get_default()
     device: BacklightDevice = service.devices[0]  # type: ignore
 
-    return revealer_when_hover(
+    component, _ = revealer_when_hover(
         head=Widget.Icon(
             image="display-brightness-symbolic",
             css_classes=("slider-icon", "brightness-icon"),
@@ -46,3 +46,5 @@ def brightness_slider() -> Widget.Scale:
             on_change=lambda e: on_slider_change(device, round(e.value)),
         ),
     )
+
+    return component

@@ -1,9 +1,10 @@
 import os
 import subprocess
-from typing import Callable, List, Tuple
+from typing import Callable, List, Tuple, Optional
 
 from ignis.widgets import Widget
-from ignis.variable import Variable
+
+from components.revealer import revealer_when_hover
 
 DIALOG_PATH = os.environ["HOME"] + "/.config/eww/bar/bin/eww_power_dialog"
 
@@ -15,9 +16,12 @@ def open_dialog(title: str, message: str, command: str):
 def get_button(
     image: str,
     tooltip: str,
-    classes: List[str] = [],
+    classes: Optional[List[str]] = None,
     on_click: Callable = lambda: None,
 ):
+    if classes is None:
+        classes = []
+
     classes.append("power-button")
 
     return Widget.Button(
@@ -34,21 +38,12 @@ def get_button(
 def power_menu() -> Widget:
     spacing = 10
 
-    is_hovered = Variable(value=False)
-
-    def on_hover(_):
-        is_hovered.value = True
-
-    def on_hover_lost(_):
-        is_hovered.value = False
-
     child = Widget.Box(
         spacing=spacing,
         vertical=True,
         child=(
-            # get_button(image="system-lock-screen-symbolic", tooltip="Lock"),
             get_button(
-                image="system-log-out",
+                image="system-log-out-symbolic",
                 tooltip="Exit",
                 classes=["exit"],
                 on_click=lambda: open_dialog(
@@ -58,7 +53,7 @@ def power_menu() -> Widget:
                 ),
             ),
             get_button(
-                image="system-reboot",
+                image="system-reboot-symbolic",
                 tooltip="Restart",
                 classes=["restart"],
                 on_click=lambda: open_dialog(
@@ -70,13 +65,12 @@ def power_menu() -> Widget:
         ),
     )
 
-    def get_css_class(hover: bool) -> Tuple:
+    def get_head_css_class(hover: bool) -> Tuple:
         return ("power-button", "shutdown" if hover else "shutdown-alt")
 
     head = Widget.Button(
         child=Widget.Icon(
-            css_classes=is_hovered.bind("value", get_css_class),
-            image="system-shutdown",
+            image="system-shutdown-symbolic",
             pixel_size=22,
             tooltip_text="Shutdown",
         ),
@@ -87,21 +81,10 @@ def power_menu() -> Widget:
         ),
     )
 
-    revealer = Widget.Revealer(
-        child=child,
-        reveal_child=is_hovered.bind("value"),
-        transition_type="slide_up",
-        transition_duration=500,
+    component, revealed_child = revealer_when_hover(
+        child, head, spacing, css_classes=["power-menu"]
     )
 
-    event_box = Widget.EventBox(
-        child=[revealer, head],
-        css_classes=["power-menu"],
-        spacing=is_hovered.bind("value", lambda hover: spacing if hover else 0),
-        vertical=True,
-    )
+    head.css_classes = revealed_child.bind("value", get_head_css_class)
 
-    event_box.on_hover = on_hover
-    event_box.on_hover_lost = on_hover_lost
-
-    return event_box
+    return component

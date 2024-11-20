@@ -1,4 +1,5 @@
 from typing import List
+
 from ignis.services.hyprland import HyprlandService
 from ignis.widgets import Widget
 

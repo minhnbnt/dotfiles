@@ -4,7 +4,7 @@ from ignis.widgets import Widget
 from components.revealer import revealer_when_hover
 
 
-def speaker_volume() -> Widget.Box:
+def speaker_volume() -> Widget:
     audio = AudioService.get_default()
     stream = audio.speaker
 
@@ -38,7 +38,7 @@ def speaker_volume() -> Widget.Box:
         on_click=toggle_mute,
     )
 
-    return revealer_when_hover(
+    component, _ = revealer_when_hover(
         child=slider,
         head=button,
         tooltip=stream.bind(
@@ -49,3 +49,5 @@ def speaker_volume() -> Widget.Box:
             ),
         ),
     )
+
+    return component
