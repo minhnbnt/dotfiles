@@ -134,7 +134,8 @@ return {
 
 		opts = {
 			pickers = {
-				find_files = { hidden = true },
+				find_files = { hidden = true, grouped = true },
+				file_browser = { hidden = true, grouped = true },
 			},
 			defaults = {
 				-- borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
