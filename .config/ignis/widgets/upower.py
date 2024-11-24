@@ -48,8 +48,11 @@ def get_icon(battery: UPowerDevice) -> str:
     return icon_name + "-symbolic"
 
 
-def get_icon_GoObject(battery: UPowerDevice):
-    return battery.bind(
+def battery() -> Widget:
+    service = UPowerService.get_default()
+    battery: UPowerDevice = service.display_device  # type: ignore
+
+    icon_name = battery.bind(
         "charged",
         lambda _: battery.bind(
             "percent",
@@ -57,16 +60,11 @@ def get_icon_GoObject(battery: UPowerDevice):
         ),
     )
 
-
-def battery() -> Widget:
-    service = UPowerService.get_default()
-    battery: UPowerDevice = service.display_device  # type: ignore
-
     widget = Widget.EventBox(
         child=[
             Widget.Icon(
-                css_classes=["battery"],
-                image=get_icon_GoObject(battery),
+                css_classes=("battery",),
+                image=icon_name,
                 pixel_size=22,
             )
         ]

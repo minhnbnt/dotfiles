@@ -1,4 +1,4 @@
-from typing import List, Optional, Tuple
+from typing import Iterable, Optional, Tuple
 
 from ignis.variable import Variable
 from ignis.widgets import Widget
@@ -9,7 +9,7 @@ def revealer(
     head: Widget,
     spacing: int = 0,
     tooltip: Optional[str] = None,
-    css_classes: Optional[List[str]] = None,
+    css_classes: Optional[Iterable[str]] = None,
 ) -> Tuple[Widget, Variable]:
     if css_classes is None:
         css_classes = []
@@ -32,11 +32,11 @@ def revealer(
     def on_reveal_child_change(is_revealed: Variable, _):
         if is_revealed.value:
             revealer.set_reveal_child(True)
-            event_box.set_property("spacing", spacing)
+            event_box.spacing = spacing
 
         else:
             revealer.set_reveal_child(False)
-            event_box.set_property("spacing", 0)
+            event_box.spacing = 0
 
     reveal_child.connect("notify::value", on_reveal_child_change)
 
@@ -44,6 +44,6 @@ def revealer(
     event_box.on_hover_lost = lambda _: reveal_child.set_property("value", False)
 
     if tooltip is not None:
-        event_box.set_property("tooltip_text", tooltip)
+        event_box.tooltip_text = tooltip
 
     return event_box, reveal_child

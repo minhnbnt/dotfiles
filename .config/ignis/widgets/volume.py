@@ -4,7 +4,7 @@ from ignis.widgets import Widget
 from components.revealer import revealer
 
 
-def speaker_volume() -> Widget:
+def speaker_slider() -> Widget:
     audio = AudioService.get_default()
     stream = audio.speaker
 
@@ -31,7 +31,7 @@ def speaker_volume() -> Widget:
 
     button = Widget.Button(
         child=Widget.Icon(
-            css_classes=["slider-icon", "volume-icon"],
+            css_classes=("slider-icon", "volume-icon"),
             image=stream.bind("icon_name"),
             pixel_size=22,
         ),

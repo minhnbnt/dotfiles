@@ -2,27 +2,29 @@ from ignis.app import IgnisApp
 from ignis.utils import Utils
 from ignis.widgets import Widget
 
-from widgets.blacklight import brightness_slider
-from widgets.clock import clock
-from widgets.powermenu import power_menu
-from widgets.upower import battery
-from widgets.volume import speaker_volume
-from widgets.workspaces import workspaces
+from widgets import (
+    brightness_slider,
+    clock,
+    power_menu,
+    battery,
+    speaker_slider,
+    workspaces,
+)
 
 app = IgnisApp.get_default()
 
 app.apply_css(Utils.get_current_dir() + "/style.scss")
 
 
-def left() -> Widget.Box:
+def top() -> Widget:
     return workspaces()
 
 
-def right() -> Widget.Box:
+def bottom() -> Widget:
     return Widget.Box(
         vertical=True,
         child=(
-            speaker_volume(),
+            speaker_slider(),
             brightness_slider(),
             battery(),
             clock(),
@@ -39,12 +41,11 @@ def bar(monitor_id: int = 0) -> Widget.Window:
         exclusivity="exclusive",
         child=Widget.CenterBox(
             vertical=True,
-            css_classes=["bar"],
-            start_widget=left(),
-            end_widget=right(),
+            css_classes=("bar",),
+            start_widget=top(),
+            end_widget=bottom(),
         ),
     )
 
 
-for i in range(Utils.get_n_monitors()):
-    bar(i)
+bar()

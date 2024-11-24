@@ -1,4 +1,4 @@
-from typing import List
+from typing import Literal, Iterable
 
 from ignis.services.hyprland import HyprlandService
 from ignis.widgets import Widget
@@ -7,36 +7,39 @@ hyprland = HyprlandService.get_default()
 ICONS = ("1", "2", "3", "4", "5", "6", "7")
 
 
-def scroll_workspaces(direction: str) -> None:
+def scroll_workspaces(direction: Literal["up", "down"]) -> None:
     current = hyprland.active_workspace["id"]  # type: ignore
+
+    target = current + 1
     if direction == "up":
         target = current - 1
-        hyprland.switch_to_workspace(target)
 
-    else:
-        target = current + 1
-        if target == 11:
-            return
-
+    if 1 <= target <= 10:
         hyprland.switch_to_workspace(target)
 
 
-def get_buttons(workspaces: list[dict]) -> List[Widget]:
+def get_buttons(workspaces: Iterable[dict]) -> Iterable[Widget]:
     visible_workspaces = {workspace["id"] for workspace in workspaces}
     active_workspace_id = hyprland.active_workspace["id"]  # type: ignore
 
-    before_active, after_active = [], []
-    active = None
+    buttons = {
+        "before-active": [],
+        "after-active": [],
+        "active": None,
+    }
 
     def add_button(id: int, button: Widget.Button):
         if id > active_workspace_id:
-            after_active.append(button)
+            buttons["after-active"].append(button)
         elif id < active_workspace_id:
-            before_active.append(button)
+            buttons["before-active"].append(button)
+
+        else:
+            buttons["active"] = button
 
     def get_button(id: int, label: str) -> Widget.Button:
         return Widget.Button(
-            css_classes=["workspace-button"],
+            css_classes=("workspace-button",),
             child=Widget.Label(label=label),
             on_click=lambda _: hyprland.switch_to_workspace(id),
         )
@@ -51,9 +54,7 @@ def get_buttons(workspaces: list[dict]) -> List[Widget]:
             class_name = "visible"
 
         if id == active_workspace_id:
-            button.add_css_class("active")
-            active = button
-            continue
+            class_name = "active"
 
         button.add_css_class(class_name)
         add_button(id, button)
@@ -67,14 +68,10 @@ def get_buttons(workspaces: list[dict]) -> List[Widget]:
 
         if id == active_workspace_id:
             button.add_css_class("active")
-            active = button
-            continue
 
         add_button(id, button)
 
-    assert active is not None
-
-    return [
+    return (
         Widget.Box(
             vertical=True,
             css_classes=("not-visible",),
@@ -82,11 +79,11 @@ def get_buttons(workspaces: list[dict]) -> List[Widget]:
                 Widget.Box(
                     vertical=True,
                     css_classes=("before-active",),
-                    child=before_active,
+                    child=iter(buttons["before-active"]),
                 ),
             ),
         ),
-        active,
+        buttons["active"],
         Widget.Box(
             vertical=True,
             css_classes=("not-visible",),
@@ -94,11 +91,11 @@ def get_buttons(workspaces: list[dict]) -> List[Widget]:
                 Widget.Box(
                     vertical=True,
                     css_classes=("after-active",),
-                    child=after_active,
+                    child=iter(buttons["after-active"]),
                 ),
             ),
         ),
-    ]
+    )
 
 
 def workspaces() -> Widget.EventBox:

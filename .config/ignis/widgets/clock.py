@@ -15,7 +15,7 @@ def clock() -> Widget.Box:
     return Widget.Box(
         vertical=True,
         halign="center",
-        css_classes=["clock"],
+        css_classes=("clock",),
         child=(
             Widget.Label(label=transform(lambda t: f"{t.hour:02d}")),
             Widget.Label(label=transform(lambda t: f"{t.minute:02d}")),

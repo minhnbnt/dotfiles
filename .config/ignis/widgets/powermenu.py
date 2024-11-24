@@ -1,12 +1,12 @@
 import os
 import subprocess
-from typing import Callable, List, Tuple, Optional
+from typing import Callable, Iterable, Tuple, Optional
 
 from ignis.widgets import Widget
 
 from components.revealer import revealer
 
-DIALOG_PATH = os.environ["HOME"] + "/.config/eww/bar/bin/eww_power_dialog"
+DIALOG_PATH = os.path.expanduser("~/.config/eww/bar/bin/eww_power_dialog")
 
 
 def open_dialog(title: str, message: str, command: str):
@@ -16,7 +16,7 @@ def open_dialog(title: str, message: str, command: str):
 def get_button(
     image: str,
     tooltip: str,
-    classes: Optional[List[str]] = None,
+    classes: Optional[Iterable[str]] = None,
     on_click: Callable = lambda: None,
 ):
     if classes is None:
@@ -65,8 +65,8 @@ def power_menu() -> Widget:
         ),
     )
 
-    def get_head_css_class(hover: bool) -> Tuple:
-        return ("power-button", "shutdown" if hover else "shutdown-alt")
+    def get_head_css_class(hover: bool) -> Tuple[str, str]:
+        return "power-button", "shutdown" if hover else "shutdown-alt"
 
     head = Widget.Button(
         child=Widget.Icon(
@@ -82,7 +82,7 @@ def power_menu() -> Widget:
     )
 
     component, revealed_child = revealer(
-        child, head, spacing, css_classes=["power-menu"]
+        child, head, spacing, css_classes=["power-menu"],
     )
 
     head.css_classes = revealed_child.bind("value", get_head_css_class)
