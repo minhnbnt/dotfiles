@@ -1,0 +1,28 @@
+set number relativenumber
+
+set ideajoin
+
+let mapleader = " "
+
+vnoremap <BS> <Del>
+
+vnoremap <leader>x "+x
+vnoremap <leader>y "+y
+nnoremap <leader>p "+p
+
+nmap <leader>lf <Action>(ReformatCode)
+nmap <leader>lr <Action>(RenameElement)
+
+nmap <leader>ff <Action>(SearchEverywhere)
+
+nmap <leader>gi <Action>(GotoImplementation)
+nmap <leader>gd <Action>(GotoImplementation)
+nmap <leader>gt <Action>(GotoTypeDeclaration)
+
+nmap <leader>ca <Action>(ShowIntentionActions)
+nmap <leader>cr <Action>(Run)
+
+vmap <leader>cb <Action>(CommentByBlockComment)
+vmap <leader>cl <Action>(CommentByLineComment)
+
+nmap <leader>z <Action>(ToggleDistractionFreeMode)
