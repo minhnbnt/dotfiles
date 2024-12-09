@@ -1,19 +1,16 @@
+import os
+
 from ignis.app import IgnisApp
-from ignis.utils import Utils
 from ignis.widgets import Widget
 
 from widgets import (
+    battery,
     brightness_slider,
     clock,
     power_menu,
-    battery,
     speaker_slider,
     workspaces,
 )
-
-app = IgnisApp.get_default()
-
-app.apply_css(Utils.get_current_dir() + "/style.scss")
 
 
 def top() -> Widget:
@@ -47,5 +44,8 @@ def bar(monitor_id: int = 0) -> Widget.Window:
         ),
     )
 
+
+app = IgnisApp.get_default()
+app.apply_css(os.path.expanduser("~/.config/ignis/style.scss"))
 
 bar()
