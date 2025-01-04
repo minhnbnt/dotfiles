@@ -1,0 +1,9 @@
+[safe]
+	directory = *
+
+[user]
+	email = minhnbnt@gmail.com
+	name = minhnbnt
+
+[core]
+	autocrlf = input
