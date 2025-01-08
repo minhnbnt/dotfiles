@@ -1,30 +1,25 @@
+if (( ! $+commands[starship] )); then
+	return
+fi
+
 STARSHIP_LOG="error"
 
 eval "$(starship init zsh)"
 
-reset="%f%b"
-bold="%B"
-
-col_user="%F{10}" # green
-sh_char='$'
-
 if [[ $UID == 0 ]]; then
-	col_user="%F{11}" # yellow
-	sh_char='#'
+	export SH_CHAR='#'
+else
+	export SH_CHAR='$'
 fi
 
-col_line="%F{cyan}"
-col_cmdnum="%F{15}"
-col_sh="%F{14}"  # bright cyan
-
-if [[ $cmdcount < 1 ]]; then
-	cmdcount=1
+if [[ $CMD_COUNT < 0 ]]; then
+	export CMD_COUNT=0
 fi
 
-preexec() { ((cmdcount++)) }
-
-block_cmd_num=$col_line'['$col_cmdnum$bold'$cmdcount'$reset$col_line']'
-PROMPT=$col_line'┌─'$block_cmd_num${PROMPT}$col_sh$bold$sh_char$reset" "
+precmd() {
+	printf '\e[5 q'
+	((CMD_COUNT++))
+}
 
 zle-line-init() {
 	emulate -L zsh
@@ -47,7 +42,7 @@ zle-line-init() {
 	done
 
 	local saved_prompt=$PROMPT
-	PROMPT="$bold$col_sh$sh_char$reset "
+	PROMPT="%F{14}%B$SH_CHAR%f%b "
 
 	zle .reset-prompt
 

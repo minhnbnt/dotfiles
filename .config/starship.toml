@@ -1,19 +1,27 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
 add_newline = false
-palette = 'arch'
 
 format = """
+[╭─](line)${env_var.CMD_COUNT}\
 [(\\[$username$hostname\\])](line)$directory\
 [(\n[┆](line) $all)]()\
-$line_break[└╼](line) \
+$line_break[╰╼](line) ${env_var.SH_CHAR} \
 """
+
+palette = 'arch'
 
 [palettes.arch]
 line = "cyan"
 
-[battery]
-disabled = true
+[env_var.CMD_COUNT]
+format = "[([\\[](line)$env_value[\\]](line))]($style)"
+style = "bright-white bold"
+
+[env_var.SH_CHAR]
+format = "[$env_value]($style)"
+style = "bright-cyan bold"
+default = "$"
 
 [character]
 disabled = true
@@ -22,14 +30,15 @@ disabled = true
 style = "bright-purple"
 format = '[[─\[](line)$path[$read_only]($read_only_style)[\]](line)]($style)'
 read_only = " "
-truncation_length = 15
+truncation_length = 20
 truncation_symbol = '.../'
 
 [cmd_duration]
 min_time = 0
+show_milliseconds = true
 
 [git_branch]
-symbol = '[ ](#f05033)'
+symbol = '[](#f05033) '
 style = ""
 
 [git_status]
@@ -54,13 +63,16 @@ detect_files = ['package-lock.json', '.node-version']
 detect_folders = []
 
 [status]
-format = '[$int]($style)[[: ]()$common_meaning$signal_name$maybe_int](#f0c6c6) '
-style = 'bold bright-red'
+format = '[$int](bold bright-red)[[: ]()$common_meaning$signal_name$maybe_int](#f0c6c6) '
 map_symbol = true
 disabled = false
 
 [c]
 symbol = " "
+
+[conda]
+symbol = " "
+ignore_base = false
 
 [golang]
 symbol = " "
@@ -85,3 +97,8 @@ symbol = " "
 
 [rust]
 symbol = "󱘗 "
+
+[sudo]
+format = 'as [$symbol]($style) '
+symbol = ""
+disabled = false
