@@ -1,10 +1,10 @@
-from typing import Iterable, Optional, Tuple
+from collections.abc import Iterable
+from typing import Optional, Tuple
 
 from ignis.variable import Variable
 from ignis.widgets import Widget
 
 from utils.debounce import DebounceWorker
-
 
 _TIMEOUT_SECONDS = 1
 _var_setters = []
@@ -19,22 +19,21 @@ def _add_event(
     worker = DebounceWorker()
 
     def set_reveal_child(value: bool, timeout_second: float = 0):
-        def setter() -> None:
-            reveal_child.value = value
-
-        worker.run(round(timeout_second * 1000), setter)
+        worker.run(
+            round(timeout_second * 1000),
+            lambda: setattr(reveal_child, "value", value),
+        )
 
     _var_setters.append(set_reveal_child)
 
-    def on_hover() -> None:
+    def on_hover(_) -> None:
         for setter in _var_setters:
-            if setter is not set_reveal_child:
-                setter(False)
+            setter(False)
 
         set_reveal_child(True)
 
-    event_box.on_hover = lambda _: on_hover()
-    event_box.on_hover_lost = lambda _: set_reveal_child(False, _TIMEOUT_SECONDS)
+    event_box.on_hover = on_hover  # type: ignore
+    event_box.on_hover_lost = lambda _: set_reveal_child(False, _TIMEOUT_SECONDS)  # type: ignore
 
     def on_reveal_child_change(is_revealed: Variable, _):
         if is_revealed.value:  # noqa
@@ -49,8 +48,8 @@ def _add_event(
 
 
 def revealer(
-    child: Widget,
     head: Widget,
+    child: Widget,
     spacing: int = 0,
     tooltip: Optional[str] = None,
     css_classes: Optional[Iterable[str]] = None,
@@ -67,15 +66,15 @@ def revealer(
     event_box = Widget.EventBox(
         css_classes=("container", *css_classes),
         child=(revealer, head),
-        spacing=0,
         vertical=True,
+        spacing=0,
     )
+
+    if tooltip is not None:
+        event_box.tooltip_text = tooltip
 
     reveal_child = Variable(value=False)
 
     _add_event(event_box, revealer, reveal_child, spacing)
-
-    if tooltip is not None:
-        event_box.tooltip_text = tooltip
 
     return event_box, reveal_child

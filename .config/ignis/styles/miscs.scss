@@ -1,0 +1,63 @@
+@use "./colors.scss" as c;
+
+* {
+	all: unset;
+}
+
+tooltip label {
+	font-size: 14px;
+	font-family: "Cantarell";
+	border-radius: 6px;
+	border: #dce0e8 1px solid;
+	padding: 2px 4px;
+	margin-left: 4px;
+	color: #dce0e8;
+	background-color: #11111b;
+}
+
+.bar {
+	padding-bottom: 10px;
+	padding-top: 0px;
+
+	background-color: c.$bg;
+	opacity: 0.9;
+
+	color: c.$fg;
+}
+
+.tray-item {
+	all: unset;
+}
+
+.clock,
+.battery,
+.container,
+.power-menu {
+	margin: 0.5px 5px;
+	transition: 0.3s;
+	border-radius: 1rem;
+}
+
+.clock:hover,
+.battery:hover,
+.container:hover,
+.power-menu:hover {
+	background-color: rgba(c.$fg, 0.1);
+}
+
+.battery {
+	color: #cdd6f4;
+	min-width: 32px;
+	padding: 6px 3px;
+}
+
+.clock {
+	padding: 2px 3px;
+	padding-bottom: 3px;
+
+	margin-top: 3px;
+	margin-bottom: 3px;
+
+	min-width: 32px;
+	color: #ca9ee6;
+}

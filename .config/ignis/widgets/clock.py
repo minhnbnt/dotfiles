@@ -1,10 +1,10 @@
+from collections.abc import Callable
 from datetime import datetime
-from typing import Callable
 
-from ignis.utils import Utils
+from ignis.utils.poll import Poll
 from ignis.widgets import Widget
 
-_clock = Utils.Poll(1000, lambda _: datetime.now())
+_clock = Poll(1000, lambda _: datetime.now())
 
 
 def transform(func: Callable[[datetime], str]):
@@ -21,5 +21,5 @@ def clock() -> Widget.Box:
             Widget.Label(label=transform(lambda t: f"{t.minute:02d}")),
             Widget.Label(label=transform(lambda t: f"{t.second:02d}")),
         ),
-        tooltip_text=transform(lambda t: t.strftime("%a, %b %d %Y %H:%M:%S")),
+        tooltip_text=transform(lambda t: t.strftime("%A, %B %d %Y %H:%M:%S")),
     )

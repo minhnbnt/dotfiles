@@ -6,14 +6,14 @@ from components.revealer import revealer
 
 def speaker_slider() -> Widget:
     audio = AudioService.get_default()
-    stream = audio.speaker
+    stream = audio.speaker  # noqa
 
     def toggle_mute(_) -> None:
         stream.is_muted = not stream.is_muted
 
-    def get_tooltip(stream: Stream) -> str:
-        result = f"{stream.name}: {stream.volume}%"
-        if stream.is_muted:
+    def get_tooltip(audio_stream: Stream) -> str:
+        result = f"{audio_stream.name}: {audio_stream.volume}%"  # noqa
+        if audio_stream.is_muted:  # noqa
             result += " [MUTED]"
 
         return result
@@ -38,16 +38,18 @@ def speaker_slider() -> Widget:
         on_click=toggle_mute,
     )
 
-    component, _ = revealer(
-        child=slider,
-        head=button,
-        tooltip=stream.bind(
-            "is_muted",
-            lambda _: stream.bind(
-                "volume",
-                lambda _: get_tooltip(stream),
-            ),
+    tooltip = stream.bind(
+        "is_muted",
+        lambda _: stream.bind(
+            "volume",
+            lambda _: get_tooltip(stream),
         ),
+    )
+
+    component, _ = revealer(
+        head=button,
+        child=slider,
+        tooltip=tooltip,
     )
 
     return component

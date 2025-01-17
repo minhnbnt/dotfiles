@@ -14,27 +14,27 @@ def get_tooltip(device: UPowerDevice) -> str:
     tooltip = (
         f"{device.kind}: "
         f"{device.energy}/{device.energy_full}mWh "
-        f"({device.percent:.0f}%) "
+        f"({device.percent:.0f}%)"
     )
 
     if time_remaining.total_seconds() > 0:
-        tooltip += f"[{time_remaining} remaining] "
+        tooltip += f" [{time_remaining} remaining]"
 
     if state == 1:
-        tooltip += "[charging] "
+        tooltip += " [charging]"
 
     if state == 4:
-        tooltip += "[charged] "
+        tooltip += " [charged]"
 
-    return tooltip.rstrip()
+    return tooltip
 
 
-def get_icon(battery: UPowerDevice) -> str:
-    state: int = battery.proxy.State  # type: ignore
+def get_icon(battery_device: UPowerDevice) -> str:
+    state: int = battery_device.proxy.State  # type: ignore
     if state == 4:
         return "battery-level-100-charged-symbolic"
 
-    percent: float = battery.percent  # type: ignore
+    percent: float = battery_device.percent  # type: ignore
     if percent > 100:
         percent = 100
 
@@ -50,13 +50,13 @@ def get_icon(battery: UPowerDevice) -> str:
 
 def battery() -> Widget:
     service = UPowerService.get_default()
-    battery: UPowerDevice = service.display_device  # type: ignore
+    battery_device: UPowerDevice = service.display_device  # type: ignore
 
-    icon_name = battery.bind(
+    icon_name = battery_device.bind(
         "charged",
-        lambda _: battery.bind(
+        lambda _: battery_device.bind(
             "percent",
-            lambda _: get_icon(battery),
+            lambda _: get_icon(battery_device),
         ),
     )
 
@@ -71,9 +71,9 @@ def battery() -> Widget:
     )
 
     def on_hover(_):
-        widget.tooltip_text = get_tooltip(battery)
+        widget.tooltip_text = get_tooltip(battery_device)
 
-    # trigger tooltip_text on hover only to reduce power
-    widget.on_hover = on_hover
+    # refresh tooltip_text on hover only to reduce power
+    widget.on_hover = on_hover  # type: ignore
 
     return Widget.Box(halign="center", child=[widget])

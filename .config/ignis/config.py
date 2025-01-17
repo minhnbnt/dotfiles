@@ -49,3 +49,4 @@ app = IgnisApp.get_default()
 app.apply_css(os.path.expanduser("~/.config/ignis/style.scss"))
 
 bar()
+

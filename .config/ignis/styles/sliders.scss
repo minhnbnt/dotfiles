@@ -1,8 +1,6 @@
-@import "./colors";
-
 .slider trough {
 	margin-top: 14px;
-	margin-bottom: 10px;
+	margin-bottom: 5px;
 	min-height: 100px;
 	background-color: gray;
 	border-radius: 1rem;
@@ -37,7 +35,9 @@
 
 .brightness-icon {
 	color: #f9e2af;
+	padding-top: 2px;
 }
+
 .brightness-slider highlight {
 	background-color: #f9e2af;
 }

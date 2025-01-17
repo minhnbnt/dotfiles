@@ -8,7 +8,7 @@ from components.revealer import revealer
 
 
 def get_percent(device: BacklightDevice) -> int:
-    return round(device.brightness / device.max_brightness * 100)
+    return round(device.brightness / device.max_brightness * 100)  # noqa
 
 
 def on_slider_change(device: BacklightDevice, new_brightness: int) -> None:
@@ -19,7 +19,7 @@ def get_tooltip(device: BacklightDevice) -> str:
     percent = get_percent(device)
     return (
         f"{device.device_name}: "
-        f"{device.brightness}/{device.max_brightness} "
+        f"{device.brightness}/{device.max_brightness} "  # noqa
         f"({percent}%)"
     )
 
