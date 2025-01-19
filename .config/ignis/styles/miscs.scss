@@ -12,17 +12,17 @@ tooltip label {
 	padding: 2px 4px;
 	margin-left: 4px;
 	color: #dce0e8;
-	background-color: #11111b;
+	background-color: rgba(c.$bg, 0.9);
 }
 
 .bar {
 	padding-bottom: 10px;
-	padding-top: 0px;
+	padding-right: 1px;
 
 	background-color: c.$bg;
-	opacity: 0.9;
-
 	color: c.$fg;
+
+	opacity: 0.9;
 }
 
 .tray-item {
@@ -33,7 +33,7 @@ tooltip label {
 .battery,
 .container,
 .power-menu {
-	margin: 0.5px 5px;
+	margin: 1px 5px;
 	transition: 0.3s;
 	border-radius: 1rem;
 }
@@ -42,22 +42,22 @@ tooltip label {
 .battery:hover,
 .container:hover,
 .power-menu:hover {
-	background-color: rgba(c.$fg, 0.1);
+	background-color: c.$hover-bg;
 }
 
 .battery {
 	color: #cdd6f4;
 	min-width: 32px;
-	padding: 6px 3px;
+	padding: 8px 3px;
 }
 
 .clock {
-	padding: 2px 3px;
-	padding-bottom: 3px;
+	padding: 2px 0px 3px 2px;
 
-	margin-top: 3px;
-	margin-bottom: 3px;
+	margin: 3px;
 
-	min-width: 32px;
+	min-width: 36px;
+
 	color: #ca9ee6;
+	font-size: 22px;
 }

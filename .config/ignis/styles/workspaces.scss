@@ -14,11 +14,11 @@
 }
 
 .workspaces-background {
-	background-color: #c6d0f5;
+	background-color: c.$fg;
 }
 
 .workspace-button {
-	color: darken(c.$fg, 10%);
+	color: c.$inactive-fg;
 	background-color: transparent;
 }
 
@@ -30,7 +30,7 @@
 }
 
 .workspace-button.has-windows {
-	color: lighten(c.$fg, 30%);
+	color: c.$fg;
 }
 
 .workspace-button.active {
@@ -38,7 +38,7 @@
 }
 
 .workspace-button:not(.active):hover {
-	background-color: rgba(c.$fg, 0.1);
+	background-color: c.$hover-bg;
 }
 
 .workspace-button,

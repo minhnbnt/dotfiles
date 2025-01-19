@@ -1,10 +1,16 @@
+@use "./colors" as c;
+
+$shutdown-color: #e64553;
+$restart: #f5c43d;
+$exit: #965be3;
+
 .power-menu {
 	padding-top: 7px;
 	min-width: 32px;
 }
 
 .power-button {
-	color: #8087a2;
+	color: c.$inactive-fg;
 	transition: 0.5s;
 }
 
@@ -17,7 +23,7 @@
 	padding-bottom: 7px;
 
 	&:hover {
-		color: #e64553;
+		color: $shutdown-color;
 	}
 }
 

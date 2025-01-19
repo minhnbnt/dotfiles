@@ -1,12 +1,17 @@
+@use "./colors" as c;
+
+$brightness-color: #f9e2af;
+$volume-color: #a6e3a1;
+
 .slider trough {
 	margin-top: 14px;
 	margin-bottom: 5px;
 	min-height: 100px;
-	background-color: gray;
+	background-color: c.$inactive-fg;
 	border-radius: 1rem;
 
 	slider {
-		background-color: #fff;
+		background-color: white;
 		min-height: 20px;
 		min-width: 20px;
 		margin: -2px -8px;
@@ -15,7 +20,7 @@
 }
 
 .slider-icon {
-	color: #fff;
+	color: white;
 	margin: 2px;
 	padding: 0 2px 5px 4px;
 	min-width: 25px;
@@ -28,24 +33,19 @@
 	min-height: 21px;
 }
 
-.clock {
-	color: #fff;
-	font-size: 22px;
-}
-
 .brightness-icon {
-	color: #f9e2af;
+	color: $brightness-color;
 	padding-top: 2px;
 }
 
 .brightness-slider highlight {
-	background-color: #f9e2af;
+	background-color: $brightness-color;
 }
 
 .volume-icon {
-	color: #a6e3a1;
+	color: $volume-color;
 }
 
 .volume-slider highlight {
-	background-color: #a6e3a1;
+	background-color: $volume-color;
 }
