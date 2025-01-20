@@ -53,9 +53,9 @@ def background() -> Widget:
         number_of_boxes = active - 1
 
         if active > ICONS_LENGTH:
-            number_of_boxes = (
-                sum(1 for id in workspaces if ICONS_LENGTH < id < active)  #
-                + ICONS_LENGTH
+            number_of_boxes = sum(
+                (1 for id in workspaces if ICONS_LENGTH < id < active),
+                start=ICONS_LENGTH,
             )
 
         margin = 36 * number_of_boxes + 2

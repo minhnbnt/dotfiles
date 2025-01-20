@@ -13,7 +13,7 @@ def derived_variable(
 
     target.connect(
         f"notify::{property_name}",
-        lambda self, _: setattr(result, "value", transform(target)),
+        lambda _, __: setattr(result, "value", transform(target)),
     )
 
     return result

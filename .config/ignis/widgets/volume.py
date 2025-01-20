@@ -2,6 +2,15 @@ from ignis.services.audio import AudioService, Stream
 from ignis.widgets import Widget
 
 from components.revealer import revealer
+from utils.binds import bind_properties
+
+
+def get_tooltip(audio_stream: Stream) -> str:
+    result = f"{audio_stream.name}: {audio_stream.volume}%"  # noqa
+    if audio_stream.is_muted:  # noqa
+        result += " [MUTED]"
+
+    return result
 
 
 def speaker_slider() -> Widget:
@@ -10,13 +19,6 @@ def speaker_slider() -> Widget:
 
     def toggle_mute(_) -> None:
         stream.is_muted = not stream.is_muted
-
-    def get_tooltip(audio_stream: Stream) -> str:
-        result = f"{audio_stream.name}: {audio_stream.volume}%"  # noqa
-        if audio_stream.is_muted:  # noqa
-            result += " [MUTED]"
-
-        return result
 
     slider = Widget.Scale(
         vertical=True,
@@ -38,12 +40,10 @@ def speaker_slider() -> Widget:
         on_click=toggle_mute,
     )
 
-    tooltip = stream.bind(
-        "is_muted",
-        lambda _: stream.bind(
-            "volume",
-            lambda _: get_tooltip(stream),
-        ),
+    tooltip = bind_properties(
+        target=stream,
+        props=("is_muted", "volume"),
+        transform=get_tooltip,
     )
 
     component, _ = revealer(

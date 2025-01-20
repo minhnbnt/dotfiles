@@ -12,7 +12,7 @@ def get_percent(device: BacklightDevice) -> int:
 
 
 def on_slider_change(device: BacklightDevice, new_brightness: int) -> None:
-    device.brightness = new_brightness
+    device.brightness = new_brightness  # type: ignore
 
 
 def get_tooltip(device: BacklightDevice) -> str:

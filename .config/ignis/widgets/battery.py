@@ -4,6 +4,8 @@ from datetime import timedelta
 from ignis.services.upower import UPowerService, UPowerDevice
 from ignis.widgets import Widget
 
+from utils.binds import bind_properties
+
 LEVELS = (0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100)
 
 
@@ -17,14 +19,14 @@ def get_tooltip(device: UPowerDevice) -> str:
         f"({device.percent:.0f}%)"
     )
 
-    if time_remaining.total_seconds() > 0:
-        tooltip += f" [{time_remaining} remaining]"
-
     if state == 1:
         tooltip += " [charging]"
 
-    if state == 4:
+    elif state == 4:
         tooltip += " [charged]"
+
+    if time_remaining.total_seconds() > 0:
+        tooltip += f" [{time_remaining} remaining]"
 
     return tooltip
 
@@ -50,30 +52,21 @@ def get_icon(battery_device: UPowerDevice) -> str:
 
 def battery() -> Widget:
     service = UPowerService.get_default()
-    battery_device: UPowerDevice = service.display_device  # type: ignore
+    battery: UPowerDevice = service.display_device  # type: ignore
 
-    icon_name = battery_device.bind(
-        "charged",
-        lambda _: battery_device.bind(
-            "percent",
-            lambda _: get_icon(battery_device),
-        ),
+    icon_name = bind_properties(
+        target=battery,
+        props=("charged", "percent"),
+        transform=get_icon,
     )
 
-    widget = Widget.EventBox(
+    return Widget.EventBox(
         child=[
             Widget.Icon(
                 css_classes=("battery",),
                 image=icon_name,
                 pixel_size=22,
             )
-        ]
+        ],
+        on_hover=lambda self: self.set_tooltip_text(get_tooltip(battery)),
     )
-
-    def on_hover(_):
-        widget.tooltip_text = get_tooltip(battery_device)
-
-    # refresh tooltip_text on hover only to reduce power
-    widget.on_hover = on_hover  # type: ignore
-
-    return Widget.Box(halign="center", child=[widget])

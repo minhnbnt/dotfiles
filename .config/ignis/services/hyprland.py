@@ -14,7 +14,7 @@ class HyprlandWorkspacesService:
     def __init__(self, hyprland: HyprlandService) -> None:
         self.hyprland = hyprland
         self.workspaces = derived_variable(
-            self.hyprland,
+            hyprland,
             "workspaces",
             _get_workspaces_has_window,
         )
