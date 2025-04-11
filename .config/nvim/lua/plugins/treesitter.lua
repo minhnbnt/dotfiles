@@ -40,6 +40,12 @@ return {
 
 		main = "nvim-treesitter.configs",
 
+		init = function()
+			vim.filetype.add({
+				pattern = { [".*/hypr/.*%.conf"] = "hyprlang" },
+			})
+		end,
+
 		opts = {
 			-- A list of parser names, or "all"
 			ensure_installed = {
@@ -48,15 +54,21 @@ return {
 				"cpp",
 				"css",
 				"c_sharp",
+				"dockerfile",
 				"go",
+				"groovy",
 				"html",
+				"hyprlang",
 				"java",
 				"javascript",
+				"kdl",
+				"kotlin",
 				"lua",
 				"markdown",
 				"printf",
 				"python",
 				"rust",
+				"scss",
 				"svelte",
 				"tsx",
 				"typescript",
@@ -79,7 +91,9 @@ return {
 				-- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
 				-- the name of the parser)
 				-- list of language that will be disabled
-				disable = { "" },
+				disable = function()
+					return false
+				end,
 				-- Setting this to true will run `:h syntax` and tree-sitter at the same time.
 				-- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
 				-- Using this option may slow down your editor, and you may see some duplicate highlights.

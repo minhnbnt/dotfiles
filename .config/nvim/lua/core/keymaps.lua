@@ -8,10 +8,16 @@ keymap("", "<Space>", "<Nop>", opts)
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
-keymap("v", "<leader>y", '"+ygv', {
+keymap("v", "<leader>y", '"+y', {
 	noremap = true,
 	silent = true,
 	desc = "Yank to clipboard",
+})
+
+keymap("n", "<leader>p", '"+p', {
+	noremap = true,
+	silent = true,
+	desc = "Paste from clipboard",
 })
 
 keymap("v", "<BS>", "<Del>", opts)

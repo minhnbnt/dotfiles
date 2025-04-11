@@ -11,6 +11,8 @@ local M = {
 		"hrsh7th/cmp-cmdline",
 		"saadparwaiz1/cmp_luasnip",
 		"ray-x/cmp-treesitter",
+		"L3MON4D3/LuaSnip",
+		"rafamadriz/friendly-snippets",
 	},
 }
 
@@ -70,20 +72,13 @@ end
 
 function M.config()
 	local cmp, luasnip = require("cmp"), require("luasnip")
+	local defaults = require("cmp.config.default")()
+
+	require("luasnip.loaders.from_vscode").lazy_load()
 
 	cmp.setup({
 
-		sorting = {
-			comparators = {
-				cmp.config.compare.offset,
-				cmp.config.compare.exact,
-				cmp.config.compare.score,
-				cmp.config.compare.kind,
-				cmp.config.compare.sort_text,
-				cmp.config.compare.length,
-				cmp.config.compare.order,
-			},
-		},
+		sorting = defaults.sorting,
 
 		preselect = cmp.PreselectMode.None,
 		snippet = {
@@ -114,7 +109,7 @@ function M.config()
 			["<C-f>"] = cmp.mapping.scroll_docs(4),
 			["<C-Space>"] = cmp.mapping.complete(),
 			["<ESC>"] = cmp.mapping.close(),
-			["<CR>"] = cmp.mapping.confirm({ select = false }),
+			--["<CR>"] = cmp.mapping.confirm({ select = false }),
 			["<Tab>"] = cmp.mapping(function(fallback)
 				if cmp.visible() then
 					cmp.confirm({ select = true })
@@ -143,7 +138,7 @@ function M.config()
 			{ name = "path" },
 			{ name = "treesitter" },
 			{ name = "buffer" },
-			{ name = "nvim_lua" },
+			--{ name = "nvim_lua" },
 		}),
 
 		formatting = {

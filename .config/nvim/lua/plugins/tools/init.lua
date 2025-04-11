@@ -3,24 +3,27 @@ return {
 	{ import = "plugins.tools" },
 
 	{
-		"rest-nvim/rest.nvim",
-		enabled = false,
-		dependencies = { "nvim-lua/plenary.nvim" },
-		opts = {},
+		"LunarVim/bigfile.nvim",
+
+		opts = {
+			features = {
+				"indent_blankline",
+				"lsp",
+				"treesitter",
+				"vimopts",
+			},
+			pattern = function(bufnr, _)
+				local file_contents = vim.fn.readfile(vim.api.nvim_buf_get_name(bufnr))
+				local file_length = #file_contents
+				return file_length > 5000
+			end,
+		},
 	},
 
 	{
 		"windwp/nvim-autopairs",
 		event = "InsertEnter",
 		opts = {},
-	},
-
-	{
-		"antoinemadec/FixCursorHold.nvim",
-		enabled = true,
-		init = function()
-			vim.g.cursorhold_updatetime = 1000
-		end,
 	},
 
 	{

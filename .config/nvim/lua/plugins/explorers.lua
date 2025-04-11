@@ -20,7 +20,6 @@ return {
 
 	{
 		"nvim-tree/nvim-tree.lua",
-		enabled = false,
 		cmd = { "NvimTreeOpen", "NvimTreeToggle" },
 
 		keys = {
@@ -54,6 +53,7 @@ return {
 
 	{
 		"nvim-neo-tree/neo-tree.nvim",
+		enabled = false,
 		branch = "v3.x",
 
 		cmd = { "Neotree" },

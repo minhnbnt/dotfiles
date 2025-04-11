@@ -35,12 +35,19 @@ require("core.keymaps")
 
 require("lazy").setup({
 
-	spec = { import = "plugins" },
+	spec = {
+		{ import = "plugins" },
+	},
 
 	concurrency = 10,
 
 	git = {
 		timeout = 500,
+	},
+
+	checker = {
+		enabled = true,
+		notify = false,
 	},
 
 	ui = { border = "rounded" },

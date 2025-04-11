@@ -4,7 +4,7 @@ local function server_name()
 	local len = 25 -- more than max length of server name
 
 	local buf_ft = vim.bo.filetype
-	local clients = vim.lsp.get_active_clients()
+	local clients = vim.lsp.get_clients()
 
 	local attached = vim.iter(clients)
 		:filter(function(client)

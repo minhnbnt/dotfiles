@@ -78,13 +78,7 @@ return {
 				html = 'cd "$dir" && live-server --open=$fileName',
 				java = get_command("javac $fileName", "java $fileNameWithoutExt"),
 				javascript = function()
-					local root_dir = get_root({ "tsconfig.json", "package.json", "jsconfig.json" })
-
-					if root_dir == nil then
-						return get_command(nil, "node $fileName")()
-					end
-
-					return "cd " .. root_dir .. " && bun run $end"
+					return get_command(nil, "node $fileName")()
 				end,
 				lua = get_command(nil, "lua $fileName"),
 				python = get_command(nil, "python3 -u $fileName"),

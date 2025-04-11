@@ -1,4 +1,5 @@
 local servers = {
+	"ansiblels",
 	--"ccls",
 	"clangd",
 	"cmake",
@@ -10,15 +11,16 @@ local servers = {
 	"html",
 	"jdtls",
 	"jsonls",
-	"kotlin_language_server",
-	"omnisharp",
+	--"kotlin_language_server",
+	--"omnisharp",
+	"sourcekit",
 	"ruff",
 	"rust_analyzer",
 	"svelte",
 	"tailwindcss",
 	"typos_lsp",
 	"ts_ls",
-	"pyright",
+	"basedpyright",
 	"lua_ls",
 }
 
@@ -163,7 +165,7 @@ return {
 			},
 
 			capabilities = function()
-				local capabilities = vim.lsp.protocol.make_client_capabilities()
+				local capabilities = require("cmp_nvim_lsp").default_capabilities()
 				capabilities.textDocument.documentFormattingProvider = false
 				capabilities.textDocument.completion.completionItem.snippetSupport = true
 

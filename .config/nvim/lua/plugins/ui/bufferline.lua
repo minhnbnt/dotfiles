@@ -13,6 +13,7 @@ return {
 	keys = {
 		{ "<leader>bn", "<cmd>bnext<cr>", desc = "Next Buffer" },
 		{ "<leader>bb", "<cmd>bprevious<cr>", desc = "Backward Buffer" },
+		{ "<leader>bd", "<cmd>bdelete<cr>", desc = "Delete Buffer" },
 	},
 
 	opts = {

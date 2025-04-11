@@ -15,7 +15,7 @@ local options = {
 	showmode = false,
 	number = true,
 	relativenumber = true,
-	numberwidth = 4,
+	numberwidth = 1,
 	autoindent = true,
 	tabstop = 2,
 	shiftwidth = 2,
@@ -25,7 +25,7 @@ local options = {
 	undofile = true,
 	completeopt = { "menuone", "noselect" },
 	pumheight = 15,
-	--updatetime = 3000,
+	updatetime = 3000,
 
 	wrap = true,
 	linebreak = true,
@@ -49,8 +49,6 @@ local options = {
 	},
 }
 
-vim.g.cursorhold_updatetime = 1000
-
 for k, v in vim.iter(options) do
 	vim.opt[k] = v
 end
@@ -60,26 +58,3 @@ if vim.g.neovide then
 		vim.g[k] = v
 	end
 end
-
-vim.cmd([[
-
-	vnoremap <BS>                               <DEL>
-	tnoremap <esc>                              <C-\><C-N>
-	vnoremap <RightMouse>                       <C-\><C-g>gv<cmd>:popup! PopUp<cr>
-
-	aunmenu PopUp
-	nnoremenu <silent> PopUp.NeoTree           :Neotree <cr>
-	nnoremenu <silent> PopUp.Open\ File         :Telescope file_browser hidden=true grouped=true<cr>
-	nnoremenu <silent> PopUp.Format\ code       :lua vim.lsp.buf.format()<cr>
-	nnoremenu <silent> PopUp.Find\ File         :Telescope find_files hidden=true<cr>
-	nnoremenu <silent> PopUp.Toggle\ DAP\ UI    :DapUi toggle<cr>
-	vnoremenu PopUp.Cut                         "+x
-	vnoremenu PopUp.Copy                        "+ygv
-	anoremenu PopUp.Paste                       "+gP
-	vnoremenu PopUp.Paste                       "+P
-	vnoremenu PopUp.Delete                      "_x
-	nnoremenu PopUp.Select\ all                 gg0vG$
-	vnoremenu PopUp.Select\ all                 gg0oG$
-	inoremenu PopUp.Select\ all                 <C-Home><C-O>vG$
-	nnoremenu PopUp.Find                        /
-]])

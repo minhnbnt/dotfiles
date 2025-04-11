@@ -1,7 +1,7 @@
 local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
 return function(client, bufnr)
-	if not client.supports_method("textDocument/formatting") then
+	if not client:supports_method("textDocument/formatting") then
 		return
 	end
 

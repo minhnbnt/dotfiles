@@ -1,4 +1,5 @@
 local newFormatter = require("utils.formatOnSave")
+local temp_dir = vim.fn.stdpath("state") .. "/none-ls"
 
 local M = {
 
@@ -50,6 +51,22 @@ local config = {
 
 function M.init()
 	vim.g.nonels_suppress_issue58 = true
+
+	if vim.fn.isdirectory(temp_dir) == 0 then
+		vim.fn.mkdir(temp_dir, "p")
+	end
+
+	vim.api.nvim_create_autocmd({ "BufEnter" }, {
+		pattern = "*.py",
+		callback = function()
+			local file_path = vim.fn.expand("%:p")
+			local file_exists = vim.loop.fs_stat(file_path) ~= nil
+
+			if not file_exists then
+				vim.cmd("w")
+			end
+		end,
+	})
 end
 
 M.opts = function()
@@ -65,14 +82,27 @@ M.opts = function()
 	return {
 		debug = false,
 		sources = {
+
 			formatting.biome,
 
 			formatting.shfmt,
 			formatting.clang_format.with({ extra_args = { "--style=" .. config.clang_format() } }),
 			formatting.gofmt,
-			--formatting.prettier.with({ extra_filetypes = { "svelte" } }),
+			formatting.prettier.with({ extra_filetypes = { "svelte" } }),
 			require("none-ls.formatting.rustfmt").with({ extra_args = { "--config=" .. config.rustfmt() } }),
 			formatting.stylua,
+
+			--[[
+			diagnostics.mypy.with({
+				extra_args = function()
+					local virtual = os.getenv("VIRTUAL_ENV") or os.getenv("CONDA_PREFIX") or "/usr"
+					return { "--python-executable", virtual .. "/bin/python3" }
+				end,
+				temp_dir = temp_dir,
+			}),
+			]]
+
+			diagnostics.revive,
 
 			hover.dictionary,
 		},
