@@ -1,0 +1,51 @@
+@use "./colors" as c;
+
+$brightness-color: #f9e2af;
+$volume-color: #a6e3a1;
+
+.slider trough {
+	margin-top: 14px;
+	margin-bottom: 5px;
+	min-height: 100px;
+	background-color: c.$inactive-fg;
+	border-radius: 1rem;
+
+	slider {
+		background-color: white;
+		min-height: 20px;
+		min-width: 20px;
+		margin: -2px -8px;
+		border-radius: 1rem;
+	}
+}
+
+.slider-icon {
+	color: white;
+	margin: 2px;
+	padding: 0 2px 5px 4px;
+	min-width: 25px;
+	min-height: 25px;
+}
+
+.brightness-low {
+	margin: 4px 2px;
+	min-width: 21px;
+	min-height: 21px;
+}
+
+.brightness-icon {
+	color: $brightness-color;
+	padding-top: 2px;
+}
+
+.brightness-slider highlight {
+	background-color: $brightness-color;
+}
+
+.volume-icon {
+	color: $volume-color;
+}
+
+.volume-slider highlight {
+	background-color: $volume-color;
+}

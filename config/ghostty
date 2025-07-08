@@ -1,0 +1,42 @@
+adjust-box-thickness = 2
+adjust-cursor-thickness = 2
+adjust-underline-thickness = 2
+
+font-family = FiraCode Nerd Font Mono
+font-size = 13
+font-feature = -calt, -liga, -dlig
+
+cursor-style = bar
+cursor-style-blink = false
+
+gtk-single-instance = true
+gtk-wide-tabs = true
+resize-overlay = never
+window-decoration = false
+window-padding-balance = true
+window-theme = ghostty
+
+command = zsh
+confirm-close-surface = false
+
+background-opacity = 0.9
+
+background = 06060a
+foreground = cdd6f4
+
+palette =  0=000000
+palette =  1=930b28
+palette =  2=2d701e
+palette =  3=9c6314
+palette =  4=1547ac
+palette =  5=a4538e
+palette =  6=10666b
+palette =  7=acb0be
+palette =  8=51576d
+palette =  9=d20f39
+palette = 10=40a02b
+palette = 11=df8e1d
+palette = 12=1e66f5
+palette = 13=ea76cb
+palette = 14=179299
+palette = 15=ffffff
