@@ -1,16 +1,35 @@
 { pkgs, ... }:
 
 {
-  home.packages = [
+  programs.zsh = {
+    enable = true;
+  };
 
-    pkgs.ghostty
+  programs.atuin = {
+    enable = true;
+    daemon.enable = true;
+    settings = {
+      enter_accept = true;
 
-    pkgs.fastfetch
-    pkgs.eza
-    pkgs.atuin
-    pkgs.zoxide
-    pkgs.starship
-    pkgs.zsh-autocomplete
-    pkgs.zsh
+      inline_height = 20;
+      show_help = false;
+      show_tabs = false;
+
+      style = "full";
+    };
+  };
+
+  programs.eza.enable = true;
+  programs.starship.enable = true;
+
+  programs.zoxide.enable = true;
+
+  home.packages = with pkgs; [
+
+    ghostty
+
+    fastfetch
+    btop
+    eza
   ];
 }

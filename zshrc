@@ -7,7 +7,20 @@ if [[ $- != *i* ]]; then
 	return
 fi
 
+typeset -U fpath
 declare -A ZINIT
+
+for profile in ${(z)NIX_PROFILES}; do
+	fpath+=($profile/share/zsh/site-functions \
+	        $profile/share/zsh/$ZSH_VERSION/functions \
+	        $profile/share/zsh/vendor-completions)
+done
+
+zsh_nix_help_dir="${HOME}/.nix-profile/share/zsh/$ZSH_VERSION"
+if [ -d "$zsh_nix_help_dir" ]; then
+	HELPDIR="${zsh_nix_help_dir}/help"
+fi
+
 ZINIT[ZCOMPDUMP_PATH]="${HOME}/.local/share/zsh/zcompdump"
 
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
@@ -23,14 +36,15 @@ fi
 source "${ZINIT_HOME}/zinit.zsh"
 
 zicompinit
-zinit cdreplay -q
 
 # Load configuration files in ~/.config/zsh/
 for conf in "$HOME/.config/zsh/"*.zsh; do
 	source "${conf}"
 done
 
-unset conf
+zinit cdreplay -q
+
+unset conf zsh_nix_help_dir
 
 # I use Arch, BTW
 fastfetch

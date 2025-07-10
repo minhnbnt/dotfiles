@@ -21,7 +21,3 @@ if (( $+commands[pnpm] )); then
 	zinit ice atload"zpcdreplay" atclone"./zplug.zsh" atpull"%atclone"
 	zinit light g-plane/pnpm-shell-completion
 fi
-
-if (( $+commands[nix] )); then
-	zinit light nix-community/nix-zsh-completions
-fi
