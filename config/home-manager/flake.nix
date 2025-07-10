@@ -26,14 +26,16 @@
     }:
     let
       system = "x86_64-linux";
-      ignisPkgs = ignis.packages.${system};
-      pkgs = nixpkgs.legacyPackages.${system};
-      extraSpecialArgs = { inherit ignisPkgs; };
     in
     {
       homeConfigurations = {
         minhnbnt = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs extraSpecialArgs;
+
+          pkgs = nixpkgs.legacyPackages.${system};
+          extraSpecialArgs = {
+            ignisPkgs = ignis.packages.${system};
+          };
+
           modules = [ ./home.nix ];
         };
       };
