@@ -1,0 +1,37 @@
+* {
+	border: none;
+	border-radius: 5px;
+}
+
+#window {
+	color: #111;
+	font-family: "Segoe UI";
+	font-size: 16px;
+	background-color: transparent;
+}
+
+#input {
+	margin-bottom: 0.35em;
+	background: #232634;
+}
+
+#outer-box {
+	background: #181825;
+	padding: 0.35em;
+	outline: 3px solid #fff;
+}
+
+#img {
+	background-color: transparent;
+	padding: 0.125em;
+}
+
+#entry:focus {
+	background: #669df6;
+	border-style: none;
+}
+
+#inner-box {
+	border-radius: 5px;
+	color: #969cb5;
+}

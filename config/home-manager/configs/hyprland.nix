@@ -19,4 +19,13 @@
       "~/.config/hypr/hyprland/main.conf"
     ];
   };
+
+  programs.wofi = {
+    enable = true;
+    settings = {
+      mode = "drun";
+      allow_images = true;
+      normal_window = true;
+    };
+  };
 }
