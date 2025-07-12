@@ -12,7 +12,7 @@
     };
 
     ignis = {
-      url = "github:ignis-sh/ignis";
+      url = "github:ignis-sh/ignis/7042b95";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -24,16 +24,15 @@
       ignis,
       ...
     }:
-    let
-      system = "x86_64-linux";
-    in
     {
       homeConfigurations = {
         minhnbnt = home-manager.lib.homeManagerConfiguration {
 
-          pkgs = nixpkgs.legacyPackages.${system};
-          extraSpecialArgs = {
-            ignisPkgs = ignis.packages.${system};
+          pkgs = import nixpkgs {
+            system = "x86_64-linux";
+            overlays = [
+              ignis.overlays.default
+            ];
           };
 
           modules = [ ./home.nix ];

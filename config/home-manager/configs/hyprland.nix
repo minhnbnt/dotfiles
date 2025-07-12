@@ -1,13 +1,13 @@
-{ pkgs, ignisPkgs, ... }:
+{ pkgs, ... }:
 
 {
-  home.packages = [
-    pkgs.grim
-    pkgs.wofi
-    pkgs.wl-clipboard-rs
-    pkgs.swww
+  home.packages = with pkgs; [
+    grim
+    wofi
+    wl-clipboard-rs
+    swww
 
-    ignisPkgs.ignis
+    ignis
   ];
 
   wayland.windowManager.hyprland = {

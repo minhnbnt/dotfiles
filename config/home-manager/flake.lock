@@ -67,15 +67,16 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1751815080,
-        "narHash": "sha256-cdocV636xK5B0dX022beEQfCJKLLAyUXYubu2TiHZ8U=",
+        "lastModified": 1751905641,
+        "narHash": "sha256-jUrEaYP49bll7kvWAdOXqwYTc3yBEscQoA3vksOB3bY=",
         "owner": "ignis-sh",
         "repo": "ignis",
-        "rev": "6d4d7f6e381f89194a345946f63304ca4b7af9d5",
+        "rev": "7042b95a6e97799d4da4f4d6cd826a921453b546",
         "type": "github"
       },
       "original": {
         "owner": "ignis-sh",
+        "ref": "7042b95",
         "repo": "ignis",
         "type": "github"
       }
