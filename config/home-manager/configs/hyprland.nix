@@ -10,6 +10,15 @@
     ignis
   ];
 
+  programs.wofi = {
+    enable = true;
+    settings = {
+      mode = "drun";
+      allow_images = true;
+      normal_window = true;
+    };
+  };
+
   wayland.windowManager.hyprland = {
 
     enable = true;
@@ -20,12 +29,31 @@
     ];
   };
 
-  programs.wofi = {
+  services.hypridle = {
+
     enable = true;
     settings = {
-      mode = "drun";
-      allow_images = true;
-      normal_window = true;
+
+      general = {
+        after_sleep_cmd = "hyprctl dispatch dpms on";
+        ignore_dbus_inhibit = false;
+      };
+
+      listener = [
+        {
+          timeout = 150;
+          on-timeout = "brightnessctl -s set 10";
+        }
+        {
+          timeout = 360;
+          on-timeout = "hyprctl dispatch dpms off";
+          on-resume = "hyprctl dispatch dpms on";
+        }
+        {
+          timeout = 1800;
+          on-timeout = "systemctl suspend";
+        }
+      ];
     };
   };
 }
