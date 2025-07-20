@@ -1,52 +1,52 @@
 {
-	"$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
-	"logo": {
-		"padding": { "right": 2 },
-	},
-	"modules": [
-		"title",
-		"separator",
-		"os",
-		{
-			"type": "host",
-			"format": "{} {~-13}",
-		},
-		{
-			"type": "kernel",
-			"format": "{2}",
-		},
-		"bootmgr",
-		"locale",
-		"packages",
-		"shell",
-		{
-			"type": "display",
-			"key": "Display",
-			"format": "{}x{} @ {}Hz",
-		},
-		"de",
-		"wm",
-		"wmtheme",
-		"terminal",
-		{
-			"type": "terminalfont",
-			"key": "Font",
-			"format": "{2}",
-		},
-		{
-			"type": "version",
-			"key": "Fastfetch",
-			"format": "{2} ({6})",
-		},
-		"editor",
-		{
-			"type": "cpu",
-			"format": "{1}",
-		},
-		{
-			"type": "uptime",
-		},
-		"break",
-		"colors",
-	],
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "padding": { "right": 2 },
+  },
+  "modules": [
+    "title",
+    "separator",
+    "os",
+    {
+      "type": "host",
+      "format": "{} {~-13}",
+    },
+    {
+      "type": "kernel",
+      "format": "{2}",
+    },
+    "bootmgr",
+    "locale",
+    "packages",
+    "shell",
+    {
+      "type": "display",
+      "key": "Display",
+      "format": "{}x{} @ {}Hz",
+    },
+    "de",
+    "wm",
+    "wmtheme",
+    "terminal",
+    {
+      "type": "terminalfont",
+      "key": "Font",
+      "format": "{2}",
+    },
+    {
+      "type": "version",
+      "key": "Fastfetch",
+      "format": "{2} ({6})",
+    },
+    "editor",
+    {
+      "type": "cpu",
+      "format": "{1}",
+    },
+    {
+      "type": "uptime",
+    },
+    "break",
+    "colors",
+  ],
 }

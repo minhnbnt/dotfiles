@@ -29,5 +29,7 @@
     nodePackages.prettier
     shfmt
     stylua
+
+    ripgrep
   ];
 }

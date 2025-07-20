@@ -65,6 +65,7 @@ return {
 				"kotlin",
 				"lua",
 				"markdown",
+				"nix",
 				"printf",
 				"python",
 				"rust",

@@ -1,7 +1,7 @@
 import os
 
-from ignis.app import IgnisApp
-from ignis.widgets import Widget
+from ignis import widgets, utils
+from ignis.css_manager import CssManager, CssInfoPath
 from ignis.services.system_tray import SystemTrayService
 
 from widgets import (
@@ -14,20 +14,20 @@ from widgets import (
 )
 
 
-def top() -> Widget:
+def top() -> widgets.Widget:
     return workspaces()
 
 
-def tray_item(item) -> Widget.Button:
+def tray_item(item) -> widgets.Button:
     if item.menu:
         menu = item.menu.copy()
     else:
         menu = None
 
-    return Widget.Button(
-        child=Widget.Box(
+    return widgets.Button(
+        child=widgets.Box(
             child=[
-                Widget.Icon(image=item.bind("icon"), pixel_size=24),
+                widgets.Icon(image=item.bind("icon"), pixel_size=24),
                 menu,
             ]
         ),
@@ -42,7 +42,7 @@ def tray_item(item) -> Widget.Button:
 def tray():
     system_tray = SystemTrayService.get_default()
 
-    return Widget.Box(
+    return widgets.Box(
         setup=lambda self: system_tray.connect(
             "added", lambda x, item: self.append(tray_item(item))
         ),
@@ -50,8 +50,8 @@ def tray():
     )
 
 
-def bottom() -> Widget:
-    return Widget.Box(
+def bottom() -> widgets.Widget:
+    return widgets.Box(
         vertical=True,
         child=(
             speaker_slider(),
@@ -63,14 +63,14 @@ def bottom() -> Widget:
     )
 
 
-def bar(monitor_id: int = 0) -> Widget.Window:
-    return Widget.Window(
+def bar(monitor_id: int = 0) -> widgets.Window:
+    return widgets.Window(
         namespace=f"ignis_bar_{monitor_id}",
         monitor=monitor_id,
         anchor=("top", "left", "bottom"),  # type: ignore
         exclusivity="exclusive",
         style="background-color: transparent",
-        child=Widget.CenterBox(
+        child=widgets.CenterBox(
             css_classes=("bar",),
             vertical=True,
             start_widget=top(),
@@ -79,7 +79,13 @@ def bar(monitor_id: int = 0) -> Widget.Window:
     )
 
 
-app = IgnisApp.get_default()
-app.apply_css(os.path.expanduser("~/.config/ignis/style.scss"))
+css_manager = CssManager.get_default()
+css_manager.apply_css(
+    CssInfoPath(
+        name="main",
+        path=os.path.expanduser("~/.config/ignis/style.scss"),
+        compiler_function=lambda path: utils.sass_compile(path),
+    )
+)
 
 bar()

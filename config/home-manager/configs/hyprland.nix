@@ -3,6 +3,7 @@
 {
   home.packages = with pkgs; [
     grim
+    slurp
     wofi
     wl-clipboard-rs
     swww

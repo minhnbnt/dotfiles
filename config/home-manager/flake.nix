@@ -24,18 +24,34 @@
       ignis,
       ...
     }:
+
+    let
+      system = "x86_64-linux";
+      pkgs = import nixpkgs {
+        inherit system;
+        overlays = [ ignis.overlays.default ];
+      };
+
+      username = "minhnbnt";
+      homeDirectory = "/home/${username}";
+      dotDirectory = "${homeDirectory}/dotfiles";
+    in
+
     {
+      formatter.${system} = pkgs.nixfmt-rfc-style;
+
       homeConfigurations = {
-        minhnbnt = home-manager.lib.homeManagerConfiguration {
 
-          pkgs = import nixpkgs {
-            system = "x86_64-linux";
-            overlays = [
-              ignis.overlays.default
-            ];
-          };
+        ${username} = home-manager.lib.homeManagerConfiguration {
 
-          modules = [ ./home.nix ];
+          inherit pkgs;
+
+          extraSpecialArgs = { inherit dotDirectory username; };
+
+          modules = [
+            { home = { inherit username homeDirectory; }; }
+            ./home.nix
+          ];
         };
       };
     };

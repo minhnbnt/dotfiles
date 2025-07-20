@@ -1,14 +1,22 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  dotDirectory,
+  ...
+}:
 
 {
-  nixpkgs.config.allowUnfree = true;
-
-  home.username = "minhnbnt";
-  home.homeDirectory = "/home/minhnbnt";
-
   imports = [ ./configs ];
 
   home.stateVersion = "25.05";
+
+  nix.package = pkgs.nix;
+  nix.settings = {
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
+  };
 
   programs.obs-studio = {
     enable = true;
@@ -17,15 +25,23 @@
     ];
   };
 
+  programs.zed-editor.enable = true;
+
   home.packages = with pkgs; [
 
-    btop
     brave
     librewolf
+
+    gimp3
     vlc
 
-    jetbrains.idea-community
-    jetbrains.pycharm-community
+    (jetbrains.idea-community-bin.override {
+      jdk = pkgs.jdk24;
+    })
+
+    (jetbrains.pycharm-community-bin.override {
+      jdk = pkgs.jdk24;
+    })
 
     pnpm
     nodePackages_latest.nodejs
@@ -33,25 +49,21 @@
     gcc
     gitleaks
     jujutsu
-
-    osu-lazer-bin
   ];
 
   home.file =
     let
       mkSymlink = config.lib.file.mkOutOfStoreSymlink;
-      dotDirectory = "${config.home.homeDirectory}/dotfiles";
     in
     {
-      ".zshrc".source = mkSymlink "${dotDirectory}/zshrc";
       ".profile".source = mkSymlink "${dotDirectory}/profile";
       ".config/home-manager".source = mkSymlink "${dotDirectory}/config/home-manager";
       ".config/ghostty/config".source = mkSymlink "${dotDirectory}/config/ghostty";
-      ".config/zsh".source = mkSymlink "${dotDirectory}/config/zsh";
       ".config/nvim".source = mkSymlink "${dotDirectory}/config/nvim";
       ".config/ignis".source = mkSymlink "${dotDirectory}/config/ignis";
       ".config/fastfetch/config.jsonc".source = mkSymlink "${dotDirectory}/config/fastfetch.jsonc";
       ".config/hypr/hyprland".source = mkSymlink "${dotDirectory}/config/hypr/hyprland";
+      ".config/hypr/scripts".source = mkSymlink "${dotDirectory}/config/hypr/scripts";
       ".config/wofi/style.css".source = mkSymlink "${dotDirectory}/config/wofi.css";
     };
 

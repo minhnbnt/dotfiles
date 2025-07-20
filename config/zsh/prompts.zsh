@@ -1,11 +1,3 @@
-if (( ! $+commands[starship] )); then
-	return
-fi
-
-STARSHIP_LOG="error"
-
-eval "$(starship init zsh)"
-
 if [[ $UID == 0 ]]; then
 	export SH_CHAR='#'
 else
