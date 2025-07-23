@@ -49,6 +49,8 @@
     gcc
     gitleaks
     jujutsu
+
+    anki-bin
   ];
 
   home.file =
