@@ -6,5 +6,6 @@
     ./fonts.nix
     ./theme.nix
     ./inputMethod.nix
+    ./vcs.nix
   ];
 }
