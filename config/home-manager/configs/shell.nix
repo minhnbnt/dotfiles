@@ -10,13 +10,13 @@
   programs.zsh = {
 
     enable = true;
-    dotDir = ".config/zsh";
+    dotDir = "${config.xdg.configHome}/zsh";
 
     initContent = lib.mkOrder 1500 "source ${dotDirectory}/config/zsh/extra.zsh";
 
     history = {
       saveNoDups = true;
-      path = "${config.xdg.dataHome}/zsh/zsh_history";
+      path = "${config.xdg.configHome}/zsh/zsh_history";
     };
 
     antidote = {
