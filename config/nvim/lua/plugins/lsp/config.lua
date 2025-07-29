@@ -22,6 +22,7 @@ local servers = {
 	"tailwindcss",
 	"terraformls",
 	"typos_lsp",
+	"qmlls",
 	"vtsls",
 	"yamlls",
 }

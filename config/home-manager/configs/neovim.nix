@@ -12,6 +12,7 @@
     clang-tools
     emmet-language-server
     gopls
+    kdePackages.qtdeclarative # qmlls
     lua-language-server
     nixd
     typos-lsp
@@ -29,6 +30,7 @@
     nodePackages.prettier
     shfmt
     stylua
+    kdlfmt
 
     ripgrep
   ];
