@@ -9,6 +9,7 @@
     swww
 
     ignis
+    uwsm
   ];
 
   programs.wofi = {
@@ -19,6 +20,8 @@
       normal_window = true;
     };
   };
+
+  services.hyprpolkitagent.enable = true;
 
   wayland.windowManager.hyprland = {
 
