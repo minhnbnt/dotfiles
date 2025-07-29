@@ -15,21 +15,36 @@
       url = "github:ignis-sh/ignis/7042b95";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    quickshell = {
+      url = "github:quickshell-mirror/quickshell/v0.2.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
     {
-      nixpkgs,
       home-manager,
       ignis,
+      nixpkgs,
+      quickshell,
       ...
     }:
 
     let
       system = "x86_64-linux";
+      quickshell-overlay = final: prev: {
+        quickshell = quickshell.packages.${prev.system}.default;
+      };
+
       pkgs = import nixpkgs {
+
         inherit system;
-        overlays = [ ignis.overlays.default ];
+
+        overlays = [
+          ignis.overlays.default
+          quickshell-overlay
+        ];
       };
 
       username = "minhnbnt";

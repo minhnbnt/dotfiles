@@ -31,25 +31,25 @@
 
     brave
     librewolf
+    qutebrowser
 
     gimp3
     vlc
 
-    (jetbrains.idea-community-bin.override {
-      jdk = pkgs.jdk24;
-    })
-
-    (jetbrains.pycharm-community-bin.override {
-      jdk = pkgs.jdk24;
-    })
+    jetbrains.idea-community-bin
+    jetbrains.pycharm-community-bin
 
     pnpm
     nodePackages_latest.nodejs
 
-    gcc
+    clang
     gitleaks
+    lazydocker
+    minikube
 
-    anki-bin
+    anki
+
+    quickshell
   ];
 
   home.file =
