@@ -45,6 +45,11 @@ vim.api.nvim_create_autocmd({ "BufEnter", "WinResized" }, {
 		if vim.tbl_contains(excluded_ft, vim.bo.filetype) then
 			vim.cmd("se tabstop=4 shiftwidth=4 softtabstop=4")
 		end
+
+		local namespaces = vim.api.nvim_get_namespaces()
+		for index, value in ipairs(namespaces) do
+			print(index, value)
+		end
 	end,
 })
 

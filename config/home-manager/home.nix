@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   dotDirectory,
   ...
@@ -11,20 +12,18 @@
   home.stateVersion = "25.05";
 
   nix.package = pkgs.nix;
-  nix.settings = {
-    experimental-features = [
-      "nix-command"
-      "flakes"
-    ];
-  };
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
-  programs.obs-studio = {
-    enable = true;
-    plugins = with pkgs.obs-studio-plugins; [
-      obs-pipewire-audio-capture
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
+    builtins.elem (lib.getName pkg) [
+      "osu-lazer-bin"
     ];
-  };
 
+  programs.obs-studio.enable = true;
   programs.zed-editor.enable = true;
 
   home.packages = with pkgs; [
@@ -44,10 +43,16 @@
 
     clang
     gitleaks
+    hurl
+    kubectl
     lazydocker
     minikube
+    opentofu
 
-    anki
+    nh
+
+    anki-bin
+    osu-lazer-bin
 
     quickshell
   ];
@@ -68,7 +73,9 @@
       ".config/wofi/style.css".source = mkSymlink "${dotDirectory}/config/wofi.css";
     };
 
-  home.sessionVariables = { };
+  home.sessionVariables = {
+    NH_HOME_FLAKE = "${config.xdg.configHome}/home-manager";
+  };
 
   programs.home-manager.enable = true;
 }
