@@ -1,9 +1,18 @@
-{ pkgs, ... }:
+{
+  config,
+  dotDirectory,
+  pkgs,
+  ...
+}:
 
 {
   programs.neovim = {
     enable = true;
     viAlias = true;
+  };
+
+  home.file = {
+    ".config/nvim".source = config.lib.file.mkOutOfStoreSymlink "${dotDirectory}/config/nvim";
   };
 
   home.packages = with pkgs; [

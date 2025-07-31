@@ -23,10 +23,6 @@ return {
 
 			segments = {
 				{
-					click = "v:lua.ScSa",
-					sign = { namespace = { "diagnostic/signs" }, colwidth = 1 },
-				},
-				{
 					click = "v:lua.ScLa",
 					sign = { name = { "Dap" }, colwidth = 1 },
 				},

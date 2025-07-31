@@ -64,7 +64,7 @@ return {
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"nvim-tree/nvim-web-devicons",
-			"MunifTanjim/nui.nvim",
+			{ "pynappo/nui.nvim", branch = "support-winborder" },
 			"3rd/image.nvim",
 		},
 
@@ -114,6 +114,7 @@ return {
 
 			{
 				"ahmedkhalf/project.nvim",
+				enabled = false,
 				main = "project_nvim",
 				opts = {},
 			},

@@ -185,14 +185,27 @@ return {
 			local lspconfig = require("lspconfig")
 			local capabilities = opts.capabilities()
 
-			vim.diagnostic.config(opts.diagnostic)
+			local sign_config = {}
+
+			for type, icon in ipairs(opts.signs) do -- set signs
+				local numhl = "DiagnosticSign" .. type
+				local severity = vim.diagnostic.severity[string.upper(type)]
+				print(string.upper(type))
+
+				local icon_config = {
+					text = { [severity] = icon },
+					linehl = { [severity] = "" },
+					numhl = { [severity] = numhl },
+				}
+
+				sign_config = vim.tbl_deep_extend("keep", sign_config, icon_config)
+			end
+
+			opts.diagnostic.signs = sign_config
+
+			vim.diagnostic.config({ signs = sign_config })
 			vim.lsp.set_log_level(opts.log_level)
 			vim.lsp.inlay_hint.enable(opts.inlay_hint)
-
-			for type, icon in vim.iter(opts.signs) do -- set signs
-				local hl = "DiagnosticSign" .. type
-				vim.fn.sign_define(hl, { text = icon, texthl = hl })
-			end
 
 			local vscode_extracted = { "html", "cssls", "eslint", "jsonls" }
 

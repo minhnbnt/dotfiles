@@ -7,13 +7,14 @@ niri = NiriService.get_default()
 
 
 def get_css_classes(idx: int, is_focused: bool) -> list[str]:
+    sleep(0.01)  # this will make gtk render animation
     result = ["workspace-button"]
-
-    if idx < len(niri.workspaces):
-        result.append("has-windows")
 
     if is_focused:
         result.append("active")
+
+    elif idx < len(niri.workspaces):
+        result.append("has-windows")
 
     return result
 
@@ -21,7 +22,7 @@ def get_css_classes(idx: int, is_focused: bool) -> list[str]:
 cache = dict()
 
 
-def get_button(id: int) -> Widget.Button | None:
+def get_button(id: int, on_destroy_callback=lambda: None) -> Widget.Button | None:
     button = cache.get(id)
     if button is not None:
         return button
@@ -34,30 +35,27 @@ def get_button(id: int) -> Widget.Button | None:
         child=Widget.Label(label=workspace.bind("idx", str)),
         tooltip_text=workspace.bind("idx", lambda idx: f"Workspace {idx}"),
         on_click=lambda _: workspace.switch_to(),
-        css_classes=workspace.bind_many(["idx", "is_focused"], get_css_classes),
+        css_classes=["workspace-button", "hidden"],
         valign="center",
     )
 
     cache[id] = button
 
-    # @run_in_thread
-    # def refresh_css_class(_, __):
-    #     sleep(0.01)
-    #
-    #     if workspace.idx >= len(niri.workspaces):
-    #         button.css_classes = ["workspace-button"]
-    #     else:
-    #         button.css_classes = get_css_classes(workspace.idx, workspace.is_focused)
-    #
-    # niri.connect("notify::workspaces", refresh_css_class)
-    #
-    # @run_in_thread
-    # def on_destroy(_):
-    #     sleep(0.01)
-    #     button.css_classes = ["workspace-button", "hidden"]
-    #     del cache[id]
-    #
-    # workspace.connect("destroyed", on_destroy)
+    @run_in_thread
+    def refresh_css_class(_, __):
+        button.css_classes = get_css_classes(workspace.idx, workspace.is_focused)
+
+    niri.connect("notify::workspaces", refresh_css_class)
+    refresh_css_class(None, None)
+
+    @run_in_thread
+    def on_destroy(_):
+        button.css_classes = ["workspace-button", "hidden"]
+        del cache[id]
+
+        on_destroy_callback()
+
+    workspace.connect("destroyed", on_destroy)
 
     return button
 

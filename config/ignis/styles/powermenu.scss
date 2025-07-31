@@ -5,32 +5,32 @@ $restart: #f5c43d;
 $exit: #965be3;
 
 .power-menu {
-	padding-top: 7px;
-	min-width: 32px;
+  padding-top: 7px;
+  min-width: 32px;
 }
 
 .power-button {
-	color: c.$inactive-fg;
-	transition: 0.5s;
+  color: c.$inactive-fg;
+  transition: 0.5s;
 }
 
 .shutdown-alt {
-	padding-bottom: 7px;
-	color: #e78284;
+  padding-bottom: 7px;
+  color: #e78284;
 }
 
 .shutdown {
-	padding-bottom: 7px;
+  padding-bottom: 7px;
 
-	&:hover {
-		color: $shutdown-color;
-	}
+  &:hover {
+    color: $shutdown-color;
+  }
 }
 
 .restart:hover {
-	color: #f5c43d;
+  color: #f5c43d;
 }
 
 .exit:hover {
-	color: #965be3;
+  color: #965be3;
 }

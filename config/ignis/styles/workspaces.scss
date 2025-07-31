@@ -1,45 +1,45 @@
 @use "./colors" as c;
 
 .workspaces {
-	margin-top: 1rem;
+  margin-top: 1rem;
 }
 
 .workspace-button,
 .workspaces-background {
-	margin: 2px 6px;
-	padding: 2px 0px 1px 1px;
+  margin: 2px 6px;
+  padding: 2px 0px 1px 1px;
 
-	border-radius: 1rem;
-	font-size: 25px;
+  border-radius: 1rem;
+  font-size: 25px;
 
-	transition: 200ms;
+  transition: 200ms;
 }
 
 .workspaces-background {
-	padding: 0;
-	background-color: c.$fg;
-	min-height: 33px;
+  padding: 0;
+  background-color: c.$fg;
+  min-height: 33px;
 }
 
 .workspace-button {
-	color: c.$inactive-fg;
-	background-color: transparent;
+  color: c.$inactive-fg;
+  background-color: transparent;
 }
 
 .workspace-button.hidden {
-	font-size: 0;
-	padding: 0;
-	margin: 0;
+  font-size: 0;
+  padding: 0;
+  margin: 0;
 }
 
 .workspace-button.has-windows {
-	color: c.$fg;
+  color: c.$fg;
 }
 
 .workspace-button.active {
-	color: c.$bg;
+  color: c.$bg;
 }
 
 .workspace-button:not(.active):hover {
-	background-color: c.$hover-bg;
+  background-color: c.$hover-bg;
 }
