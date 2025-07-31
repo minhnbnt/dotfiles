@@ -1,65 +1,65 @@
 @use "./colors.scss" as c;
 
 .bar * {
-	all: unset;
+  all: unset;
 }
 
 tooltip {
-	all: unset;
-	font-size: 14px;
-	border-radius: 6px;
-	border: #dce0e8 1px solid;
-	padding: 2px 4px;
-	margin-left: 4px;
-	color: #dce0e8;
-	background-color: rgba(c.$bg, 0.9);
+  all: unset;
+  font-size: 14px;
+  border-radius: 6px;
+  border: #dce0e8 1px solid;
+  padding: 2px 4px;
+  margin-left: 4px;
+  color: #dce0e8;
+  background-color: rgba(c.$bg, 0.9);
 }
 
 .bar {
-	padding-bottom: 10px;
-	padding-right: 1px;
+  padding-bottom: 10px;
+  padding-right: 1px;
 
-	background-color: c.$bg;
-	color: c.$fg;
+  background-color: c.$bg;
+  color: c.$fg;
 
-	opacity: 0.9;
+  opacity: 0.9;
 }
 
 .tray-item {
-	all: unset;
+  all: unset;
 }
 
 .clock,
 .battery,
 .container,
 .power-menu {
-	margin: 1px 5px;
-	margin-left: 6px;
-	transition: 0.3s;
-	border-radius: 1rem;
+  margin: 1px 5px;
+  margin-left: 6px;
+  transition: 0.3s;
+  border-radius: 1rem;
 }
 
 .clock:hover,
 .battery:hover,
 .container:hover,
 .power-menu:hover {
-	background-color: c.$hover-bg;
+  background-color: c.$hover-bg;
 }
 
 .battery {
-	color: #cdd6f4;
-	min-width: 32px;
-	padding: 8px 3px;
+  color: #cdd6f4;
+  min-width: 32px;
+  padding: 8px 3px;
 }
 
 .clock {
-	margin: 4px;
-	margin-top: 3px;
-	margin-left: 5px;
-	padding: 2px 0px 3px 2px;
+  margin: 4px;
+  margin-top: 3px;
+  margin-left: 5px;
+  padding: 2px 0px 3px 2px;
 
-	min-width: 36px;
+  min-width: 36px;
 
-	color: #ca9ee6;
-	font-size: 22px;
+  color: #ca9ee6;
+  font-size: 22px;
 }
