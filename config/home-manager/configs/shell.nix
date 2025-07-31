@@ -76,4 +76,14 @@
     fastfetch
     ghostty
   ];
+
+  home.file =
+    let
+      mkSymlink = config.lib.file.mkOutOfStoreSymlink;
+    in
+    {
+      ".profile".source = mkSymlink "${dotDirectory}/profile";
+      ".config/ghostty/config".source = mkSymlink "${dotDirectory}/config/ghostty";
+      ".config/fastfetch/config.jsonc".source = mkSymlink "${dotDirectory}/config/fastfetch.jsonc";
+    };
 }

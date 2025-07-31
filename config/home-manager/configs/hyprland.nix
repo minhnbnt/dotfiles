@@ -1,4 +1,9 @@
-{ pkgs, ... }:
+{
+  config,
+  dotDirectory,
+  pkgs,
+  ...
+}:
 
 {
   home.packages = with pkgs; [
@@ -11,6 +16,17 @@
     ignis
     uwsm
   ];
+
+  home.file =
+    let
+      mkSymlink = config.lib.file.mkOutOfStoreSymlink;
+    in
+    {
+      ".config/ignis".source = mkSymlink "${dotDirectory}/config/ignis";
+      ".config/hypr/hyprland".source = mkSymlink "${dotDirectory}/config/hypr/hyprland";
+      ".config/hypr/scripts".source = mkSymlink "${dotDirectory}/config/hypr/scripts";
+      ".config/wofi/style.css".source = mkSymlink "${dotDirectory}/config/wofi.css";
+    };
 
   programs.wofi = {
     enable = true;

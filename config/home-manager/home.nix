@@ -1,8 +1,8 @@
 {
   config,
+  dotDirectory,
   lib,
   pkgs,
-  dotDirectory,
   ...
 }:
 
@@ -25,6 +25,7 @@
 
   programs.obs-studio.enable = true;
   programs.zed-editor.enable = true;
+  programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
 
@@ -57,25 +58,12 @@
     quickshell
   ];
 
-  home.file =
-    let
-      mkSymlink = config.lib.file.mkOutOfStoreSymlink;
-    in
-    {
-      ".profile".source = mkSymlink "${dotDirectory}/profile";
-      ".config/home-manager".source = mkSymlink "${dotDirectory}/config/home-manager";
-      ".config/ghostty/config".source = mkSymlink "${dotDirectory}/config/ghostty";
-      ".config/nvim".source = mkSymlink "${dotDirectory}/config/nvim";
-      ".config/ignis".source = mkSymlink "${dotDirectory}/config/ignis";
-      ".config/fastfetch/config.jsonc".source = mkSymlink "${dotDirectory}/config/fastfetch.jsonc";
-      ".config/hypr/hyprland".source = mkSymlink "${dotDirectory}/config/hypr/hyprland";
-      ".config/hypr/scripts".source = mkSymlink "${dotDirectory}/config/hypr/scripts";
-      ".config/wofi/style.css".source = mkSymlink "${dotDirectory}/config/wofi.css";
-    };
+  home.file = {
+    ".config/home-manager".source =
+      config.lib.file.mkOutOfStoreSymlink "${dotDirectory}/config/home-manager";
+  };
 
   home.sessionVariables = {
     NH_HOME_FLAKE = "${config.xdg.configHome}/home-manager";
   };
-
-  programs.home-manager.enable = true;
 }
