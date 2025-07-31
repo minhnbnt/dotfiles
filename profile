@@ -52,5 +52,4 @@ unset boot_times my_cache_dir
 
 if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 1 ]; then
 	Hyprland >/dev/null 2>&1
-	#niri >/dev/null 2>&1
 fi
