@@ -55,7 +55,7 @@
     anki-bin
     osu-lazer-bin
 
-    quickshell
+    #quickshell
   ];
 
   home.file = {
