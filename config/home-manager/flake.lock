@@ -21,19 +21,25 @@
         "type": "github"
       }
     },
-    "gvc": {
-      "flake": false,
+    "flake-utils_2": {
+      "inputs": {
+        "systems": [
+          "ignis",
+          "ignis-gvc",
+          "systems"
+        ]
+      },
       "locked": {
-        "lastModified": 1735384240,
-        "narHash": "sha256-ikF9EzFlsRH8i4+SVUHETF4Jk1ob2JX1RLsuMdzrQOQ=",
-        "owner": "ignis-sh",
-        "repo": "libgnome-volume-control-wheel",
-        "rev": "2d1cb33dacdae43127bb843a48b159ea7b8925d0",
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
         "type": "github"
       },
       "original": {
-        "owner": "ignis-sh",
-        "repo": "libgnome-volume-control-wheel",
+        "owner": "numtide",
+        "repo": "flake-utils",
         "type": "github"
       }
     },
@@ -44,15 +50,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1753732062,
-        "narHash": "sha256-vojVM0SgFP8crFh1LDDXkzaI9/er/1cuRfbNPhfBHyc=",
+        "lastModified": 1753592768,
+        "narHash": "sha256-oV695RvbAE4+R9pcsT9shmp6zE/+IZe6evHWX63f2Qg=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "f49e872f55e36e67ebcb906ff65f86c7a1538f7c",
+        "rev": "fc3add429f21450359369af74c2375cb34a2d204",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
+        "ref": "release-25.05",
         "repo": "home-manager",
         "type": "github"
       }
@@ -60,39 +67,62 @@
     "ignis": {
       "inputs": {
         "flake-utils": "flake-utils",
-        "gvc": "gvc",
+        "ignis-gvc": "ignis-gvc",
         "nixpkgs": [
+          "nixpkgs"
+        ],
+        "systems": "systems_2"
+      },
+      "locked": {
+        "lastModified": 1753910662,
+        "narHash": "sha256-I92qDzUcUONRNnBSxDg8F1b5mX0EdizWxXHVa2LDdS0=",
+        "owner": "ignis-sh",
+        "repo": "ignis",
+        "rev": "2cf7e624871985a19078400c37e12f236ab816ac",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ignis-sh",
+        "ref": "2cf7e62",
+        "repo": "ignis",
+        "type": "github"
+      }
+    },
+    "ignis-gvc": {
+      "inputs": {
+        "flake-utils": "flake-utils_2",
+        "nixpkgs": [
+          "ignis",
           "nixpkgs"
         ],
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1751905641,
-        "narHash": "sha256-jUrEaYP49bll7kvWAdOXqwYTc3yBEscQoA3vksOB3bY=",
+        "lastModified": 1753646985,
+        "narHash": "sha256-sEVvNhb+hwnd/J/6yKPzkjKlxPvWLDcMxu2Jprvwq1U=",
         "owner": "ignis-sh",
-        "repo": "ignis",
-        "rev": "7042b95a6e97799d4da4f4d6cd826a921453b546",
+        "repo": "ignis-gvc",
+        "rev": "face8c020fa38856c7378a39cbe98c9d6d963995",
         "type": "github"
       },
       "original": {
         "owner": "ignis-sh",
-        "ref": "7042b95",
-        "repo": "ignis",
+        "repo": "ignis-gvc",
         "type": "github"
       }
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1753432016,
-        "narHash": "sha256-cnL5WWn/xkZoyH/03NNUS7QgW5vI7D1i74g48qplCvg=",
+        "lastModified": 1753749649,
+        "narHash": "sha256-+jkEZxs7bfOKfBIk430K+tK9IvXlwzqQQnppC2ZKFj4=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "6027c30c8e9810896b92429f0092f624f7b1aace",
+        "rev": "1f08a4df998e21f4e8be8fb6fbf61d11a1a5076a",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
-        "ref": "nixpkgs-unstable",
+        "ref": "nixos-25.05",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -127,6 +157,21 @@
       }
     },
     "systems": {
+      "locked": {
+        "lastModified": 1689347949,
+        "narHash": "sha256-12tWmuL2zgBgZkdoB6qXZsgJEH9LR3oUgpaQq2RbI80=",
+        "owner": "nix-systems",
+        "repo": "default-linux",
+        "rev": "31732fcf5e8fea42e59c2488ad31a0e651500f68",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default-linux",
+        "type": "github"
+      }
+    },
+    "systems_2": {
       "locked": {
         "lastModified": 1689347949,
         "narHash": "sha256-12tWmuL2zgBgZkdoB6qXZsgJEH9LR3oUgpaQq2RbI80=",

@@ -3,16 +3,16 @@
 
   inputs = {
     nixpkgs = {
-      url = "github:nixos/nixpkgs/nixpkgs-unstable";
+      url = "github:nixos/nixpkgs/nixos-25.05";
     };
 
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     ignis = {
-      url = "github:ignis-sh/ignis/7042b95";
+      url = "github:ignis-sh/ignis/2cf7e62";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
