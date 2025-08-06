@@ -32,6 +32,7 @@
     terraform-ls
     vtsls
     vscode-langservers-extracted
+    yaml-language-server
 
     go # gofmt
     golangci-lint
