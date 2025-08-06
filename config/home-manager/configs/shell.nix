@@ -10,7 +10,7 @@
   programs.zsh = {
 
     enable = true;
-    dotDir = "${config.xdg.configHome}/zsh";
+    dotDir = ".config/zsh";
 
     initContent = lib.mkOrder 1500 "source ${dotDirectory}/config/zsh/extra.zsh";
 
