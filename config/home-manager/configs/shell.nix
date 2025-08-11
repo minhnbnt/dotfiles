@@ -7,12 +7,15 @@
 }:
 
 {
+  imports = [
+    { programs.zsh.initContent = lib.mkOrder 100 "set -o emacs"; }
+    { programs.zsh.initContent = lib.mkOrder 1500 "source ${dotDirectory}/config/zsh/extra.zsh"; }
+  ];
+
   programs.zsh = {
 
     enable = true;
-    dotDir = ".config/zsh";
-
-    initContent = lib.mkOrder 1500 "source ${dotDirectory}/config/zsh/extra.zsh";
+    dotDir = "${config.xdg.configHome}/zsh";
 
     history = {
       saveNoDups = true;
@@ -20,7 +23,9 @@
     };
 
     antidote = {
+
       enable = true;
+
       plugins = [
 
         "zsh-users/zsh-completions kind:fpath path:src"
