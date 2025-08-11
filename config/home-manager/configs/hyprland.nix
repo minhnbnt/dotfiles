@@ -12,6 +12,7 @@
     wofi
     wl-clipboard-rs
     swww
+    cliphist
 
     ignis
     uwsm
@@ -42,7 +43,6 @@
   wayland.windowManager.hyprland = {
 
     enable = true;
-    systemd.enableXdgAutostart = true;
 
     settings.source = [
       "~/.config/hypr/hyprland/main.conf"
