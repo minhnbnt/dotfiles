@@ -20,7 +20,7 @@
   nixpkgs.config.allowUnfreePredicate =
     pkg:
     builtins.elem (lib.getName pkg) [
-      "osu-lazer-bin"
+      "osu-lazer-bin" # spellchecker:disable-line
     ];
 
   programs.obs-studio.enable = true;
@@ -59,18 +59,19 @@
     minikube
     opentofu
 
+    nmap
+    rustscan
+
     nh
 
     anki-bin
-    osu-lazer-bin
+    osu-lazer-bin # spellchecker:disable-line
 
     #quickshell
   ];
 
-  home.file = {
-    ".config/home-manager".source =
-      config.lib.file.mkOutOfStoreSymlink "${dotDirectory}/config/home-manager";
-  };
+  home.file.".config/home-manager".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotDirectory}/config/home-manager";
 
   home.sessionVariables = {
     NH_HOME_FLAKE = "${config.xdg.configHome}/home-manager";
